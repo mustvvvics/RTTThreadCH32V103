@@ -1,4 +1,4 @@
-Mcu Type=CH32V10x
+Mcu Type=CH32V103
 Address=0x08000000
 Target Path=obj\mainCoreWithRTOS.hex
 Erase All=true

@@ -22,13 +22,7 @@
 //右键单击工程，选择刷新
 
 #include "headfile.h"
-#include "display.h"
-#include "timer_pit.h"
-#include "encoder.h"
-#include "buzzer.h"
-#include "button.h"
-#include "motor.h"
-#include "elec.h"
+
 
 
 int main(void)
@@ -42,6 +36,8 @@ int main(void)
     buzzer_init();
     button_init();
     motor_init();
+    PID_Init();
+    Esp_Init();
     //elec_init();电感初始化
     //timer_pit_init();
 
@@ -67,6 +63,6 @@ int main(void)
     {
         rt_thread_mdelay(300);//new delay
         gpio_toggle(B15);
-
+        Tcp_Decode();
     }
 }

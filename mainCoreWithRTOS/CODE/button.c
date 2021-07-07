@@ -1,6 +1,4 @@
-#include "buzzer.h"
-#include "button.h"
-#include "display.h"
+#include "headfile.h"
 
 //定义按键引脚
 #define KEY1    C4

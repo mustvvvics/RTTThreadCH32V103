@@ -8,7 +8,7 @@
 #ifndef CODE_COMMUNICATION_H_
 #define CODE_COMMUNICATION_H_
 
-#include "common.h"
+#include "headfile.h"
 
 #define LINE_LEN                11      //数据长度
 

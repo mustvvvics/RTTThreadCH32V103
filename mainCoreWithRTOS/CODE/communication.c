@@ -4,8 +4,8 @@
  *  Created on: Jun 30, 2021
  *      Author: 29275
  */
-#include "communication.h"
-#include "encoder.h"
+#include "headfile.h"
+
 uint8   temp_buff[LINE_LEN];            //主机用于接收数据的BUFF
 vuint8  uart_flag;                   //接收数据标志位
 

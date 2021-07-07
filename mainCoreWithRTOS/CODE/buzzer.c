@@ -1,4 +1,4 @@
-#include "buzzer.h"
+#include "headfile.h"
 
 #define BUZZER_PIN   D2       //定义蜂鸣器引脚
 
@@ -25,7 +25,7 @@ void buzzer_entry(void *parameter)
 
 void buzzer_init(void)
 {
-    rt_thread_t tid;
+    rt_thread_t tidBuzzer;
     
     //初始化蜂鸣器所使用的GPIO
     gpio_init(BUZZER_PIN, GPO, 0, GPIO_PIN_CONFIG);
@@ -34,11 +34,11 @@ void buzzer_init(void)
     buzzer_mailbox = rt_mb_create("buzzer", 5, RT_IPC_FLAG_FIFO);
     
     //创建蜂鸣器的线程
-    tid = rt_thread_create("buzzer", buzzer_entry, RT_NULL, 512, 5, 2);
+    tidBuzzer = rt_thread_create("buzzer", buzzer_entry, RT_NULL, 512, 5, 2);
     
     //启动线程
-    if(RT_NULL != tid)
+    if(RT_NULL != tidBuzzer)
     {
-        rt_thread_startup(tid);
+        rt_thread_startup(tidBuzzer);
     }
 }

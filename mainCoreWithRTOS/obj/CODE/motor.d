@@ -1,5 +1,4 @@
-CODE/motor.o: ../CODE/motor.c ../CODE/motor.h \
- ../Libraries/seekfree_libraries/headfile.h \
+CODE/motor.o: ../CODE/motor.c ../Libraries/seekfree_libraries/headfile.h \
  ../Libraries/seekfree_libraries/common.h \
  ../Libraries/wch_libraries/Peripheral/ch32v10x.h \
  ../Libraries/wch_libraries/Core/core_riscv.h ../Libraries/board/board.h \
@@ -38,13 +37,13 @@ CODE/motor.o: ../CODE/motor.c ../CODE/motor.h \
  ../Libraries/seekfree_libraries/zf_systick.h \
  ../Libraries/seekfree_libraries/zf_uart.h \
  ../Libraries/seekfree_libraries/zf_pit.h \
- F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtthread.h \
- F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\bsp/rtconfig.h \
- F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdebug.h \
- F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdef.h \
- F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtservice.h \
- F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtm.h \
- F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\components\finsh/finsh_api.h \
+ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtthread.h \
+ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\bsp/rtconfig.h \
+ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdebug.h \
+ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdef.h \
+ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtservice.h \
+ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtm.h \
+ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\components\finsh/finsh_api.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_18TFT.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_FONT.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_ICM20602.h \
@@ -59,9 +58,9 @@ CODE/motor.o: ../CODE/motor.c ../CODE/motor.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_TSL1401.h \
  ../Libraries/seekfree_libraries/zf_gpio.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_ABSOLUTE_ENCODER.h \
- ../CODE/communication.h
-
-../CODE/motor.h:
+ ../CODE/communication.h ../CODE/pid.h ../CODE/value.h ../CODE/display.h \
+ ../CODE/timer_pit.h ../CODE/encoder.h ../CODE/buzzer.h ../CODE/button.h \
+ ../CODE/motor.h ../CODE/esp8266.h
 
 ../Libraries/seekfree_libraries/headfile.h:
 
@@ -143,19 +142,19 @@ CODE/motor.o: ../CODE/motor.c ../CODE/motor.h \
 
 ../Libraries/seekfree_libraries/zf_pit.h:
 
-F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtthread.h:
+F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtthread.h:
 
-F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\bsp/rtconfig.h:
+F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\bsp/rtconfig.h:
 
-F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdebug.h:
+F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdebug.h:
 
-F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdef.h:
+F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtdef.h:
 
-F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtservice.h:
+F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtservice.h:
 
-F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtm.h:
+F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\include/rtm.h:
 
-F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_libraries\components\finsh/finsh_api.h:
+F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\components\finsh/finsh_api.h:
 
 ../Libraries/seekfree_peripheral/SEEKFREE_18TFT.h:
 
@@ -186,3 +185,21 @@ F:\SCHOOL\文件\智能车\全向组\WchWorkSPace\mainCoreWithRTOS\Libraries\rtthread_li
 ../Libraries/seekfree_peripheral/SEEKFREE_ABSOLUTE_ENCODER.h:
 
 ../CODE/communication.h:
+
+../CODE/pid.h:
+
+../CODE/value.h:
+
+../CODE/display.h:
+
+../CODE/timer_pit.h:
+
+../CODE/encoder.h:
+
+../CODE/buzzer.h:
+
+../CODE/button.h:
+
+../CODE/motor.h:
+
+../CODE/esp8266.h:

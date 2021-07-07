@@ -13,6 +13,7 @@ void show_speed(void)
 }
 
 
+
 void display_entry(void *parameter)
 {
     //uint32 count=0;
@@ -26,9 +27,6 @@ void display_entry(void *parameter)
     }
     
 }
-
-
-
 
 
 void display_init(void)

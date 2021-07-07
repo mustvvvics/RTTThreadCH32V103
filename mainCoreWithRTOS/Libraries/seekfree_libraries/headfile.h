@@ -78,7 +78,16 @@
 #include "SEEKFREE_TSL1401.h"
 #include "SEEKFREE_ABSOLUTE_ENCODER.h"
 
+//用户头文件
 #include "communication.h"
-
+#include "pid.h"
+#include "value.h"
+#include "display.h"
+#include "timer_pit.h"
+#include "encoder.h"
+#include "buzzer.h"
+#include "button.h"
+#include "motor.h"
+#include "esp8266.h"
 
 #endif

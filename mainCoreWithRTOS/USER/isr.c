@@ -19,7 +19,6 @@
 
 
 #include "headfile.h"
-#include "encoder.h"
 
 
 
@@ -85,6 +84,8 @@ void EXTI1_IRQHandler(void)
 
     rt_interrupt_leave();   //ÍË³öÖĞ¶Ï
 }
+
+
 void EXTI2_IRQHandler(void)//************************************************±àÂëÆ÷****************************************
 {
     rt_interrupt_enter();    //½øÈëÖĞ¶Ï
@@ -93,10 +94,22 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
     {
         if(uart_flag == E_OK)                           //µÈ´ı½ÓÊÕÊı¾İ
         {
-            data_analysis(temp_buff);//Êı¾İ½âÎö
+            data_analysis(temp_buff);//Êı¾İ½âÎö Í¼ÏñºË±àÂëÆ÷  Æ«²îÊı¾İ
             uart_flag = E_START;
-            encoder_get();
+            encoder_get();//Ö÷ºË±àÂëÆ÷
         }
+
+        speed_conversion(0,0,0);
+
+
+        //µç»ú¿ØÖÆËÙ¶È»·
+        motor1_ctl(PID_Speed(Left_front,encoder_data[3],&motor1_pid));
+        motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+        motor4_ctl(PID_Speed(Right_rear,-encoder_data[1],&motor4_pid));
+        motor3_ctl(PID_Speed(Left_rear,-encoder_data[0],&motor3_pid));
+
+
+
         EXTI_ClearITPendingBit(EXTI_Line2);
     }
 
@@ -335,10 +348,12 @@ void TIM4_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
     rt_interrupt_enter();       //½øÈëÖĞ¶Ï
-
+    uint8 data_temp;
     if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
     {
         USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+        data_temp = (uint8)USART_ReceiveData(USART2);
+        esp8266_buf[esp8266_cnt++]=data_temp;
     }
 
     rt_interrupt_leave();       //ÍË³öÖĞ¶Ï

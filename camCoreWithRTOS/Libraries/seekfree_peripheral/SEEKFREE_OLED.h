@@ -49,7 +49,7 @@
 //定义显示方向
 //0 横屏模式
 //1 横屏模式  旋转180
-#define OLED_DISPLAY_DIR 0
+#define OLED_DISPLAY_DIR 1
 
 #if (0==OLED_DISPLAY_DIR || 1==OLED_DISPLAY_DIR)
 #define X_WIDTH         128

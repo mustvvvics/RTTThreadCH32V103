@@ -1,20 +1,16 @@
 #include "headfile.h"
-#include "encoder.h"
-#include "display.h"
-#include "button.h"
-#include "motor.h"
 
 void show_speed(void)
 {
     char txt[32]={0};
 
-    sprintf(txt,"left_front = %05d",encoder_data[1]);
+    sprintf(txt,"left_front = %05d",encoder_data[3]);
     ips114_showstr(0,0,txt);
-    sprintf(txt,"right_front = %05d",encoder_data[0]);
+    sprintf(txt,"right_front = %05d",encoder_data[2]);
     ips114_showstr(0,1,txt);
-    sprintf(txt,"left_rear = %05d",encoder_data[2]);
+    sprintf(txt,"left_rear = %05d",encoder_data[1]);
     ips114_showstr(0,2,txt);
-    sprintf(txt,"right_rear = %05d",encoder_data[3]);
+    sprintf(txt,"right_rear = %05d",encoder_data[0]);
     ips114_showstr(0,3,txt);
 }
 
@@ -22,18 +18,12 @@ int32 count=0;
 void display_entry(void *parameter)
 {
 
-    char txt[32]={0};
+//    char txt[32]={0};
 
     while(1)
     {
         //ips114_displayimage032(mt9v03x_image[0], MT9V03X_W, MT9V03X_H);
-        //show_speed();
-        //rt_sem_take(key3_sem, RT_WAITING_FOREVER);
-        motor1_ctl(count*250);
-        motor2_ctl(count*250);
-        sprintf(txt,"PWM = %05d",count*250);
-        ips114_showstr(0,4,txt);
-
+        show_speed();
     }
     
 }
