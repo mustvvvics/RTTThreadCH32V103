@@ -365,6 +365,7 @@ void USART2_IRQHandler(void)
         data_temp = (uint8)USART_ReceiveData(USART2);
         esp8266_buf[esp8266_cnt++]=data_temp;
         rt_sem_release(esp8266_sem);//释放信号量
+        rt_kprintf("rt_sem\n");
     }
 
     rt_interrupt_leave();       //退出中断

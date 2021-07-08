@@ -74,7 +74,7 @@ void Tcp_Decode(void)
 {
 
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
-    rt_kprintf("TCP in!\n");//打印到终端
+//    rt_kprintf("TCP in!\n");//打印到终端
 //    char txt[32];
     int32 Int2Float;
 //
@@ -138,7 +138,7 @@ void sendMessage(void) {
 void esp8266Entry(void *parameter)
 {
 
-//    rt_thread_mdelay(300);
+    rt_thread_mdelay(300);
     while(1)
     {
 //        rt_thread_mdelay(100);
@@ -158,10 +158,10 @@ void esp8266Init(void)
     //初始化
     Esp_Init();
 
-    esp8266_sem = rt_sem_create("esp8266_sem", 0, RT_IPC_FLAG_FIFO);
+    esp8266_sem = rt_sem_create("semEsp", 0, RT_IPC_FLAG_FIFO);
 
     //创建线程
-    tidEsp8266 = rt_thread_create("esp8266\n", esp8266Entry, RT_NULL, 1024, 2, 200);//倒数 心跳 优先级 stack_size
+    tidEsp8266 = rt_thread_create("Esp", esp8266Entry, RT_NULL, 1024, 2, 200);//倒数 心跳 优先级 stack_size
 
     //启动线程
     if(RT_NULL != tidEsp8266)

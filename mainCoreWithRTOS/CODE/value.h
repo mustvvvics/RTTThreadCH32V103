@@ -66,7 +66,7 @@ extern int32 total_z;
 //舵机输出占空比
 extern uint16 duty;
 //串口接收缓冲区
-extern uint8 esp8266_buf[64];
+extern uint8 esp8266_buf[512];
 //串口接收计数变量
 extern uint16 esp8266_cnt;
 //IP地址接收标志位
