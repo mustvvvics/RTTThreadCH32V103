@@ -72,8 +72,9 @@ void Esp_Init(void)
 
 void Tcp_Decode(void)
 {
-    if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
 
+    if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
+    rt_kprintf("TCP in!\n");//打印到终端
 //    char txt[32];
     int32 Int2Float;
 //
@@ -157,7 +158,7 @@ void esp8266Init(void)
     //初始化
     Esp_Init();
 
-    esp8266_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
+    esp8266_sem = rt_sem_create("esp8266_sem", 0, RT_IPC_FLAG_FIFO);
 
     //创建线程
     tidEsp8266 = rt_thread_create("esp8266\n", esp8266Entry, RT_NULL, 1024, 2, 200);//倒数 心跳 优先级 stack_size

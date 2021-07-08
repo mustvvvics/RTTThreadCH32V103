@@ -873,7 +873,7 @@ int finsh_system_init(void)
     }
     tid = rt_thread_create(FINSH_THREAD_NAME,
                            finsh_thread_entry, RT_NULL,
-                           FINSH_THREAD_STACK_SIZE, FINSH_THREAD_PRIORITY, 10);
+                           FINSH_THREAD_STACK_SIZE, FINSH_THREAD_PRIORITY, 10); //tshell in here
 #else
     shell = &_shell;
     tid = &finsh_thread;

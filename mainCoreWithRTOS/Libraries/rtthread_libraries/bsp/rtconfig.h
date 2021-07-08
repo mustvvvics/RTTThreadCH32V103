@@ -137,7 +137,7 @@
     //  <i>the priority of finsh thread
     //  <i>Default: 6
     #define __FINSH_THREAD_PRIORITY     5
-    #define FINSH_THREAD_PRIORITY       (RT_THREAD_PRIORITY_MAX / 8 * __FINSH_THREAD_PRIORITY - 1)// 原6 现5
+    #define FINSH_THREAD_PRIORITY       (RT_THREAD_PRIORITY_MAX / 8 * __FINSH_THREAD_PRIORITY )// 原6 现5
     // <o>the stack of finsh thread <1-4096>
     //  <i>the stack of finsh thread
     //  <i>Default: 4096  (4096Byte)
