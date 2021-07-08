@@ -73,8 +73,8 @@ void Tcp_Decode(void)
 
     //预留指令 低电量报警 接收到上位机控制指令 回传Hungry
 
-    char txt[32];
-    int32 Int2Float;
+//    char txt[32];
+//    int32 Int2Float;
 
 
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
