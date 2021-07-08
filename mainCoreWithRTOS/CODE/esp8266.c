@@ -74,11 +74,11 @@ void Tcp_Decode(void)
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
 
 //    char txt[32];
-//    int32 Int2Float;
+    int32 Int2Float;
 //    rt_kprintf("TCP in!\n");//打印到终端
 
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
-    {   rt_kprintf("TCP Init Ok!\n");
+    {
         ips114_showstr(0,6,"TCP Init Ok");
         uart_putstr(UART_2,"#0005init\n");
     }
@@ -88,29 +88,49 @@ void Tcp_Decode(void)
 //        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y);
 //        uart_putstr(UART_2,"#0016received_speed!\n");
 //        sprintf(txt,"Speed:%05d",expected_y);
-//        ips114_showstr(0,4,txt);
+//        ips114_showstr(0,5,txt);
 //    }
-//    //Turn_Kp:6026/n
-//    else if(esp8266_buf[6] == 'p' && esp8266_buf[0] == 'T')
-//    {
-//        sscanf(esp8266_buf,"Turn_Kp:%d\n",&Int2Float);
-//        uart_putstr(UART_2,"#0013received_Kp!\n");
-//        yaw_pid.Kp=(float)Int2Float*0.001f;
-//        oled_printf_float(0,5,yaw_pid.Kp,3,3);
-//    }
-//    //Turn_Kd:19775/n
-//    else if(esp8266_buf[6] == 'd' && esp8266_buf[0] == 'T')
-//    {
-//        sscanf(esp8266_buf,"Turn_Kd:%d\n",&Int2Float);
-//        uart_putstr(UART_2,"#0013received_Kd!\n");
-//        yaw_pid.Kd=(float)Int2Float*0.001f;
-//        oled_printf_float(0,6,yaw_pid.Kd,3,3);
-//    }
+    //Turn_Kp:6026/n
+    else if(esp8266_buf[6] == 'p' && esp8266_buf[0] == 'T')
+    {
+        sscanf(esp8266_buf,"Turn_Kp:%d\n",&Int2Float);
+        uart_putstr(UART_2,"#0013received_Kp!\n");
+        yaw_w_pid.Kp=(float)Int2Float*0.001f;
+        ips114_showfloat(0,5,yaw_pid.Kp,3,3);
+    }
+    //Turn_Kd:19775/n yaw_w_pid.Ki
+    else if(esp8266_buf[6] == 'i' && esp8266_buf[0] == 'T')
+    {
+        sscanf(esp8266_buf,"Turn_Ki:%d\n",&Int2Float);
+        uart_putstr(UART_2,"#0013received_Kp!\n");
+        yaw_w_pid.Ki=(float)Int2Float*0.001f;
+        ips114_showfloat(0,6,yaw_pid.Kp,3,3);
+    }
+
+    else if(esp8266_buf[6] == 'd' && esp8266_buf[0] == 'T')
+    {
+        sscanf(esp8266_buf,"Turn_Kd:%d\n",&Int2Float);
+        uart_putstr(UART_2,"#0013received_Kd!\n");
+        yaw_pid.Kd=(float)Int2Float*0.001f;
+        ips114_showfloat(0,7,yaw_pid.Kd,3,3);
+    }
 
 
     ESP8266_Clear();
 }
 
+const char* message0 = ",";
+const char* message1 = "\n";
+void sendMessage(void) {
+//发送两个数据曲线进行分析
+    char txtA[6];
+    sprintf(txtA,"%04d",expected_omega);
+    uart_putstr(UART_2,txtA);
+    uart_putstr(UART_2,message0);
+    sprintf(txtA,"%04d",g_fGyroAngleSpeed_z);
+    uart_putstr(UART_2,txtA);
+    uart_putstr(UART_2,message1);
+}
 //void esp8266Entry(void *parameter)
 //{
 //    uint32 espData;

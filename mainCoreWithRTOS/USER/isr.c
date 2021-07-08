@@ -107,8 +107,8 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
 //        else {
 //            speed_conversion(0,0,0);
 //        }
-        speed_conversion(0,0,0);
-//        speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+//        speed_conversion(0,0,0);
+        speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
         //µç»ú¿ØÖÆËÙ¶È»·
         motor1_ctl(PID_Speed(Left_front,encoder_data[3] / 2,&motor1_pid));
         motor2_ctl(PID_Speed(Right_front,-encoder_data[2] / 2,&motor2_pid));

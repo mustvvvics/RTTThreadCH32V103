@@ -28,8 +28,8 @@ float S_D=45;
 
 //角速度环参数
 float yaw_w_P=1;
-float yaw_w_I=0.06;//0.01
-float yaw_w_D=0.26;//0.15
+float yaw_w_I=0.01;//0.06;//0.01
+float yaw_w_D=0.15;//0.26;//0.15
 
 //待整定 转向环参数
 float yaw_P=4;//2.9->50;

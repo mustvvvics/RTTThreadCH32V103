@@ -18,6 +18,7 @@ void Esp_Init(void);
 void ESP8266_Clear(void);
 void Esp_IP_Get(uint8 data_temp);
 void Tcp_Decode(void);
+void sendMessage(void);
 //void esp8266Init(void);
 
 #endif /* CODE_ESP8266_H_ */
