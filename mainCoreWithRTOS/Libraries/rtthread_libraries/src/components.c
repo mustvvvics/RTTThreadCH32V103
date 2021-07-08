@@ -195,7 +195,8 @@ void rt_application_init(void)
 
 #ifdef RT_USING_HEAP
     tid = rt_thread_create("main", main_thread_entry, RT_NULL,
-                           RT_MAIN_THREAD_STACK_SIZE, RT_MAIN_THREAD_PRIORITY, 20);
+                           RT_MAIN_THREAD_STACK_SIZE, 3, 20);
+    //main   RT_MAIN_THREAD_STACK_SIZE, RT_MAIN_THREAD_PRIORITY,  20
     RT_ASSERT(tid != RT_NULL);
 #else
     rt_err_t result;
@@ -236,7 +237,7 @@ int rtthread_startup(void)
 #endif
 
     /* create init_thread */
-    rt_application_init();
+    rt_application_init(); //main in here
 
     /* timer thread initialization */
     rt_system_timer_thread_init();

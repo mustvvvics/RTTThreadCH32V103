@@ -107,8 +107,8 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
 //        else {
 //            speed_conversion(0,0,0);
 //        }
-//        speed_conversion(0,20,0);
-        speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+        speed_conversion(0,0,0);
+//        speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
         //µç»ú¿ØÖÆËÙ¶È»·
         motor1_ctl(PID_Speed(Left_front,encoder_data[3] / 2,&motor1_pid));
         motor2_ctl(PID_Speed(Right_front,-encoder_data[2] / 2,&motor2_pid));
@@ -364,10 +364,7 @@ void USART2_IRQHandler(void)
         USART_ClearITPendingBit(USART2, USART_IT_RXNE);
         data_temp = (uint8)USART_ReceiveData(USART2);
         esp8266_buf[esp8266_cnt++]=data_temp;
-//        if (esp8266_buf[esp8266_cnt-1] == 0x0A) { //·¢ËÍÐÅºÅÁ¿ ¿ªÆô½âÂë
-//        rt_mb_send(esp8266Mailbox, 1);
-//        }
-
+        rt_sem_release(esp8266_sem);//ÊÍ·ÅÐÅºÅÁ¿
     }
 
     rt_interrupt_leave();       //ÍË³öÖÐ¶Ï

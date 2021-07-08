@@ -41,7 +41,7 @@ void display_init(void)
     //初始化屏幕
     ips114_init();
     
-    //创建显示线程 优先级设置为6 
+    //创建显示线程 优先级设置为5
     tid1 = rt_thread_create("display", display_entry, RT_NULL, 1024, 5, 50);
     
     //启动显示线程

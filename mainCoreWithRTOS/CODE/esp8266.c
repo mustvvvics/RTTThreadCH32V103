@@ -6,7 +6,8 @@
  */
 #include "headfile.h"
 
-rt_mailbox_t esp8266Mailbox;
+rt_sem_t esp8266_sem;
+
 //接线顺序
 //C12 - WiFi-RST
 //C11 - WiFi-TX
@@ -75,12 +76,13 @@ void Tcp_Decode(void)
 
 //    char txt[32];
     int32 Int2Float;
-//    rt_kprintf("TCP in!\n");//打印到终端
+//
 
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
     {
         ips114_showstr(0,6,"TCP Init Ok");
         uart_putstr(UART_2,"#0005init\n");
+//        rt_kprintf("TCP in!\n");//打印到终端
     }
 
 //    else if(esp8266_buf[4] == 'S' && esp8266_buf[0] == 'C')
@@ -131,35 +133,39 @@ void sendMessage(void) {
     uart_putstr(UART_2,txtA);
     uart_putstr(UART_2,message1);
 }
-//void esp8266Entry(void *parameter)
-//{
-//    uint32 espData;
-//    while(1)
-//    {
-//        //接收邮箱数据，如果没有数据则持续等待并释放CPU控制权
-//        rt_mb_recv(esp8266Mailbox, &espData, RT_WAITING_FOREVER); //
-//        Tcp_Decode();
-//
-//    }
-//}
-//
-//
-//void esp8266Init(void)
-//{
-//    rt_thread_t tidEsp8266;
-//
-//    //初始化
-//    Esp_Init();
-//    //创建邮箱
-//    esp8266Mailbox = rt_mb_create("esp8266", 5, RT_IPC_FLAG_FIFO);//邮箱名 大小 flag
-//
-//    //创建线程
-//    tidEsp8266 = rt_thread_create("esp8266", esp8266Entry, RT_NULL, 1024, 6, 50);//倒数 心跳 优先级 stack_size
-//
-//    //启动线程
-//    if(RT_NULL != tidEsp8266)
-//    {
-//        rt_thread_startup(tidEsp8266);
-//
-//    }
-//}
+
+void esp8266Entry(void *parameter)
+{
+
+//    rt_thread_mdelay(300);
+    while(1)
+    {
+//        rt_thread_mdelay(100);
+        rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
+        Tcp_Decode();
+
+//        rt_kprintf("8266\n");
+
+    }
+}
+
+
+void esp8266Init(void)
+{
+    rt_thread_t tidEsp8266;
+
+    //初始化
+    Esp_Init();
+
+    esp8266_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
+
+    //创建线程
+    tidEsp8266 = rt_thread_create("esp8266\n", esp8266Entry, RT_NULL, 1024, 2, 200);//倒数 心跳 优先级 stack_size
+
+    //启动线程
+    if(RT_NULL != tidEsp8266)
+    {
+        rt_thread_startup(tidEsp8266);
+        rt_kprintf("8266_startup\n");
+    }
+}

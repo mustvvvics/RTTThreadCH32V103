@@ -31,9 +31,10 @@ int main(void)
     //camera_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
     //mt9v03x_init();
 
-//    esp8266Init();
+//
     icm20602_init_spi();
-    Esp_Init();
+//    Esp_Init();
+
     PID_Init();
     display_init();
     encoder_init();
@@ -50,6 +51,8 @@ int main(void)
     //LED灯初始化
 //    gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG); //icm20602 时不能使用
 
+    esp8266Init();
+
     //双核通信放最后
 
     //串口3初始化
@@ -64,9 +67,9 @@ int main(void)
 //    ips114_showstr(0, 6, "Master Init OK!");
     while(1)
     {
-        rt_thread_mdelay(300);//new delay
+        rt_thread_mdelay(10);//new delay
 //        gpio_toggle(B15);
-        Tcp_Decode();
-        sendMessage();
+//        Tcp_Decode();
+//        sendMessage();
     }
 }
