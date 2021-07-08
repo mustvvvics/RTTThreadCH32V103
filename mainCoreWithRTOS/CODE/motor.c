@@ -83,6 +83,6 @@ void motor4_ctl(int32 speed4_power)
 void speed_conversion(double Vx, double Vy, int Vz) {
     Left_front= (int)(+Vx + Vy - Vz * 0.18);
     Right_front = (int)(-Vx + Vy + Vz * 0.18);
-    Right_rear = (int)(+Vx + Vy + Vz * 0.18);
-    Left_rear = (int)(-Vx + Vy - Vz * 0.18);
+    Right_rear = (int)(+Vx + Vy - Vz * 0.18);
+    Left_rear = (int)(-Vx + Vy + Vz * 0.18);
 }

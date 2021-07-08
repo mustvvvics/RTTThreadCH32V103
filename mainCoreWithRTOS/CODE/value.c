@@ -13,7 +13,7 @@ int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 int16 position_front;
 
 //期望直线速度和角速度
-int16 expected_omega=0;
+int16 expected_omega=30;
 int16 expected_y=0;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
 int16 manual_y=0;
 int16 manual_z=0;
@@ -28,8 +28,8 @@ float S_D=45;
 
 //角速度环参数
 float yaw_w_P=1;
-float yaw_w_I=0.01;//0.06;//0.01
-float yaw_w_D=0.15;//0.26;//0.15
+float yaw_w_I=0.01;//0.06;//  0.02
+float yaw_w_D=0.15;//0.26;//0.15   0
 
 //待整定 转向环参数
 float yaw_P=4;//2.9->50;

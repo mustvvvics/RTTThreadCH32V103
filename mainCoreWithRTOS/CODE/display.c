@@ -4,13 +4,13 @@ void show_speed(void)
 {
     char txt[32]={0};
 
-    sprintf(txt,"left_front = %05d",encoder_data[3]);
+    sprintf(txt,"left_front = %05d",-encoder_data[3]);
     ips114_showstr(0,0,txt);
     sprintf(txt,"right_front = %05d",encoder_data[2]);
     ips114_showstr(0,1,txt);
     sprintf(txt,"left_rear = %05d",encoder_data[1]);
     ips114_showstr(0,2,txt);
-    sprintf(txt,"right_rear = %05d",encoder_data[0]);
+    sprintf(txt,"right_rear = %05d",-encoder_data[0]);
     ips114_showstr(0,3,txt);
     sprintf(txt,"Angle = %05d",g_fGyroAngleSpeed_z);
     ips114_showstr(0,4,txt);

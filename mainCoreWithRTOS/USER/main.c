@@ -64,7 +64,7 @@ int main(void)
 //    ips114_showstr(0, 6, "Master Init OK!");
     while(1)
     {
-        rt_thread_mdelay(10);//new delay
+        rt_thread_mdelay(300);//new delay
 //        gpio_toggle(B15);
         Tcp_Decode();
         sendMessage();
