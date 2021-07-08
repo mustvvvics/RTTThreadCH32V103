@@ -75,7 +75,7 @@ void Tcp_Decode(void)
 
 //    char txt[32];
 //    int32 Int2Float;
-    rt_kprintf("TCP in!\n");
+//    rt_kprintf("TCP in!\n");//打印到终端
 
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
     {   rt_kprintf("TCP Init Ok!\n");

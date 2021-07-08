@@ -1,4 +1,4 @@
-CODE/display.o: ../CODE/display.c \
+CODE/filter.o: ../CODE/filter.c \
  ../Libraries/seekfree_libraries/headfile.h \
  ../Libraries/seekfree_libraries/common.h \
  ../Libraries/wch_libraries/Peripheral/ch32v10x.h \

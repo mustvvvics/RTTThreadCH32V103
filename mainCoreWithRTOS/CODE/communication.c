@@ -40,7 +40,7 @@ void get_slave_data(uint8 data)
     }
 }
 
-int16 position_front;
+
 void data_analysis(uint8 *line)
 {
     if(line[1] == 0xB0)    encoder_data[2] = ((int16)line[2] << 8) | line[3];

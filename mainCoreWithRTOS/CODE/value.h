@@ -13,6 +13,7 @@
 extern uint16 fivems_tick;
 extern uint16 fives_tick;
 extern int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
+extern int16 position_front;
 
 extern uint8 car_flag;
 

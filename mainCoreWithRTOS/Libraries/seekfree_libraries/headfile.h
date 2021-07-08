@@ -82,6 +82,7 @@
 #include "communication.h"
 #include "pid.h"
 #include "value.h"
+#include "filter.h"
 #include "display.h"
 #include "timer_pit.h"
 #include "encoder.h"
@@ -89,5 +90,6 @@
 #include "button.h"
 #include "motor.h"
 #include "esp8266.h"
+
 
 #endif

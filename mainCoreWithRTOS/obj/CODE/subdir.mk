@@ -10,6 +10,7 @@ C_SRCS += \
 ../CODE/display.c \
 ../CODE/encoder.c \
 ../CODE/esp8266.c \
+../CODE/filter.c \
 ../CODE/motor.c \
 ../CODE/pid.c \
 ../CODE/timer_pit.c \
@@ -22,6 +23,7 @@ OBJS += \
 ./CODE/display.o \
 ./CODE/encoder.o \
 ./CODE/esp8266.o \
+./CODE/filter.o \
 ./CODE/motor.o \
 ./CODE/pid.o \
 ./CODE/timer_pit.o \
@@ -34,6 +36,7 @@ C_DEPS += \
 ./CODE/display.d \
 ./CODE/encoder.d \
 ./CODE/esp8266.d \
+./CODE/filter.d \
 ./CODE/motor.d \
 ./CODE/pid.d \
 ./CODE/timer_pit.d \

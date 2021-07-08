@@ -12,6 +12,10 @@ void show_speed(void)
     ips114_showstr(0,2,txt);
     sprintf(txt,"right_rear = %05d",encoder_data[0]);
     ips114_showstr(0,3,txt);
+    sprintf(txt,"Angle = %05d",g_fGyroAngleSpeed_z);
+    ips114_showstr(0,4,txt);
+//    ips114_showint16(0, 5, icm_gyro_x);
+
 }
 
 int32 count=0;

@@ -30,8 +30,9 @@ int main(void)
     //uint16 duty;
     //camera_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
     //mt9v03x_init();
-    //icm20602_init_spi();
+
 //    esp8266Init();
+    icm20602_init_spi();
     Esp_Init();
     PID_Init();
     display_init();
@@ -47,7 +48,7 @@ int main(void)
     pwm_init(PWM1_CH1_A8, 50, 650);//舵机 TIMER1
 
     //LED灯初始化
-    gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
+//    gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG); //icm20602 时不能使用
 
     //双核通信放最后
 
@@ -64,7 +65,7 @@ int main(void)
     while(1)
     {
         rt_thread_mdelay(300);//new delay
-        gpio_toggle(B15);
+//        gpio_toggle(B15);
         Tcp_Decode();
     }
 }

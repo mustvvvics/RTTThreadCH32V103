@@ -61,9 +61,9 @@ Libraries/seekfree_peripheral/SEEKFREE_ABSOLUTE_ENCODER.o: \
  ../Libraries/seekfree_peripheral/SEEKFREE_TSL1401.h \
  ../Libraries/seekfree_libraries/zf_gpio.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_ABSOLUTE_ENCODER.h \
- ../CODE/communication.h ../CODE/pid.h ../CODE/value.h ../CODE/display.h \
- ../CODE/timer_pit.h ../CODE/encoder.h ../CODE/buzzer.h ../CODE/button.h \
- ../CODE/motor.h ../CODE/esp8266.h \
+ ../CODE/communication.h ../CODE/pid.h ../CODE/value.h ../CODE/filter.h \
+ ../CODE/display.h ../CODE/timer_pit.h ../CODE/encoder.h ../CODE/buzzer.h \
+ ../CODE/button.h ../CODE/motor.h ../CODE/esp8266.h \
  ../Libraries/seekfree_libraries/zf_systick.h
 
 ../Libraries/seekfree_peripheral/SEEKFREE_ABSOLUTE_ENCODER.h:
@@ -195,6 +195,8 @@ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthre
 ../CODE/pid.h:
 
 ../CODE/value.h:
+
+../CODE/filter.h:
 
 ../CODE/display.h:
 
