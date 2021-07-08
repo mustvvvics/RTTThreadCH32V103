@@ -1,6 +1,5 @@
 #include "headfile.h"
 
-
 void motor_init(void)
 {
     //初始化电机PWM引脚和方向引脚
@@ -22,7 +21,6 @@ void motor_init(void)
 //{
 //
 //}
-
 
 void motor1_ctl(int32 speed1_power)
 {
@@ -80,7 +78,6 @@ void motor4_ctl(int32 speed4_power)
         pwm_duty(MOTOR4_B, -speed4_power);
     }
 }
-
 
 //速度解算
 void speed_conversion(double Vx, double Vy, int Vz) {

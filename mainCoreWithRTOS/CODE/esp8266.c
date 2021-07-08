@@ -6,10 +6,12 @@
  */
 #include "headfile.h"
 
+rt_mailbox_t esp8266Mailbox;
 //接线顺序
 //C12 - WiFi-RST
 //C11 - WiFi-TX
 //C10 - WiFi-RX
+
 
 void ESP8266_Clear(void)
 {
@@ -50,7 +52,7 @@ void Esp_IP_Get(uint8 data_temp)
 
 void Esp_Init(void)
 {
-    //初始化串口3
+    //初始化串口2
     uart_init(UART_2,921600,UART2_TX_A2,UART2_RX_A3);//    UART2_TX_A2 = 0x10,     UART2_RX_A3,    //默认引脚
 
     //使能串口接收中断
@@ -65,20 +67,21 @@ void Esp_Init(void)
 
     //ESP8266_Clear();
 }
-uint8 run_mode=0;
-//命令范例：ch.laTh.110\n
+
+
 void Tcp_Decode(void)
 {
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
 
-    //预留指令 低电量报警 接收到上位机控制指令 回传Hungry
-
 //    char txt[32];
 //    int32 Int2Float;
-
+    rt_kprintf("TCP in!\n");
 
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
-    {ips114_showstr(0,6,"TCP Init Ok");uart_putstr(UART_2,"#0005init\n");}
+    {   rt_kprintf("TCP Init Ok!\n");
+        ips114_showstr(0,6,"TCP Init Ok");
+        uart_putstr(UART_2,"#0005init\n");
+    }
 
 //    else if(esp8266_buf[4] == 'S' && esp8266_buf[0] == 'C')
 //    {
@@ -108,7 +111,35 @@ void Tcp_Decode(void)
     ESP8266_Clear();
 }
 
-
-
-
-
+//void esp8266Entry(void *parameter)
+//{
+//    uint32 espData;
+//    while(1)
+//    {
+//        //接收邮箱数据，如果没有数据则持续等待并释放CPU控制权
+//        rt_mb_recv(esp8266Mailbox, &espData, RT_WAITING_FOREVER); //
+//        Tcp_Decode();
+//
+//    }
+//}
+//
+//
+//void esp8266Init(void)
+//{
+//    rt_thread_t tidEsp8266;
+//
+//    //初始化
+//    Esp_Init();
+//    //创建邮箱
+//    esp8266Mailbox = rt_mb_create("esp8266", 5, RT_IPC_FLAG_FIFO);//邮箱名 大小 flag
+//
+//    //创建线程
+//    tidEsp8266 = rt_thread_create("esp8266", esp8266Entry, RT_NULL, 1024, 6, 50);//倒数 心跳 优先级 stack_size
+//
+//    //启动线程
+//    if(RT_NULL != tidEsp8266)
+//    {
+//        rt_thread_startup(tidEsp8266);
+//
+//    }
+//}

@@ -89,8 +89,7 @@ void EXTI1_IRQHandler(void)
 void EXTI2_IRQHandler(void)//************************************************±àÂëÆ÷****************************************
 {
     rt_interrupt_enter();    //½øÈëÖÐ¶Ï
-    static uint32 timeControl;
-    timeControl++;
+
     if(SET == EXTI_GetITStatus(EXTI_Line2))
     {
         if(uart_flag == E_OK)                           //µÈ´ý½ÓÊÕÊý¾Ý
@@ -101,14 +100,13 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
         }
 
         speed_conversion(0,0,0);
-        if (timeControl >= 2) {
-            timeControl = 0;
-            //µç»ú¿ØÖÆËÙ¶È»·
-            motor1_ctl(PID_Speed(Left_front,(int16)(encoder_data[3] / 2),&motor1_pid));
-            motor2_ctl(PID_Speed(Right_front,-(int16)(encoder_data[2] / 2),&motor2_pid));
-            motor4_ctl(PID_Speed(Right_rear,-encoder_data[1],&motor4_pid));
-            motor3_ctl(PID_Speed(Left_rear,-encoder_data[0],&motor3_pid));
-        }
+
+        //µç»ú¿ØÖÆËÙ¶È»·
+        motor1_ctl(PID_Speed(Left_front,(int16)(encoder_data[3] / 2),&motor1_pid));
+        motor2_ctl(PID_Speed(Right_front,-(int16)(encoder_data[2] / 2),&motor2_pid));
+        motor4_ctl(PID_Speed(Right_rear,-encoder_data[1],&motor4_pid));
+        motor3_ctl(PID_Speed(Left_rear,-encoder_data[0],&motor3_pid));
+
 
 
 
@@ -352,12 +350,16 @@ void TIM4_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
     rt_interrupt_enter();       //½øÈëÖÐ¶Ï
-//    uint8 data_temp;
+    uint8 data_temp;
     if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
     {
-//        USART_ClearITPendingBit(USART2, USART_IT_RXNE);
-//        data_temp = (uint8)USART_ReceiveData(USART2);
-//        esp8266_buf[esp8266_cnt++]=data_temp;
+        USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+        data_temp = (uint8)USART_ReceiveData(USART2);
+        esp8266_buf[esp8266_cnt++]=data_temp;
+//        if (esp8266_buf[esp8266_cnt-1] == 0x0A) { //·¢ËÍÐÅºÅÁ¿ ¿ªÆô½âÂë
+//        rt_mb_send(esp8266Mailbox, 1);
+//        }
+
     }
 
     rt_interrupt_leave();       //ÍË³öÖÐ¶Ï
@@ -372,7 +374,7 @@ void USART3_IRQHandler(void)/***************************************************
     //Çå³ýÖÐ¶Ï±êÖ¾Î»
     if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
     {
-        USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+        USART_ClearITPendingBit(USART3, USART_IT_RXNE);
         dat = USART_ReceiveData(USART3);                //»ñÈ¡´®¿ÚÊý¾Ý
         get_slave_data(dat);                            //½«Ã¿Ò»¸ö×Ö½ÚµÄ´®¿ÚÊý¾Ý´æÈëtemp_buffÖÐ¡£
     }

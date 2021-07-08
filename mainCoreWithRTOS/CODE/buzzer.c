@@ -16,6 +16,7 @@ void buzzer_entry(void *parameter)
         gpio_set(BUZZER_PIN, 1);    //打开蜂鸣器
         rt_thread_mdelay(mb_data);  //延时
         gpio_set(BUZZER_PIN, 0);    //关闭蜂鸣器
+
     }
 }
 
@@ -29,7 +30,7 @@ void buzzer_init(void)
     
     //初始化蜂鸣器所使用的GPIO
     gpio_init(BUZZER_PIN, GPO, 0, GPIO_PIN_CONFIG);
-    
+
     //创建邮箱
     buzzer_mailbox = rt_mb_create("buzzer", 5, RT_IPC_FLAG_FIFO);
     
@@ -40,5 +41,6 @@ void buzzer_init(void)
     if(RT_NULL != tidBuzzer)
     {
         rt_thread_startup(tidBuzzer);
+
     }
 }

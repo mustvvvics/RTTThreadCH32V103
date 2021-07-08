@@ -31,13 +31,15 @@ int main(void)
     //camera_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
     //mt9v03x_init();
     //icm20602_init_spi();
+//    esp8266Init();
+    Esp_Init();
     PID_Init();
     display_init();
     encoder_init();
-    buzzer_init();
     button_init();
     motor_init();
-//    Esp_Init();
+//    buzzer_init();
+
     //elec_init();电感初始化
     //timer_pit_init();
 
@@ -63,6 +65,6 @@ int main(void)
     {
         rt_thread_mdelay(300);//new delay
         gpio_toggle(B15);
-//        Tcp_Decode();
+        Tcp_Decode();
     }
 }
