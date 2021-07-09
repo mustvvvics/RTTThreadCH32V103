@@ -1,5 +1,4 @@
-#include "timer_pit.h"
-#include "communication.h"
+#include "headfile.h"
 
 void timer1_pit_entry(void *parameter)
 {
@@ -10,8 +9,7 @@ void timer1_pit_entry(void *parameter)
     uart_putbuff(UART_3, temp_buff, LINE_LEN);  //通过串口3将数据发送出去。
     GPIO_PIN_SET(B12);
     GPIO_PIN_RESET(B12);                         //A0引脚拉低
-    //将图像计算出来的车身位置与电磁信号计算出的车身位置进行融合得到更好数据
-    //然后进行车模控制
+
 
 }
 
@@ -21,7 +19,7 @@ void timer_pit_init(void)
     rt_timer_t timer;
     
     //创建一个定时器 周期运行
-    timer = rt_timer_create("timer1", timer1_pit_entry, RT_NULL, 5, RT_TIMER_FLAG_PERIODIC);
+    timer = rt_timer_create("timer1", timer1_pit_entry, RT_NULL, 4, RT_TIMER_FLAG_PERIODIC);
     
     //启动定时器
     if(RT_NULL != timer)

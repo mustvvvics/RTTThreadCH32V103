@@ -78,5 +78,13 @@
 #include "SEEKFREE_WIRELESS.h"
 #include "SEEKFREE_TSL1401.h"
 #include "SEEKFREE_ABSOLUTE_ENCODER.h"
+//
+#include "communication.h"
+#include "display.h"
+#include "laneAnalyze.h"
+#include "laneCommon.h"
+#include "timer_pit.h"
+#include "value.h"
+#include "esp8266Cam.h"
 
 #endif

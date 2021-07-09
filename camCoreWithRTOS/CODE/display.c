@@ -1,6 +1,5 @@
 #include "headfile.h"
-#include "display.h"
-#include "communication.h"
+
 
 void show_speed(void)
 {
@@ -10,6 +9,8 @@ void show_speed(void)
     oled_p6x8str(0, 2, txt);
     sprintf(txt,"right_rear = %05d",encoder_left_rear);
     oled_p6x8str(0, 3, txt);
+    sprintf(txt,"cameraError = %05d",cameraError);
+    oled_p6x8str(0, 4, txt);
 }
 
 
@@ -37,7 +38,7 @@ void display_init(void)
     oled_init();
     
     //创建显示线程 优先级设置为6 
-    tid1 = rt_thread_create("display", display_entry, RT_NULL, 1024, 6, 50);
+    tid1 = rt_thread_create("display", display_entry, RT_NULL, 1024, 5, 50);
     
     //启动显示线程
     if(RT_NULL != tid1)

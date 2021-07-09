@@ -59,8 +59,9 @@ USER/main.o: ../USER/main.c ../Libraries/seekfree_libraries/headfile.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_TSL1401.h \
  ../Libraries/seekfree_libraries/zf_gpio.h \
  ../Libraries/seekfree_peripheral/SEEKFREE_ABSOLUTE_ENCODER.h \
- ../CODE/display.h ../CODE/timer_pit.h ../CODE/buzzer.h \
- ../CODE/communication.h
+ ../CODE/communication.h ../CODE/display.h ../CODE/laneAnalyze.h \
+ ../CODE/laneCommon.h ../CODE/timer_pit.h ../CODE/value.h \
+ ../CODE/esp8266Cam.h
 
 ../Libraries/seekfree_libraries/headfile.h:
 
@@ -186,10 +187,16 @@ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\camCoreWithRTOS\Libraries\rtthrea
 
 ../Libraries/seekfree_peripheral/SEEKFREE_ABSOLUTE_ENCODER.h:
 
+../CODE/communication.h:
+
 ../CODE/display.h:
+
+../CODE/laneAnalyze.h:
+
+../CODE/laneCommon.h:
 
 ../CODE/timer_pit.h:
 
-../CODE/buzzer.h:
+../CODE/value.h:
 
-../CODE/communication.h:
+../CODE/esp8266Cam.h:

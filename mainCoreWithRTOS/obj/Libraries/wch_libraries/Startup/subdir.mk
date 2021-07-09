@@ -15,6 +15,6 @@ S_UPPER_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 Libraries/wch_libraries/Startup/%.o: ../Libraries/wch_libraries/Startup/%.S
-	@	@	riscv-none-embed-gcc -march=rv32imac -mabi=ilp32 -msmall-data-limit=8 -mno-save-restore -O1 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -x assembler-with-cpp -I"../Libraries/wch_libraries/Startup" -I"E:\onedrive\OneDrive - stu.cqupt.edu.cn\Desktop\rt\mainCoreWithRTOS\Libraries\rtthread_libraries\bsp" -I"E:\onedrive\OneDrive - stu.cqupt.edu.cn\Desktop\rt\mainCoreWithRTOS\Libraries\rtthread_libraries\libcpu" -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+	@	@	riscv-none-embed-gcc -march=rv32imac -mabi=ilp32 -msmall-data-limit=8 -mno-save-restore -O1 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized  -g -x assembler-with-cpp -I"../Libraries/wch_libraries/Startup" -I"F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\bsp" -I"F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\Libraries\rtthread_libraries\libcpu" -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@	@
 

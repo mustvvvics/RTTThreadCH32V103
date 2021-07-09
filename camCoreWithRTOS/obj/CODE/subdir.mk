@@ -4,22 +4,31 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../CODE/buzzer.c \
 ../CODE/communication.c \
 ../CODE/display.c \
-../CODE/timer_pit.c 
+../CODE/esp8266Cam.c \
+../CODE/laneAnalyze.c \
+../CODE/laneCommon.c \
+../CODE/timer_pit.c \
+../CODE/value.c 
 
 OBJS += \
-./CODE/buzzer.o \
 ./CODE/communication.o \
 ./CODE/display.o \
-./CODE/timer_pit.o 
+./CODE/esp8266Cam.o \
+./CODE/laneAnalyze.o \
+./CODE/laneCommon.o \
+./CODE/timer_pit.o \
+./CODE/value.o 
 
 C_DEPS += \
-./CODE/buzzer.d \
 ./CODE/communication.d \
 ./CODE/display.d \
-./CODE/timer_pit.d 
+./CODE/esp8266Cam.d \
+./CODE/laneAnalyze.d \
+./CODE/laneCommon.d \
+./CODE/timer_pit.d \
+./CODE/value.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

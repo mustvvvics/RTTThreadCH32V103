@@ -14,6 +14,8 @@ void show_speed(void)
     ips114_showstr(0,3,txt);
     sprintf(txt,"Angle = %05d",g_fGyroAngleSpeed_z);
     ips114_showstr(0,4,txt);
+    sprintf(txt,"ERROR = %05d",position_front);
+    ips114_showstr(0,5,txt);
 //    ips114_showint16(0, 5, icm_gyro_x);
 
 }

@@ -20,37 +20,6 @@ void ESP8266_Clear(void)
     esp8266_cnt = 0;
 }
 
-//void Esp_IP_Get(uint8 data_temp)
-//{
-//    static uint8 IP_Start=0;
-//    static uint8 IP_REC=0;
-//    if(IP_REC)
-//    {
-//        esp8266_buf[esp8266_cnt++]=data_temp;
-//    }
-//    else
-//    {
-//        if(data_temp == ':')IP_Start=1;
-//
-//        if(data_temp >= '0' && data_temp <='9' && IP_Start == 1)
-//        {
-//            esp8266_buf[esp8266_cnt++]=data_temp;
-//        }
-//        else if(data_temp == '.'&& IP_Start == 1)
-//        {
-//            esp8266_buf[esp8266_cnt++]=data_temp;
-//        }
-//        else if(data_temp == 0x0A&& IP_Start == 1)
-//        {
-//            oled_p6x8str(0, 0, esp8266_buf);
-//            IP_REC=1;
-//            IP_Start_Rec=1;
-//            ESP8266_Clear();
-//        }
-//    }
-//
-//}
-
 void Esp_Init(void)
 {
     //初始化串口2
@@ -58,7 +27,7 @@ void Esp_Init(void)
 
     //使能串口接收中断
     uart_rx_irq(UART_2,ENABLE);
-//    nvic_init((IRQn_Type)(53 + UART_2), 2, 2, ENABLE);      //将串口3的抢占优先级设置为最高，次优先级设置为最高。
+
     //初始化复位引脚
     gpio_init(A4, GPO, 1, GPIO_PIN_CONFIG);
 
@@ -73,7 +42,7 @@ void Esp_Init(void)
 
 void Tcp_Decode(void)
 {
-    rt_kprintf("TCP in!\n");//打印到终端
+//    rt_kprintf("TCP in!\n");//打印到终端
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
 
 //    char txt[32];

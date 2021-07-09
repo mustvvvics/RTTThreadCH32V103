@@ -4,16 +4,15 @@
  *  Created on: Jun 30, 2021
  *      Author: 29275
  */
-#include "communication.h"
-#include "zf_qtimer.h"
-#include "zf_gpio.h"
+#include "headfile.h"
+
 
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;
 
-int ABS(int x){
-    return x>0?x:-x;
-}
+//int ABS(int x){
+//    return x>0?x:-x;
+//}
 
 void encoder_init(void)
 {
@@ -23,25 +22,19 @@ void encoder_init(void)
 
 void get_sensor_data(void)
 {
-//    if(gpio_get(B5))
-//        encoder_left_front = ABS(timer_quad_get(TIMER_3));
-//    else
-//        encoder_left_front = -ABS(timer_quad_get(TIMER_3));
     encoder_left_front = timer_quad_get(TIMER_3);
     timer_quad_clear(TIMER_3);                      //清空计数器 对于1024
 
     //读计数值
-//    if(gpio_get(B3))
-//        encoder_left_rear = -ABS(timer_quad_get(TIMER_2));
-//    else
-//        encoder_left_rear = ABS(timer_quad_get(TIMER_2));
     encoder_left_rear = timer_quad_get(TIMER_2);   //清空计数器 对于1024
     //清空计数器
     timer_quad_clear(TIMER_2);
 }
-int16 slave_position=10;
+int16 slave_position=0;
 void process_data(void)
 {
+    slave_position = cameraError;//传递误差
+
     temp_buff[0] = 0xD8;                         //帧头
 
     temp_buff[1] = 0xB0;                         //功能字

@@ -22,34 +22,36 @@
 //右键单击工程，选择刷新
 
 #include "headfile.h"
-#include "display.h"
-#include "timer_pit.h"
-#include "buzzer.h"
-#include "communication.h"
+
 
 rt_sem_t camera_sem;
 
 int main(void)
 {
-    //camera_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
-    //mt9v03x_init();
-    rt_thread_mdelay(3000);
+    camera_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
+    mt9v03x_init();
+    rt_thread_mdelay(3000);//保证摄像头初始化完成
 
+    laneInit();
     display_init();
     encoder_init();
     timer_pit_init();//软定时器初始化
+//
+//    esp8266Init();
 
-    gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化
-    uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);
+    gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
+    uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);//通讯
     gpio_init(B15, GPO, 0, GPIO_PIN_CONFIG);
 
     while(1)
     {
         //等待摄像头采集完毕
-        //rt_sem_take(camera_sem, RT_WAITING_FOREVER);
-        rt_thread_mdelay(200);
-        gpio_toggle(B15);
+        rt_sem_take(camera_sem, RT_WAITING_FOREVER);
+//        rt_thread_mdelay(200);
+//        gpio_toggle(B15);
+        laneAnalyze(mt9v03x_image);
+        computeError();
         //开始处理摄像头图像
-
+        //mt9v03x_image[0]
     }
 }
