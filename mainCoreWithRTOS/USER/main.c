@@ -19,14 +19,14 @@
 
 #include "headfile.h"
 
-
+uint32 key_data;
 
 int main(void)
 {
+    button_init();
     icm20602_init_spi();
     display_init();
     encoder_init();
-    button_init();
     motor_init();
     //timer_pit_init();
 
@@ -47,13 +47,13 @@ int main(void)
 
     while(1)
     {
+//        rt_thread_mdelay(20);//new delay
+        rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
+        if (key_data == 1) { //左
 
-        if (count == 1) { //左
-            rt_sem_take(key1_sem, RT_WAITING_FOREVER);
             car_flag = 0;
         }
-        else if (count == 2) {
-            rt_sem_take(key2_sem, RT_WAITING_FOREVER);
+        else if (key_data == 2) {
             if (car_flag == 0) {
                 car_flag = 1;
             }
@@ -61,18 +61,14 @@ int main(void)
                 car_flag = 0;
             }
         }
-        else if (count == 3) { //上
-            rt_sem_take(key3_sem, RT_WAITING_FOREVER);
+        else if (key_data == 3) { //上
             expected_y = expected_y + 10;
         }
-        else if (count == 4) { //右
-            rt_sem_take(key4_sem, RT_WAITING_FOREVER);
+        else if (key_data == 4) { //右
             car_flag = 0;
         }
-        else if (count == 5) { //下
-            rt_sem_take(key5_sem, RT_WAITING_FOREVER);
+        else if (key_data == 5) { //下
             expected_y = expected_y - 10;
         }
-        rt_thread_mdelay(20);//new delay
     }
 }
