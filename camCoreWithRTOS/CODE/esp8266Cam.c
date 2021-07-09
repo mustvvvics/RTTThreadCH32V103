@@ -35,7 +35,7 @@ void Tcp_Decode(void)
 
 
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
-    {oled_p6x8str(0,0,"TCP Init Ok");uart_putstr(UART_1,"#0005init\n");}
+    {ips114_showstr(0,5,"TCP Init Ok");uart_putstr(UART_1,"#0005init\n");}
 
 
     //新增功能 开环控制前后左右 可以手动到自动切换
@@ -111,15 +111,10 @@ void sendMessage(void) {
 void esp8266Entry(void *parameter)
 {
 
-//    rt_thread_mdelay(300);
     while(1)
     {
-//        rt_thread_mdelay(100);
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
         Tcp_Decode();
-        rt_kprintf("8266\n");
-
-
     }
 }
 

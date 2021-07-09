@@ -13,7 +13,7 @@ int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 int16 position_front;
 
 //期望直线速度和角速度
-int16 expected_omega=30;
+int16 expected_omega=0;
 int16 expected_y=0;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
 int16 manual_y=0;
 int16 manual_z=0;

@@ -56,30 +56,34 @@ void button_entry(void *parameter)
     //检测到按键按下之后并放开 释放一次信号量
     if(key1_status && !key1_last_status)    
     {
+        count = 1;
         rt_sem_release(key1_sem);
-        rt_mb_send(buzzer_mailbox, 100);
+//        rt_mb_send(buzzer_mailbox, 100);
     }
     if(key2_status && !key2_last_status)    
     {
+        count = 2;
         rt_sem_release(key2_sem);
-        rt_mb_send(buzzer_mailbox, 300);
+
+//        rt_mb_send(buzzer_mailbox, 300);
     }
     if(key3_status && !key3_last_status)    
     {
+        count = 3;
         rt_sem_release(key3_sem);
-        count++;
-        rt_mb_send(buzzer_mailbox, 600);
+//        rt_mb_send(buzzer_mailbox, 600);
     }
     if(key4_status && !key4_last_status)
     {
+        count = 4;
         rt_sem_release(key4_sem);
-        rt_mb_send(buzzer_mailbox, 600);
+//        rt_mb_send(buzzer_mailbox, 600);
     }
     if(key5_status && !key5_last_status)
     {
+        count = 5;
         rt_sem_release(key5_sem);
-        count--;
-        rt_mb_send(buzzer_mailbox, 600);
+//        rt_mb_send(buzzer_mailbox, 600);
     }
     
 }
@@ -94,11 +98,11 @@ void button_init(void)
     gpio_init(KEY4, GPI, 0, GPIO_INT_CONFIG);
     gpio_init(KEY5, GPI, 0, GPIO_INT_CONFIG);
     
-    key1_sem = rt_sem_create("key1", 0, RT_IPC_FLAG_FIFO);  //创建按键的信号量，当按键按下就释放信号量，在需要使用按键的地方获取信号量即可
-    key2_sem = rt_sem_create("key2", 0, RT_IPC_FLAG_FIFO);  
-    key3_sem = rt_sem_create("key3", 0, RT_IPC_FLAG_FIFO);  
-    key4_sem = rt_sem_create("key4", 0, RT_IPC_FLAG_FIFO);
-    key5_sem = rt_sem_create("key5", 0, RT_IPC_FLAG_FIFO);
+    key1_sem = rt_sem_create("key1", 1, RT_IPC_FLAG_FIFO);  //创建按键的信号量，当按键按下就释放信号量，在需要使用按键的地方获取信号量即可
+    key2_sem = rt_sem_create("key2", 2, RT_IPC_FLAG_FIFO);
+    key3_sem = rt_sem_create("key3", 3, RT_IPC_FLAG_FIFO);
+    key4_sem = rt_sem_create("key4", 4, RT_IPC_FLAG_FIFO);
+    key5_sem = rt_sem_create("key5", 5, RT_IPC_FLAG_FIFO);
     
     timer1 = rt_timer_create("button", button_entry, RT_NULL, 20, RT_TIMER_FLAG_PERIODIC);
 

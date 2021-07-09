@@ -100,14 +100,14 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             uart_flag = E_START;
             encoder_get();//Ö÷ºË±àÂëÆ÷
         }
-//        if (car_flag == 1) {
-//            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-//            speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
-//        }
-//        else {
-//            speed_conversion(0,0,0);
-//        }
-        speed_conversion(0,0,0);
+        if (car_flag == 1) {
+            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+            speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+        }
+        else {
+            speed_conversion(0,0,0);
+        }
+//        speed_conversion(0,0,0);
 //        speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
         //µç»ú¿ØÖÆËÙ¶È»·
         motor1_ctl(PID_Speed(Left_front,encoder_data[3] / 2,&motor1_pid));

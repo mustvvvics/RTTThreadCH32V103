@@ -37,11 +37,11 @@ int main(void)
     encoder_init();
     timer_pit_init();//软定时器初始化
 //
-//    esp8266Init();
-
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);//通讯
-    gpio_init(B15, GPO, 0, GPIO_PIN_CONFIG);
+//    gpio_init(B15, GPO, 0, GPIO_PIN_CONFIG);
+
+    esp8266Init();
 
     while(1)
     {

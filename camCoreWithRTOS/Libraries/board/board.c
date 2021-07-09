@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <rthw.h>
 #include <rtthread.h>
-
+#include "headfile.h"
 
 //finsh组件接收串口数据，是通过在串口中断内发送邮件，finsh线程接收邮件进行获取的
 rt_mailbox_t uart_mb;
@@ -158,24 +158,31 @@ void rt_hw_console_output(const char *str)
 
 char rt_hw_console_getchar(void) //串口接收
 {
-    uint32 dat;
-    rt_mb_recv(uart_mb, &dat, RT_WAITING_FOREVER);//当没有接收数据的时候会去做其他事情 释放性能
-    //uart_getchar(DEBUG_UART, &dat);
-    return (char)dat;
+//    uint32 dat;
+////    rt_mb_recv(uart_mb, &dat, RT_WAITING_FOREVER);//当没有接收数据的时候会去做其他事情 释放性能
+//    //uart_getchar(DEBUG_UART, &dat);
+//    return (char)dat;
+    return 0;
 }
 
 
 void USART1_IRQHandler(void) __attribute__((interrupt()));
 void USART1_IRQHandler(void)
 {
-    uint8 dat;
-
+//    uint8 dat;
+    uint8 data_temp;
     rt_interrupt_enter();       //进入中断
 
     if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
     {
-        uart_getchar(DEBUG_UART, &dat);
-        rt_mb_send(uart_mb, dat);           // 发送邮件
+//        uart_getchar(DEBUG_UART, &dat);
+//        rt_mb_send(uart_mb, dat);           // 发送邮件
+
+        data_temp = (uint8)USART_ReceiveData(USART1);
+        esp8266_buf[esp8266_cnt++] = data_temp;
+        if (data_temp == 0x0A) { //接收到了换行符
+            rt_sem_release(esp8266_sem);//释放信号量
+        }
     }
 
     rt_interrupt_leave();       //退出中断

@@ -16,10 +16,6 @@
  * @Taobao          https://seekfree.taobao.com/
  * @date            2020-12-04
  ********************************************************************************************************************/
-//整套推荐IO查看Projecct文件夹下的TXT文本
-
-//打开新的工程或者工程移动了位置务必执行以下操作
-//右键单击工程，选择刷新
 
 #include "headfile.h"
 
@@ -27,33 +23,18 @@
 
 int main(void)
 {
-    //uint16 duty;
-    //camera_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
-    //mt9v03x_init();
-
-//
     icm20602_init_spi();
-//    Esp_Init();
-
-    PID_Init();
     display_init();
     encoder_init();
     button_init();
     motor_init();
-//    buzzer_init();
-
-    //elec_init();电感初始化
     //timer_pit_init();
 
     //舵机初始化，默认在中位上
     pwm_init(PWM1_CH1_A8, 50, 650);//舵机 TIMER1
 
-    //LED灯初始化
-//    gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG); //icm20602 时不能使用
-
     esp8266Init();
-
-    //双核通信放最后
+    PID_Init();
 
     //串口3初始化
     uart_init(UART_3, 921600, UART3_TX_B10, UART3_RX_B11);  //串口3初始化，波特率115200
@@ -64,12 +45,34 @@ int main(void)
     gpio_interrupt_init(B2, RISING, GPIO_INT_CONFIG);       //B2初始化为GPIO 上升沿触发
     nvic_init(EXTI2_IRQn, 1, 1, ENABLE);                    //EXTI2优先级配置，抢占优先级1，次优先级1
 
-//    ips114_showstr(0, 6, "Master Init OK!");
     while(1)
     {
-        rt_thread_mdelay(10);//new delay
-//        gpio_toggle(B15);
-//        Tcp_Decode();
-//        sendMessage();
+
+        if (count == 1) { //左
+            rt_sem_take(key1_sem, RT_WAITING_FOREVER);
+            car_flag = 0;
+        }
+        else if (count == 2) {
+            rt_sem_take(key2_sem, RT_WAITING_FOREVER);
+            if (car_flag == 0) {
+                car_flag = 1;
+            }
+            else {
+                car_flag = 0;
+            }
+        }
+        else if (count == 3) { //上
+            rt_sem_take(key3_sem, RT_WAITING_FOREVER);
+            expected_y = expected_y + 10;
+        }
+        else if (count == 4) { //右
+            rt_sem_take(key4_sem, RT_WAITING_FOREVER);
+            car_flag = 0;
+        }
+        else if (count == 5) { //下
+            rt_sem_take(key5_sem, RT_WAITING_FOREVER);
+            expected_y = expected_y - 10;
+        }
+        rt_thread_mdelay(20);//new delay
     }
 }
