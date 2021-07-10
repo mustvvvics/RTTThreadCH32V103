@@ -3,7 +3,7 @@
 
 #include "headfile.h"
 
-extern int32 count;
+//extern int32 count;
 void display_init(void);
     
 #endif

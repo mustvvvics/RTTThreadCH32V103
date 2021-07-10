@@ -19,7 +19,7 @@
 
 #include "headfile.h"
 
-uint32 key_data;
+
 
 int main(void)
 {
@@ -48,9 +48,9 @@ int main(void)
     while(1)
     {
 //        rt_thread_mdelay(20);//new delay
+
         rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
         if (key_data == 1) { //×ó
-
             car_flag = 0;
         }
         else if (key_data == 2) {
@@ -59,6 +59,7 @@ int main(void)
             }
             else {
                 car_flag = 0;
+                clearError();//Çå³ýÀÛ¼ÆÎó²î
             }
         }
         else if (key_data == 3) { //ÉÏ
@@ -69,6 +70,9 @@ int main(void)
         }
         else if (key_data == 5) { //ÏÂ
             expected_y = expected_y - 10;
+        }
+        else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {//Ò£¿Ø
+            manual_control();
         }
     }
 }

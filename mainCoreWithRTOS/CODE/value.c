@@ -14,7 +14,7 @@ int16 position_front; //偏差
 
 //期望直线速度和角速度
 int16 expected_omega=0;
-int16 expected_y=0;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
+int32 expected_y=0;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
 int16 manual_y=0;
 int16 manual_z=0;
 int32 dx=0,dy=0,dz=0,dist;

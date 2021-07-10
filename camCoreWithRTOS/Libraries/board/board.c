@@ -120,7 +120,7 @@ void board_init(void)
     sys_clk = 8000000 * (((RCC->CFGR0 >> 18)&0x0F) + 2);
     //³õÊ¼»¯DEBUG´®¿Ú
     uart_init(DEBUG_UART, DEBUG_UART_BAUD, DEBUG_UART_TX_PIN, DEBUG_UART_RX_PIN);
-
+//    uart_init(DEBUG_UART, 115200, DEBUG_UART_TX_PIN, DEBUG_UART_RX_PIN);
     uart_rx_irq(DEBUG_UART, ENABLE);
 }
 

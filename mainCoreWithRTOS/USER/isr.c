@@ -105,7 +105,8 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
         }
         else {
-            speed_conversion(0,0,0);
+//            speed_conversion(0,0,0);
+            speed_conversion(0,manual_y,manual_z);
         }
         //µç»ú¿ØÖÆËÙ¶È»·
         motor1_ctl(PID_Speed(Left_front,encoder_data[3] / 2,&motor1_pid));
@@ -113,8 +114,18 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
         motor4_ctl(PID_Speed(Right_rear,encoder_data[1]/ 2,&motor4_pid));
         motor3_ctl(PID_Speed(Left_rear,-encoder_data[0]/ 2,&motor3_pid));
 
-
-
+//        /***********************************************************************/
+//        //Ò£¿Ø
+//        if(count_en == 1)
+//        {
+//            //Àï³Ì¼Æ
+//            //dx += (encoder_data[0]-encoder_data[3])/2;
+//            dy += (encoder_data[3]-encoder_data[2]+encoder_data[1]-encoder_data[0])/4;//ËÄ¸öÂÖ×ÓÕýÖµÏà¼Ó
+//            dz += (-encoder_data[3]-encoder_data[2]-encoder_data[1]-encoder_data[0]);//×ó±ßÁ½¸öÏòÄÚ£¬ÓÒ±ßÁ½¸öÏòÍâ ->Ïò×óÐÐ½ø
+//            //dist = sqrt(dx*dx+dy*dy);
+//            //total_z += (int16)g_fGyroAngleSpeed_z;
+//            //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;//Çå¿Õ²¢¹Ø±ÕÀï³Ì¼Æ
+//        }
 
 
 

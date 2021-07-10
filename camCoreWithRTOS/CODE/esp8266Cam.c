@@ -99,14 +99,14 @@ void sendMessage(void) {
 
     for (ii = 0; ii < imgRow; ++ii) {
         sprintf(txtB,"%04d ",laneCenter[ii]);//5
-        uart_putstr(UART_3,txtB);
+        uart_putstr(UART_1,txtB);
     }
 
     uart_putstr(UART_1,message0);//1
 
     for (ii = 0; ii < imgRow; ++ii) {
         sprintf(txtC,"%02d ",flagDetectLeft[ii]);//3
-        uart_putstr(UART_3,txtC);
+        uart_putstr(UART_1,txtC);
     }
 
     uart_putstr(UART_1,message0);//1
@@ -124,7 +124,7 @@ void sendMessage(void) {
     //5+1+5+1+3+1+3+1+3+1+3+1+2+1+2+1+6+1+6=47
 //    uart_putstr(UART_1,txtD);
     sprintf(txtD,"%05d %05d %03d %03d %03d %03d% 02d %02d %06d %06d",cameraError,slope,sharpCurveRow
-            ,missCounterLeft,missCounterRight,missCounterBoth,flagEnterRoundabout,flagThreeWay,(int16)(laneJitterLeft*100),(int16)(laneJitterRight*100));   //相关变量
+            ,missCounterLeft,missCounterRight,missCounterBoth,flagEnterRoundabout,flagThreeWay,laneJitterLeft,laneJitterRight);   //相关变量
 
     uart_putstr(UART_1,txtD);
     //1
@@ -141,6 +141,8 @@ void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
     display_is_working = 1;
+    oled_p6x8str(0,7,esp8266_buf);
+    display_is_working = 0;
     while(1)
     {
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);

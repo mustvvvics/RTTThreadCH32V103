@@ -21,39 +21,22 @@ void show_speed(void)
     }
 
     if (displayFlag == 0) {
-        ips114_showstr(0,7,esp8266_buf);
-    }
-    else {
-        oled_p6x8str(0,7,esp8266_buf);
-    }
-
-    if (displayFlag == 0) {
+//        ips114_showstr(0,7,esp8266_buf);
         ips114_showstr(0,6,"TCP Init Ok");
-    }
-    else {
-        oled_p6x8str(0,6,"TCP Init Ok");
-    }
-
-    if (displayFlag == 0) {
         sprintf(txt,"pMeanT=%d",pixelMeanThres);
         ips114_showstr(0, 2, txt);
-    }
-    else {
-        sprintf(txt,"pMeanT=%d",pixelMeanThres);
-        oled_p6x8str(0, 2, txt);
-    }
-
-
-    if (displayFlag == 0) {
         sprintf(txt,"det_Dis=%d",Int2Float);
         ips114_showstr(0, 3, txt);
     }
     else {
+//        oled_p6x8str(0,7,esp8266_buf);
+        oled_p6x8str(0,6,"TCP Init Ok");
+        sprintf(txt,"pMeanT=%d",pixelMeanThres);
+        oled_p6x8str(0, 2, txt);
         sprintf(txt,"pMeanT=%d",Int2Float);
         oled_p6x8str(0, 3, txt);
-//            oled_printf_float(0,4,detectDistance,3,3);
-//            rt_kprintf("8266_startup\n");
     }
+
 
 
     display_is_working = 0;

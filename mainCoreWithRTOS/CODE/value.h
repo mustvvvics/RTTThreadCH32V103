@@ -19,7 +19,7 @@ extern uint8 car_flag;
 
 //期望直线速度和角速度
 extern int16 expected_omega;
-extern int16 expected_y;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
+extern int32 expected_y;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
 extern int16 manual_y;
 extern int16 manual_z;
 extern int32 dx,dy,dz,dist;

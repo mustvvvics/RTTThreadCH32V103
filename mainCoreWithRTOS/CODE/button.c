@@ -35,6 +35,8 @@ uint8 key5_flag;
 //rt_sem_t key4_sem;
 //rt_sem_t key5_sem;
 
+uint32 key_data;
+
 rt_mailbox_t key_mailbox;
 
 void button_entry(void *parameter)
@@ -86,7 +88,9 @@ void button_entry(void *parameter)
 //        rt_sem_release(key5_sem);
         rt_mb_send(key_mailbox, 5);
     }
-    
+    /*************************************************************************/
+
+
 }
 
 void button_init(void)
