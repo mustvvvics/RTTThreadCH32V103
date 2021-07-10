@@ -1,25 +1,13 @@
-/*
- * esp8266.c
- *
- *  Created on: Jun 12, 2021
- *      Author: 29275
- */
+
 #include "headfile.h"
 
 rt_sem_t esp8266_sem;
-
-//接线顺序
-//C12 - WiFi-RST
-//C11 - WiFi-TX
-//C10 - WiFi-RX
-
 
 void ESP8266_Clear(void)
 {
     memset(esp8266_buf, 0, sizeof(esp8266_buf));
     esp8266_cnt = 0;
 }
-
 
 void Esp_Init(void)
 {
@@ -43,26 +31,31 @@ void Esp_Init(void)
 
 void Tcp_Decode(void)
 {
-//    rt_kprintf("TCP in!\n");//打印到终端
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
 
 //    char txt[32];
 //    int32 Int2Float;
 //
-    if(strcmp((char *)esp8266_buf,"init\n") == 0)
-    {
-        ips114_showstr(0,6,"TCP Init Ok");
+    if(strcmp((char *)esp8266_buf,"init\n") == 0) {
+        ips114_showstr(0,4,"TCP Init Ok");
         uart_putstr(UART_2,"#0008control\n");
-//        rt_kprintf("TCP in!\n");//打印到终端
+    }
+    else if(strcmp((char *)esp8266_buf,"car_go\n") == 0){
+        car_flag = 1;
+        uart_putstr(UART_2,"#0013received_go!\n");
     }
 
-//    else if(esp8266_buf[4] == 'S' && esp8266_buf[0] == 'C')
-//    {
-//        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y);
-//        uart_putstr(UART_2,"#0016received_speed!\n");
-//        sprintf(txt,"Speed:%05d",expected_y);
-//        ips114_showstr(0,5,txt);
-//    }
+    else if (strcmp((char *)esp8266_buf,"car_stop\n") == 0) {
+        car_flag =0;position_front=0;expected_omega=0;
+        uart_putstr(UART_2,"#0015received_stop!\n");
+    }
+
+    else if(esp8266_buf[4] == 'S' && esp8266_buf[0] == 'C')
+    {
+        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y);
+        uart_putstr(UART_2,"#0016received_speed!\n");
+    }
+
     //Turn_Kp:6026/n
 //    else if(esp8266_buf[6] == 'p' && esp8266_buf[0] == 'T')
 //    {
@@ -88,7 +81,6 @@ void Tcp_Decode(void)
 //        ips114_showfloat(0,7,yaw_pid.Kd,3,3);
 //    }
 
-
     ESP8266_Clear();
 }
 
@@ -107,15 +99,8 @@ void sendMessage(void) {
 
 void esp8266Entry(void *parameter)
 {
-//    int32 counter=0;
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
     ips114_showstr(0,7,esp8266_buf);
-//    rt_kprintf(esp8266_buf);
-//    for (; counter < 20; ++counter) {
-//        if (esp8266_buf[counter] != 0) {
-//            rt_kprintf("#");
-//        }
-//    }
     ESP8266_Clear();
     while(1)
     {

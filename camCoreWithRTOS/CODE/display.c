@@ -1,28 +1,71 @@
 #include "headfile.h"
 
+int16 displayFlag = 1;
+
 
 void show_speed(void)
 {
     char txt[32]={0};
+    display_is_working = 1;
+    if (displayFlag == 0) {
+        sprintf(txt,"l_f=%05d|r_f=%05d",encoder_left_rear,encoder_left_front);
+        ips114_showstr(0, 0, txt);
+        sprintf(txt,"cameraError = %05d",cameraError);
+        ips114_showstr(0, 1, txt);
+    }
+    else {
+        sprintf(txt,"l_f=%05d|r_f=%05d",encoder_left_rear,encoder_left_front);
+        oled_p6x8str(0, 0, txt);
+        sprintf(txt,"cameraError = %05d",cameraError);
+        oled_p6x8str(0, 1, txt);
+    }
 
-    sprintf(txt,"left_front = %05d",encoder_left_front);
-    ips114_showstr(0, 1, txt);
-    sprintf(txt,"right_rear = %05d",encoder_left_rear);
-    ips114_showstr(0, 2, txt);
-    sprintf(txt,"cameraError = %05d",cameraError);
-    ips114_showstr(0, 3, txt);
+    if (displayFlag == 0) {
+        ips114_showstr(0,7,esp8266_buf);
+    }
+    else {
+        oled_p6x8str(0,7,esp8266_buf);
+    }
+
+    if (displayFlag == 0) {
+        ips114_showstr(0,6,"TCP Init Ok");
+    }
+    else {
+        oled_p6x8str(0,6,"TCP Init Ok");
+    }
+
+    if (displayFlag == 0) {
+        sprintf(txt,"pMeanT=%d",pixelMeanThres);
+        ips114_showstr(0, 2, txt);
+    }
+    else {
+        sprintf(txt,"pMeanT=%d",pixelMeanThres);
+        oled_p6x8str(0, 2, txt);
+    }
+
+
+    if (displayFlag == 0) {
+        sprintf(txt,"det_Dis=%d",Int2Float);
+        ips114_showstr(0, 3, txt);
+    }
+    else {
+        sprintf(txt,"pMeanT=%d",Int2Float);
+        oled_p6x8str(0, 3, txt);
+//            oled_printf_float(0,4,detectDistance,3,3);
+//            rt_kprintf("8266_startup\n");
+    }
+
+
+    display_is_working = 0;
+    rt_thread_mdelay(100);
 }
 
 
 
 void display_entry(void *parameter)
 {
-    //uint32 count=0;
-
     while(1)
     {
-        //ips114_displayimage032(mt9v03x_image[0], MT9V03X_W, MT9V03X_H);
-        //count++;
         show_speed();
     }
     
@@ -34,8 +77,12 @@ void display_init(void)
     rt_thread_t tid1;
 
     //初始化屏幕
-//    oled_init();
-    ips114_init();
+    if (displayFlag == 0) {
+        ips114_init();
+    }
+    else {
+        oled_init();
+    }
     
     //创建显示线程 优先级设置为6 
     tid1 = rt_thread_create("display", display_entry, RT_NULL, 1024, 5, 50);

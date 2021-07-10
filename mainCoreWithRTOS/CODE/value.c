@@ -10,7 +10,7 @@
 uint16 fivems_tick=0;
 uint16 fives_tick=0;
 int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
-int16 position_front;
+int16 position_front; //偏差
 
 //期望直线速度和角速度
 int16 expected_omega=0;

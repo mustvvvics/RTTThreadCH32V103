@@ -3,6 +3,8 @@
 
 rt_sem_t esp8266_sem;
 
+int32 Int2Float;
+int8 display_is_working = 0;
 void ESP8266_Clear(void)
 {
     memset(esp8266_buf, 0, sizeof(esp8266_buf));
@@ -31,19 +33,39 @@ void Esp_Init(void)
 
 void Tcp_Decode(void)
 {
+
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
 
+//    char txt[32]={0};
 
-    if(strcmp((char *)esp8266_buf,"init\n") == 0)
-    {ips114_showstr(0,5,"TCP Init Ok");uart_putstr(UART_1,"#0007camera\n");}
+    while (display_is_working) {rt_thread_mdelay(20);}
 
-
-    //新增功能 开环控制前后左右 可以手动到自动切换
-    //增加功能 能手动清空两个标志位
-
-    else if(strcmp((char *)esp8266_buf,"ClearElement\n") == 0)
-    {flagEnterRoundabout=0;flagThreeWay=0;uart_putstr(UART_1,"#0008Cleard!\n");}
-
+    if(strcmp((char *)esp8266_buf,"init\n") == 0){
+        uart_putstr(UART_1,"#0007camera\n");
+    }
+    else if(strcmp((char *)esp8266_buf,"ClearElement\n") == 0){
+        flagEnterRoundabout=0;flagThreeWay=0;
+        uart_putstr(UART_1,"#0008Cleard!\n");
+    }
+    else if(strcmp((char *)esp8266_buf,"ShowCamera\n") == 0){
+        CameraShow_flag = 1;
+    }
+    //laTh:19775\n
+    //int32 pixelMeanThres
+    else if(esp8266_buf[2] == 'T' && esp8266_buf[3] == 'h')
+    {
+        sscanf(esp8266_buf,"laTh:%d\n",&pixelMeanThres);
+        uart_putstr(UART_1,"#0025received_pixelMeanThres!\n");
+    }
+    //laDs:19775\n
+    //float detectDistance
+    else if(esp8266_buf[2] == 'D' && esp8266_buf[3] == 's')
+    {
+        sscanf(esp8266_buf,"laDs:%d\n",&Int2Float);
+        detectDistance=(float)Int2Float*0.1f;
+        uart_putstr(UART_1,"#0025received_detectDistance!\n");
+    }
+    gpio_set(B15, 1);
 
     ESP8266_Clear();
 }
@@ -54,9 +76,9 @@ const char* message0 = ",";
 const char* message1 = "\n";
 void sendMessage(void) {
     uint16 ii;
-    char txtA[6],txtB[6],txtC[4];//,txtD[40];
+    char txtA[6],txtB[6],txtC[4],txtD[48];
 
-    uart_putstr(UART_1,"#1095");
+    uart_putstr(UART_1,"#1103");
 
     //5+5+5+3+3 * 50 = 1050
     //1+1+1+1+1 = 5
@@ -99,19 +121,26 @@ void sendMessage(void) {
     //5+1+5+1+3+1+3+1+2+1+2+1+6+1+6=39
 //    sprintf(txtD,"%05d %05d %03d %03d %02d %02d %06d %06d",cameraError,slope,sharpCurveRow
 //            ,missCounter,flagEnterRoundabout,flagThreeWay,(int16)(laneJitterLeft*100),(int16)(laneJitterRight*100));   //相关变量
-//
+    //5+1+5+1+3+1+3+1+3+1+3+1+2+1+2+1+6+1+6=47
 //    uart_putstr(UART_1,txtD);
+    sprintf(txtD,"%05d %05d %03d %03d %03d %03d% 02d %02d %06d %06d",cameraError,slope,sharpCurveRow
+            ,missCounterLeft,missCounterRight,missCounterBoth,flagEnterRoundabout,flagThreeWay,(int16)(laneJitterLeft*100),(int16)(laneJitterRight*100));   //相关变量
+
+    uart_putstr(UART_1,txtD);
     //1
     uart_putstr(UART_1,message1);////结束也算1个
 
     //39 + 1 = 40
     //1055 + 40 = 1095
+
+    //47+1 = 48
+    //1055 + 48 = 1103
 }
 
 void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
-    ips114_showstr(0,6,esp8266_buf);
+    display_is_working = 1;
     while(1)
     {
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);

@@ -39,19 +39,22 @@ int main(void)
 //
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);//通讯
-//    gpio_init(B15, GPO, 0, GPIO_PIN_CONFIG);
+    gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 
     esp8266Init();
 
     while(1)
     {
         //等待摄像头采集完毕
+//gpio_set(pin, dat)
         rt_sem_take(camera_sem, RT_WAITING_FOREVER);
-//        rt_thread_mdelay(200);
-//        gpio_toggle(B15);
+        //开始处理摄像头图像
         laneAnalyze(mt9v03x_image);
         computeError();
-        //开始处理摄像头图像
-        //mt9v03x_image[0]
+        if (CameraShow_flag == 1) {
+            sendMessage();
+            CameraShow_flag = 0;
+        }
+
     }
 }
