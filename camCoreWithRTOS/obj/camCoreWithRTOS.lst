@@ -19090,7 +19090,7 @@ void sendMessage(void) {
     5fcc:	d2a6                	sw	s1,100(sp)
     5fce:	d0ca                	sw	s2,96(sp)
 F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\camCoreWithRTOS\obj/../CODE/esp8266Cam.c:81
-    uart_putstr(UART_1,"#1103");
+    uart_putstr(UART_1,"#1098"); //瀹為檯娴嬭瘯寰楀嚭
     5fd0:	0000b5b7          	lui	a1,0xb
     5fd4:	25058593          	addi	a1,a1,592 # b250 <__fsym___cmd_ps_name+0x1ac>
     5fd8:	4501                	li	a0,0
@@ -19231,7 +19231,7 @@ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\camCoreWithRTOS\obj/../CODE/esp82
     60e0:	4501                	li	a0,0
     60e2:	e7bfc0ef          	jal	ra,2f5c <uart_putstr>
 F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\camCoreWithRTOS\obj/../CODE/esp8266Cam.c:126
-    sprintf(txtD,"%05d %05d %03d %03d %03d %03d% 02d %02d %06d %06d",cameraError,slope,sharpCurveRow
+    sprintf(txtD,"%05d %05d %03d %03d %03d %03d% 02d %02d %04d %04d",cameraError,slope,sharpCurveRow
     60e6:	8241a783          	lw	a5,-2012(gp) # 20000384 <laneJitterRight>
     60ea:	c63e                	sw	a5,12(sp)
     60ec:	8201a783          	lw	a5,-2016(gp) # 20000380 <laneJitterLeft>
@@ -26390,12 +26390,12 @@ _exit():
     b214:	6165 546e 7268 7365 0a21 0000 616c 7344     eanThres!...laDs
     b224:	253a 0064 3023 3230 7235 6365 6965 6576     :%d.#0025receive
     b234:	5f64 6564 6574 7463 6944 7473 6e61 6563     d_detectDistance
-    b244:	0a21 0000 7365 3870 3632 0036 3123 3031     !...esp8266.#110
-    b254:	0033 0000 3025 6434 0020 0000 3025 6432     3...%04d ...%02d
+    b244:	0a21 0000 7365 3870 3632 0036 3123 3930     !...esp8266.#109
+    b254:	0038 0000 3025 6434 0020 0000 3025 6432     8...%04d ...%02d
     b264:	0020 0000 3025 6435 2520 3530 2064 3025      ...%05d %05d %0
     b274:	6433 2520 3330 2064 3025 6433 2520 3330     3d %03d %03d %03
-    b284:	2564 3020 6432 2520 3230 2064 3025 6436     d% 02d %02d %06d
-    b294:	2520 3630 0064 0000 002c 0000 6974 656d      %06d...,...time
+    b284:	2564 3020 6432 2520 3230 2064 3025 6434     d% 02d %02d %04d
+    b294:	2520 3430 0064 0000 002c 0000 6974 656d      %04d...,...time
     b2a4:	3172 0000 c2be ffff c210 ffff c210 ffff     r1..............
     b2b4:	c20e ffff c214 ffff c214 ffff c1e4 ffff     ................
     b2c4:	c20e ffff c214 ffff c1e4 ffff c214 ffff     ................

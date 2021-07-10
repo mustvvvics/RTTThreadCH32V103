@@ -20415,7 +20415,7 @@ F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\obj/../CODE/esp8
     6826:	8f01a503          	lw	a0,-1808(gp) # 20000310 <esp8266_sem>
     682a:	d39fc0ef          	jal	ra,3562 <rt_sem_take>
 F:\SCHOOL\文件\智能车\全向组\RTTThreadCH32V103\mainCoreWithRTOS\obj/../CODE/esp8266.c:175
-    esp8266_buf[esp8266_cnt-2] = '\0';
+    esp8266_buf[esp8266_cnt-2] = '\0';//娑堥櫎鏄剧ず涔辩爜
     682e:	20002637          	lui	a2,0x20002
     6832:	9081d783          	lhu	a5,-1784(gp) # 20000328 <esp8266_cnt>
     6836:	1a460713          	addi	a4,a2,420 # 200021a4 <esp8266_buf>

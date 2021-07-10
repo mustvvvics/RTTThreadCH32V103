@@ -78,7 +78,7 @@ void sendMessage(void) {
     uint16 ii;
     char txtA[6],txtB[6],txtC[4],txtD[48];
 
-    uart_putstr(UART_1,"#1103");
+    uart_putstr(UART_1,"#1098"); //实际测试得出
 
     //5+5+5+3+3 * 50 = 1050
     //1+1+1+1+1 = 5
@@ -123,7 +123,7 @@ void sendMessage(void) {
 //            ,missCounter,flagEnterRoundabout,flagThreeWay,(int16)(laneJitterLeft*100),(int16)(laneJitterRight*100));   //相关变量
     //5+1+5+1+3+1+3+1+3+1+3+1+2+1+2+1+6+1+6=47
 //    uart_putstr(UART_1,txtD);
-    sprintf(txtD,"%05d %05d %03d %03d %03d %03d% 02d %02d %06d %06d",cameraError,slope,sharpCurveRow
+    sprintf(txtD,"%05d %05d %03d %03d %03d %03d% 02d %02d %04d %04d",cameraError,slope,sharpCurveRow
             ,missCounterLeft,missCounterRight,missCounterBoth,flagEnterRoundabout,flagThreeWay,laneJitterLeft,laneJitterRight);   //相关变量
 
     uart_putstr(UART_1,txtD);
