@@ -54,14 +54,14 @@ void Tcp_Decode(void)
     //int32 pixelMeanThres
     else if(esp8266_buf[2] == 'T' && esp8266_buf[3] == 'h')
     {
-        sscanf(esp8266_buf,"laTh:%d\n",&pixelMeanThres);
+        sscanf(esp8266_buf,"laTh:%d",&pixelMeanThres);
         uart_putstr(UART_1,"#0025received_pixelMeanThres!\n");
     }
     //laDs:19775\n
     //float detectDistance
     else if(esp8266_buf[2] == 'D' && esp8266_buf[3] == 's')
     {
-        sscanf(esp8266_buf,"laDs:%d\n",&Int2Float);
+        sscanf(esp8266_buf,"laDs:%d",&Int2Float);
         detectDistance=(float)Int2Float*0.1f;
         uart_putstr(UART_1,"#0025received_detectDistance!\n");
     }
@@ -141,8 +141,10 @@ void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
     display_is_working = 1;
+    esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
     oled_p6x8str(0,7,esp8266_buf);
     display_is_working = 0;
+    ESP8266_Clear();
     while(1)
     {
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
@@ -167,7 +169,7 @@ void esp8266Init(void)
     if(RT_NULL != tidEsp8266)
     {
         rt_thread_startup(tidEsp8266);
-        rt_kprintf("8266_startup\n");
+//        rt_kprintf("8266_startup\n");
     }
 }
 

@@ -56,7 +56,7 @@ void Tcp_Decode(void)
 //    char txt[32];
 //    int32 Int2Float;
 //
-    if(strcmp((char *)esp8266_buf,"init\n") == 0) {
+    if(strcmp((char *)esp8266_buf,"init\n") == 0) { //
         ips114_showstr(0,4,"TCP Init Ok");
         uart_putstr(UART_2,"#0008control\n");
     }
@@ -172,6 +172,7 @@ void sendMessage(void) {
 void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
+    esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
     ips114_showstr(0,7,esp8266_buf);
     ESP8266_Clear();
     while(1)
@@ -198,6 +199,6 @@ void esp8266Init(void)
     if(RT_NULL != tidEsp8266)
     {
         rt_thread_startup(tidEsp8266);
-        rt_kprintf("8266_startup\n");
+//        rt_kprintf("8266_startup\n");
     }
 }
