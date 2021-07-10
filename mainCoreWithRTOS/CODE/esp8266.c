@@ -20,6 +20,7 @@ void ESP8266_Clear(void)
     esp8266_cnt = 0;
 }
 
+
 void Esp_Init(void)
 {
     //初始化串口2
@@ -48,11 +49,10 @@ void Tcp_Decode(void)
 //    char txt[32];
 //    int32 Int2Float;
 //
-
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
     {
         ips114_showstr(0,6,"TCP Init Ok");
-        uart_putstr(UART_2,"#0005init\n");
+        uart_putstr(UART_2,"#0008control\n");
 //        rt_kprintf("TCP in!\n");//打印到终端
     }
 
@@ -90,7 +90,6 @@ void Tcp_Decode(void)
 
 
     ESP8266_Clear();
-    rt_kprintf("TCP OUT!\n");//打印到终端
 }
 
 const char* message0 = ",";
@@ -108,19 +107,22 @@ void sendMessage(void) {
 
 void esp8266Entry(void *parameter)
 {
-
-//    rt_thread_mdelay(300);
+//    int32 counter=0;
+    rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
+    ips114_showstr(0,7,esp8266_buf);
+//    rt_kprintf(esp8266_buf);
+//    for (; counter < 20; ++counter) {
+//        if (esp8266_buf[counter] != 0) {
+//            rt_kprintf("#");
+//        }
+//    }
+    ESP8266_Clear();
     while(1)
     {
-//        rt_thread_mdelay(100);
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
         Tcp_Decode();
-        rt_kprintf("8266\n");
-
-
     }
 }
-
 
 void esp8266Init(void)
 {
@@ -129,7 +131,7 @@ void esp8266Init(void)
     //初始化
     Esp_Init();
 
-    esp8266_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
+    esp8266_sem = rt_sem_create("esp8266", 0, RT_IPC_FLAG_FIFO);
 
     //创建线程
     tidEsp8266 = rt_thread_create("esp8266", esp8266Entry, RT_NULL, 1024, 2, 200);//倒数 心跳 优先级 stack_size

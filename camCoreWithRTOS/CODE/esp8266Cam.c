@@ -35,7 +35,7 @@ void Tcp_Decode(void)
 
 
     if(strcmp((char *)esp8266_buf,"init\n") == 0)
-    {ips114_showstr(0,5,"TCP Init Ok");uart_putstr(UART_1,"#0005init\n");}
+    {ips114_showstr(0,5,"TCP Init Ok");uart_putstr(UART_1,"#0007camera\n");}
 
 
     //新增功能 开环控制前后左右 可以手动到自动切换
@@ -110,7 +110,8 @@ void sendMessage(void) {
 
 void esp8266Entry(void *parameter)
 {
-
+    rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
+    ips114_showstr(0,6,esp8266_buf);
     while(1)
     {
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);

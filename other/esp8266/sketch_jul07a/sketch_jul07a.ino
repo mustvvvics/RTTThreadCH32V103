@@ -23,7 +23,7 @@ void setup()
     //wifiManager.autoConnect("ESP_EEESP", "12345678");
 
     //WiFi.begin("L_PC","4433221100");
-    
+   /******************************************************************************/
     IPAddress softLocal(192,168,128,2);   // 1 设置内网WIFI IP地址
     IPAddress softGateway(192,168,128,2);
     IPAddress softSubnet(255,255,255,0);
@@ -34,7 +34,7 @@ void setup()
     const char *softAPName = apName.c_str();
   
     WiFi.softAP(softAPName, "11223344");      // 3创建wifi  名称 +密码 adminadmin
-  
+   /******************************************************************************/
 //    while(WiFi.status()!=WL_CONNECTED){
 //    delay(500);}
     

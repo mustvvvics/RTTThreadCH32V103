@@ -14,13 +14,14 @@ void show_speed(void)
     ips114_showstr(0,2,txt);
     sprintf(txt,"right_rear = %05d",-encoder_data[0]);
     ips114_showstr(0,3,txt);
-    sprintf(txt,"car_flag = %05d",car_flag);
-    ips114_showstr(0,4,txt);
-    sprintf(txt,"ERROR = %05d",position_front);
-    ips114_showstr(0,5,txt);
-    sprintf(txt,"count=%02d,sp=%04d",count,expected_y);
-    ips114_showstr(0,6,txt);
+//    sprintf(txt,"car_flag = %05d",car_flag);
+//    ips114_showstr(0,4,txt);
+//    sprintf(txt,"ERROR = %05d",position_front);
+//    ips114_showstr(0,5,txt);
+//    sprintf(txt,"count=%02d,sp=%04d",count,expected_y);
+//    ips114_showstr(0,6,txt);
 //    ips114_showint16(0, 5, icm_gyro_x);
+
 
 }
 
