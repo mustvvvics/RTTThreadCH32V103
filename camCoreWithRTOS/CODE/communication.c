@@ -10,9 +10,9 @@
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;
 
-//int ABS(int x){
-//    return x>0?x:-x;
-//}
+int16 ABS(int16 x){
+    return x>0?x:-x;
+}
 
 void encoder_init(void)
 {
@@ -22,11 +22,19 @@ void encoder_init(void)
 
 void get_sensor_data(void)
 {
-    encoder_left_front = timer_quad_get(TIMER_3);
-    timer_quad_clear(TIMER_3);                      //清空计数器 对于1024
+    if(gpio_get(B5))
+        encoder_left_front = ABS(timer_quad_get(TIMER_3));
+    else
+        encoder_left_front = -ABS(timer_quad_get(TIMER_3));
+
+    timer_quad_clear(TIMER_3);                      //清空计数器
 
     //读计数值
-    encoder_left_rear = timer_quad_get(TIMER_2);   //清空计数器 对于1024
+    if(gpio_get(B3))
+        encoder_left_rear = -ABS(timer_quad_get(TIMER_2));
+    else
+        encoder_left_rear = ABS(timer_quad_get(TIMER_2));
+
     //清空计数器
     timer_quad_clear(TIMER_2);
 }

@@ -4,14 +4,14 @@
 //#include "headfile.h"
 
 // laneBinarize
-#define uint8 unsigned char
-#define uint16 unsigned short
-#define uint32 unsigned int
-#define uint64 unsigned long
-
-#define uint8 unsigned char
-#define int32 int
-#define int16 short
+//#define uint8 unsigned char
+//#define uint16 unsigned short
+//#define uint32 unsigned int
+//#define uint64 unsigned long
+//
+//#define int8 char
+//#define int32 int
+//#define int16 short
 
 #define imgRow 50
 #define imgCol 188
@@ -20,7 +20,7 @@
 #define max(x,y) ((x) > (y) ? (x) : (y))
 #define min(x,y) ((x) < (y) ? (x) : (y))
 
-#define rangeBiNear	10
+#define rangeBiNear 10
 
 // laneAnalyze
 extern int32 laneLocationLeft[imgRow];
@@ -39,16 +39,16 @@ extern float detectDistance;
 #define laneFound 1
 #define laneMiss 0
 
-#define laneNear	15
-//#define laneFar		10
+#define laneNear    15
+//#define laneFar       10
 
 // roundabout status flag
-#define enterRoundabout	1
-#define exitRoundabout	0
+#define enterRoundabout 1
+#define exitRoundabout  0
 extern int16 flagEnterRoundabout;
 extern uint8 enterRoundaboutTimer;
 
-#define rangeCountJitter	20
+#define rangeCountJitter    20
 
 #define laneGainNear 1
 #define laneGainFar 1
@@ -65,11 +65,11 @@ ushort jitterBendLeft = 0;
 */
 
 // predefined lane half width
-extern uint8 laneWidth[imgRow];
+extern int32 laneWidth[imgRow];
 
 // sharp curve
 extern uint8 sharpCurveRow;
-#define rangeSharpCurveRow		35
+#define rangeSharpCurveRow      35
 
 // working temp
 extern uint8 iterRow, iterCol;
@@ -78,15 +78,15 @@ extern uint8 iterRowSub, iterColSub;
 // parameter
 
 /* not activated
-#define rangeLittleSBand	40
+#define rangeLittleSBand    40
 */
 
 extern int32 slope;
 extern uint8 slopeRowStart, slopeRowEnd;
 extern uint8 specialCaseStart;
 
-#define rangeComputeSlopeFar	30
-#define rangeComputeSlopeNear	49
+#define rangeComputeSlopeFar    30
+#define rangeComputeSlopeNear   49
 
 extern int32 cameraError;
 extern int32 cameraErrorPrevious;
@@ -114,15 +114,15 @@ extern int32 *destiArray;
 extern uint8 *flagDetectRefer;
 extern uint8 *flagDetectDesti;
 
-#define rowStartThreeWayDetect	15
-#define rowStopThreeWayDetect	13
-#define colStartThreeWayDetect	91
-#define colStopThreeWayDetect	97
-#define threeWayDetectThreshold	100 * (colStopThreeWayDetect - colStartThreeWayDetect) * (rowStopThreeWayDetect - rowStartThreeWayDetect)
-#define threeWayLaneThres		100
+#define rowStartThreeWayDetect  15
+#define rowStopThreeWayDetect   13
+#define colStartThreeWayDetect  91
+#define colStopThreeWayDetect   97
+#define threeWayDetectThreshold 100 * (colStopThreeWayDetect - colStartThreeWayDetect) * (rowStopThreeWayDetect - rowStartThreeWayDetect)
+#define threeWayLaneThres       100
 
 extern uint16 detectPointSum;
-extern uint8 flagThreeWay;
+extern uint8 flagEnterThreeWay;
 extern uint8 flagDetectedThreeWayFeature;
 
 //extern uint16 areaDetectRoundabout;
@@ -150,7 +150,7 @@ extern uint8 missingLaneLowerRight;
 extern float slopeDetectRoundabout;
 extern float roundaboutSlopeRowLocation;
 extern uint16 curveError;
-extern uint16 bigCurveThres; 
+extern int32 bigCurveThres;
 
 extern int32 laneLocationShifted;
 extern int32 laneLocationShiftedPrevious;
@@ -164,4 +164,15 @@ extern int32 enterBreachSlope;
 // used in detect roundabout
 extern int32 laneLocationShiftedLower;
 extern int32 laneLocationShiftedUpper;
+
+extern uint16 startlineJumpingPointNum;
+extern uint16 startlineJumpingPointNumThres;
+extern uint8 flagEnterStartLine;
+
+extern uint16 outboundAreaBenchmark;
+extern uint16 outboundAreaSum;
+extern uint16 outboundAreaThres;
+extern uint8 flagEnterOutbound;
+extern uint16 exitOutboundDelay;
+
 #endif

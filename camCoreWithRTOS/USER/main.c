@@ -23,7 +23,6 @@
 
 #include "headfile.h"
 
-
 rt_sem_t camera_sem;
 
 int main(void)
@@ -46,7 +45,6 @@ int main(void)
     while(1)
     {
         //等待摄像头采集完毕
-//gpio_set(pin, dat)
         rt_sem_take(camera_sem, RT_WAITING_FOREVER);
         //开始处理摄像头图像
         laneAnalyze(mt9v03x_image);

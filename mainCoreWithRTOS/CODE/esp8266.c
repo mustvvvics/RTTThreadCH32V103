@@ -126,33 +126,30 @@ void manual_control(void)
     if(key_data==6)
     {
         clearError();
-        count_en=1;
-        manual_y=5;
-        expected_omega=0;
+        manual_y = 10;
+        manual_z = 0;
     }
 
     if(key_data==7)
     {
         clearError();
-        count_en=1;
-        manual_y=-5;
+        manual_y=-10;
+        manual_z = 0;
 
     }
 
     if(key_data==8)
     {
         clearError();
-        count_en=1;
-        manual_z=40;
-
+        manual_z=-40;
+        manual_y = 0;
     }
 
     if(key_data==9)
     {
         clearError();
-        count_en=1;
-        manual_z=-50;
-
+        manual_z=40;
+        manual_y = 0;
     }
 
 }

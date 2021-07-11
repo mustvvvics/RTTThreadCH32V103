@@ -21,20 +21,21 @@ void show_speed(void)
     }
 
     if (displayFlag == 0) {
-//        ips114_showstr(0,7,esp8266_buf);
         ips114_showstr(0,6,"TCP Init Ok");
-        sprintf(txt,"pMeanT=%d",pixelMeanThres);
+        sprintf(txt,"pMeanT=%d,det_Dis=%d",pixelMeanThres,Int2Float);
         ips114_showstr(0, 2, txt);
-        sprintf(txt,"det_Dis=%d",Int2Float);
-        ips114_showstr(0, 3, txt);
     }
     else {
-//        oled_p6x8str(0,7,esp8266_buf);
         oled_p6x8str(0,6,"TCP Init Ok");
-        sprintf(txt,"pMeanT=%d",pixelMeanThres);
+        sprintf(txt,"pMeanT=%d,det_Dis=%d",pixelMeanThres,Int2Float);
         oled_p6x8str(0, 2, txt);
-        sprintf(txt,"pMeanT=%d",Int2Float);
+        sprintf(txt,"LLS=%07d",laneLocationShifted);
         oled_p6x8str(0, 3, txt);
+        sprintf(txt,"LJL=%07d",laneJitterLeft);
+        oled_p6x8str(0, 4, txt);
+        sprintf(txt,"LJR=%07d",laneJitterRight);
+        oled_p6x8str(0, 5, txt);
+
     }
 
 

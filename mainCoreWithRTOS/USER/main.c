@@ -31,7 +31,7 @@ int main(void)
     //timer_pit_init();
 
     //舵机初始化，默认在中位上
-    pwm_init(PWM1_CH1_A8, 50, 650);//舵机 TIMER1
+    pwm_init(PWM1_CH1_A8, 50, 680);//舵机 TIMER1  338  1015
 
     esp8266Init();
     PID_Init();
@@ -47,7 +47,8 @@ int main(void)
 
     while(1)
     {
-//        rt_thread_mdelay(20);//new delay
+        rt_thread_mdelay(20);//new delay
+
         rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
         if (key_data == 1) { //左
             car_flag = 0;

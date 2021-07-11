@@ -1,7 +1,7 @@
 #include "headfile.h"
 //#include "laneCommon.h"
 
-// Mat outMat;	// this is used to store the results in thresholdAdapt
+// Mat outMat;  // this is used to store the results in thresholdAdapt
 //
 
 // laneAnalyze
@@ -28,12 +28,12 @@ ushort jitterBendLeft = 0;
 */
 
 // predefined lane half width
-uint8 laneWidth[imgRow] = {
-	16, 17, 18, 19, 21, 22, 23, 25, 26, 27,
-	29, 31, 32, 33, 35, 36, 37, 39, 40, 41,
-	42, 44, 45, 46, 48, 49, 50, 52, 53, 55,
-	56, 57, 59, 60, 61, 63, 65, 65, 67, 68,
-	69, 71, 73, 73, 75, 77, 78, 79, 82, 83,
+int32 laneWidth[imgRow] = {
+    16, 17, 18, 19, 21, 22, 23, 25, 26, 27,
+    29, 31, 32, 33, 35, 36, 37, 39, 40, 41,
+    42, 44, 45, 46, 48, 49, 50, 52, 53, 55,
+    56, 57, 59, 60, 61, 63, 65, 65, 67, 68,
+    69, 71, 73, 73, 75, 77, 78, 79, 82, 83,
 };
 
 
@@ -48,7 +48,7 @@ uint8 location = 0;
 // parameter
 
 /* not activated
-#define rangeLittleSBand	40
+#define rangeLittleSBand    40
 */
 
 int32 slope = 0;
@@ -66,9 +66,9 @@ int32 sumNum, sumDen;
 int32 averLaneCenter, averRowIndex;
 
 void laneInit() {
-	for (iterRow = 0; iterRow < imgRow; ++iterRow) {
-		laneLocationRight[iterRow] = imgCol - 1;
-	}
+    for (iterRow = 0; iterRow < imgRow; ++iterRow) {
+        laneLocationRight[iterRow] = imgCol - 1;
+    }
 }
 
 int32 laneJitterLeft = 9999;
@@ -87,12 +87,10 @@ int32 *destiArray;
 uint8 *flagDetectRefer;
 uint8 *flagDetectDesti;
 
-
 uint16 detectPointSum = 0;
-uint8 flagThreeWay = 0;
+uint8 flagEnterThreeWay = 0;
 uint8 flagDetectedThreeWayFeature = 0;
 
-//uint16 areaDetectRoundabout = 0;
 uint16 areaDetectRoundaboutLeft = 0;
 uint16 areaDetectRoundaboutRight = 0;
 
@@ -119,7 +117,7 @@ float roundaboutSlopeRowLocation = 0;
 
 uint8 enterRoundaboutTimer;
 uint16 curveError = 0;
-uint16 bigCurveThres = 100; 
+int32 bigCurveThres = 100;
 
 int32 laneLocationShifted = 0;
 int32 laneLocationShiftedPrevious = 0;
@@ -133,3 +131,13 @@ int32 enterBreachSlope = 0;
 // used in detect roundabout
 int32 laneLocationShiftedLower = 0;
 int32 laneLocationShiftedUpper = 0;
+
+uint16 startlineJumpingPointNum = 0;
+uint16 startlineJumpingPointNumThres = 50;
+uint8 flagEnterStartLine = 0;
+
+uint16 outboundAreaBenchmark = 0;
+uint16 outboundAreaSum = 0;
+uint16 outboundAreaThres = 0;
+uint8 flagEnterOutbound = 0;
+uint16 exitOutboundDelay = 0;
