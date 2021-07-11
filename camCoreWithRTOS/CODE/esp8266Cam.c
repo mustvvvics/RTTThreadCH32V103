@@ -54,14 +54,16 @@ void Tcp_Decode(void)
     //int32 pixelMeanThres
     else if(esp8266_buf[2] == 'T' && esp8266_buf[3] == 'h')
     {
-        sscanf(esp8266_buf,"laTh:%d",&pixelMeanThres);
+//        sscanf(esp8266_buf,"laTh:%d",&pixelMeanThres);
+        pixelMeanThres = 100 * (esp8266_buf[5] - '0') + 10 * (esp8266_buf[6] - '0') + (esp8266_buf[7] - '0');
         uart_putstr(UART_1,"#0025received_pixelMeanThres!\n");
     }
     //laDs:19775\n
     //float detectDistance
     else if(esp8266_buf[2] == 'D' && esp8266_buf[3] == 's')
     {
-        sscanf(esp8266_buf,"laDs:%d",&Int2Float);
+//        sscanf(esp8266_buf,"laDs:%d",&Int2Float);
+        Int2Float = 10 * (esp8266_buf[5] - '0') + (esp8266_buf[6] - '0');
         detectDistance=(float)Int2Float*0.1f;
         uart_putstr(UART_1,"#0025received_detectDistance!\n");
     }
@@ -121,7 +123,7 @@ void sendMessage(void) {
     //5+1+5+1+3+1+3+1+2+1+2+1+6+1+6=39
 //    sprintf(txtD,"%05d %05d %03d %03d %02d %02d %06d %06d",cameraError,slope,sharpCurveRow
 //            ,missCounter,flagEnterRoundabout,flagThreeWay,(int16)(laneJitterLeft*100),(int16)(laneJitterRight*100));   //相关变量
-    //5+1+5+1+3+1+3+1+3+1+3+1+2+1+2+1+6+1+6=47
+    //5+1+5+1+3+1+3+1+3+1+3+1+2+1+2+1+6+1+6=47c
 //    uart_putstr(UART_1,txtD);
     sprintf(txtD,"%05d %05d %03d %03d %03d %03d% 02d %02d %04d %04d",cameraError,slope,sharpCurveRow
             ,missCounterLeft,missCounterRight,missCounterBoth,flagEnterRoundabout,flagThreeWay,laneJitterLeft,laneJitterRight);   //相关变量
@@ -169,7 +171,6 @@ void esp8266Init(void)
     if(RT_NULL != tidEsp8266)
     {
         rt_thread_startup(tidEsp8266);
-//        rt_kprintf("8266_startup\n");
     }
 }
 

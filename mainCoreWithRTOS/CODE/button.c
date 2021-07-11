@@ -55,7 +55,7 @@ void button_entry(void *parameter)
     key3_status = gpio_get(KEY3);
     key4_status = gpio_get(KEY4);
     key5_status = gpio_get(KEY5);
-    
+
     //检测到按键按下之后并放开 释放一次信号量
     if(key1_status && !key1_last_status)    
     {
@@ -89,7 +89,6 @@ void button_entry(void *parameter)
         rt_mb_send(key_mailbox, 5);
     }
     /*************************************************************************/
-
 
 }
 

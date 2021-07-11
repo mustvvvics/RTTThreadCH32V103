@@ -109,6 +109,7 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             speed_conversion(0,manual_y,manual_z);
         }
         //µç»ú¿ØÖÆËÙ¶È»·
+
         motor1_ctl(PID_Speed(Left_front,encoder_data[3] / 2,&motor1_pid));
         motor2_ctl(PID_Speed(Right_front,-encoder_data[2] / 2,&motor2_pid));
         motor4_ctl(PID_Speed(Right_rear,encoder_data[1]/ 2,&motor4_pid));
@@ -387,15 +388,15 @@ void USART3_IRQHandler(void)/***************************************************
 {
     rt_interrupt_enter();       //½øÈëÖÐ¶Ï
 
-    uint8 dat;
+    uint8 dat_USART3;
     //»ñÈ¡ÖÐ¶Ï±êÖ¾Î»
     //Çå³ýÖÐ¶Ï±êÖ¾Î»
     if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
     {
         USART_ClearITPendingBit(USART3, USART_IT_RXNE);
-        dat = USART_ReceiveData(USART3);                //»ñÈ¡´®¿ÚÊý¾Ý
+        dat_USART3 = (uint8)USART_ReceiveData(USART3);                //»ñÈ¡´®¿ÚÊý¾Ý
 
-        get_slave_data(dat);                            //½«Ã¿Ò»¸ö×Ö½ÚµÄ´®¿ÚÊý¾Ý´æÈëtemp_buffÖÐ¡£
+        get_slave_data(dat_USART3);                            //½«Ã¿Ò»¸ö×Ö½ÚµÄ´®¿ÚÊý¾Ý´æÈëtemp_buffÖÐ¡£
     }
 
     rt_interrupt_leave();       //ÍË³öÖÐ¶Ï

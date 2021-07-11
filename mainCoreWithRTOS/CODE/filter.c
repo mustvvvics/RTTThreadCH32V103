@@ -35,13 +35,13 @@ void AngleZ_Get(void)
     //return ComplementaryFilter(g_fGravityAngle_z,g_fGyroAngleSpeed_z,0.005);
 }
 
-void show_angle(void)
-{
-    char txt[32];
-
-    sprintf(txt,"omega=%05d",g_fGyroAngleSpeed_z);
-    ips114_showstr(0,0,txt);
-
-}
+//void show_angle(void)
+//{
+//    char txt[32];
+//
+//    sprintf(txt,"omega=%05d",g_fGyroAngleSpeed_z);
+//    ips114_showstr(0,0,txt);
+//
+//}
 
 

@@ -4,11 +4,11 @@
 #include "headfile.h"
 
 //左上开始 顺时针 1 2 3 4
-#define MOTOR1_A   B12              //定义1电机正反转引脚
-#define MOTOR1_B   PWM4_CH3_B8      //定义1电机PWM引脚
+#define MOTOR4_A   B12              //定义1电机正反转引脚
+#define MOTOR4_B   PWM4_CH3_B8      //定义1电机PWM引脚
 
-#define MOTOR4_A   C12              //定义4电机正反转引脚
-#define MOTOR4_B   PWM4_CH4_B9      //定义4电机PWM引脚
+#define MOTOR1_A   C12              //定义4电机正反转引脚
+#define MOTOR1_B   PWM4_CH4_B9      //定义4电机PWM引脚
 
 #define MOTOR3_A   C10              //定义3电机正反转引脚
 #define MOTOR3_B   PWM4_CH1_B6      //定义3电机PWM引脚

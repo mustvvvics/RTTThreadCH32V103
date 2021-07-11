@@ -16,20 +16,10 @@ void encoder_init(void)
 
 void encoder_get(void) //in isr.c :void EXTI2_IRQHandler(void)
 {
-    //获取编码器数据
-//    if(gpio_get(B5))
-//        encoder_data[0] = ABS(timer_quad_get(TIMER_3));
-//    else
-//        encoder_data[0] = -ABS(timer_quad_get(TIMER_3));
 
     encoder_data[0] = timer_quad_get(TIMER_3);
     timer_quad_clear(TIMER_3);                      //清空计数器
 
-    //读计数值
-//    if(gpio_get(B3))
-//        encoder_data[1] = -ABS(timer_quad_get(TIMER_2));
-//    else
-//        encoder_data[1] = ABS(timer_quad_get(TIMER_2));
 
     encoder_data[1] = timer_quad_get(TIMER_2);
     //清空计数器

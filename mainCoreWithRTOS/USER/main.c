@@ -48,7 +48,6 @@ int main(void)
     while(1)
     {
 //        rt_thread_mdelay(20);//new delay
-
         rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
         if (key_data == 1) { //×ó
             car_flag = 0;

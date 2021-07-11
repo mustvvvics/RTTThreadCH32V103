@@ -1,1 +1,3 @@
-obj/
+mainCoreWithRTOS/obj
+
+camCoreWithRTOS/obj

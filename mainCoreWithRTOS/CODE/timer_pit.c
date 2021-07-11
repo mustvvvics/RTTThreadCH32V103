@@ -5,7 +5,7 @@ void timer1_pit_entry(void *parameter)
 //    static uint32 timeControl;
 //    timeControl++;
 
-    
+
     //采集陀螺仪数据
     //get_icm20602_gyro_spi();
     

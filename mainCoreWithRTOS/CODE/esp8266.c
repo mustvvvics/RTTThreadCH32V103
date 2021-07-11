@@ -13,7 +13,7 @@ void clearError(void){
     expected_omega = 0;
     position_front = 0;
     g_fGyroAngleSpeed_z = 0;
-    expected_y = 0;
+//    expected_y = 0;
     speed_conversion(0,0,0);
     yaw_pid.LocSum = 0;
     yaw_pid.Ek = 0;
@@ -76,7 +76,8 @@ void Tcp_Decode(void)
     //参数修改
     else if(esp8266_buf[4] == 'S' && esp8266_buf[0] == 'C')
     {
-        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y);
+        expected_y = 100 * (esp8266_buf[10] - '0') + 10 * (esp8266_buf[11] - '0') + (esp8266_buf[12] - '0');
+//        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y);//致命因子
         uart_putstr(UART_2,"#0016received_speed!\n");
     }
     //Turn_Kp:6026/n
