@@ -33,6 +33,8 @@ void show_speed(void)
         oled_p6x8str(0, 3, txt);
         sprintf(txt,"AreaRou=%6d",areaDetectRoundaboutLeft);
         oled_p6x8str(0, 4, txt);
+        sprintf(txt,"Fg=%01d|AC=%02d",elementFlagCam,accelerate);
+        oled_p6x8str(0, 5, txt);
 //        sprintf(txt,"OB=%5d OBB=%5d    ",outboundAreaBenchmark, outboundAreaSum);
 //        oled_p6x8str(0, 4, txt);
 //        sprintf(txt,"b2=%d,b3=%d",temp_buff[2],temp_buff[3]);

@@ -9,7 +9,8 @@
 int16 left,right;
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;
-
+uint8 accelerate = 10;//加速因子  两位数 eg：23   ------>  2 . 3
+uint8 elementFlagCam = 0; //0:无元素 1:三叉 2:车库 3:刹车
 
 int16 ABS(int16 x){
     return x>0?x:-x;
@@ -42,7 +43,7 @@ void get_sensor_data(void)
     timer_quad_clear(TIMER_2);
 }
 int16 slave_position=0;
-void process_data(void)
+void process_data(void)//根据协议处理数据，并存入temp_buff中
 {
     slave_position = cameraError;//传递误差
 
@@ -60,6 +61,13 @@ void process_data(void)
     temp_buff[8] = slave_position>>8;            //数据高8位
     temp_buff[9] = slave_position&0xFF;          //数据低8位
 
-    temp_buff[10] = 0xEE;                        //帧尾
+    temp_buff[10] = 0xB3;
+    temp_buff[11] = accelerate>>8;
+    temp_buff[12] = accelerate&0xFF;
+
+    temp_buff[13] = 0xB4;
+    temp_buff[14] = elementFlagCam;
+
+    temp_buff[15] = 0xEE;                        //帧尾
 }
 

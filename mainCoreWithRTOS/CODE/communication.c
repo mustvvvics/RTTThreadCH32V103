@@ -1,5 +1,5 @@
 /*
- * communication.c
+ * communication.c 主核心
  *
  *  Created on: Jun 30, 2021
  *      Author: 29275
@@ -49,4 +49,24 @@ void data_analysis(uint8 *line)
     if(line[1] == 0xB0)    encoder_data[2] = ((int16)line[2] << 8) | line[3];
     if(line[4] == 0xB1)    encoder_data[3] = ((int16)line[5] << 8) | line[6];
     if(line[7] == 0xB2)    position_front  = ((int16)line[8] << 8) | line[9];
+    if(line[10] == 0xB3)   accelerate  = (line[11] << 8) | line[12];
+    if(line[13] == 0xB4)   elementFlag  = line[14];
+
+    switch (elementFlag) {
+        case '0'://无元素
+
+            break;
+        case '1'://三叉
+
+            break;
+        case '2':// 车库
+
+            break;
+        case '3': //刹车
+            car_flag = 0;
+            break;
+        default:
+            break;
+    }
+
 }

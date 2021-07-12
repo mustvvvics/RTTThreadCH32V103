@@ -76,5 +76,8 @@ uint8 go_right=0;
 uint8 go_left=0;
 
 uint8 elementFlag = 0; //0:无元素 1:三叉  2:左环岛 3:右环岛 4:车库 5:刹车
+uint8 accelerate = 10;//加速因子  两位数 eg：23   ------>  2 . 3
+uint8 ThreeWayIntersection;//三叉路口
+uint8 garage;//车库
 
 

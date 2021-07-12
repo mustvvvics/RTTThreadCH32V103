@@ -81,5 +81,8 @@ extern uint8 go_right;
 extern uint8 go_left;
 
 extern uint8 elementFlag;
+extern uint8 accelerate;
+extern uint8 ThreeWayIntersection;//三叉路口
+extern uint8 garage;//车库
 
 #endif /* CODE_VALUE_H_ */

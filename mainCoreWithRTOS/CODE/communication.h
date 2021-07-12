@@ -1,5 +1,5 @@
 /*
- * communication.h
+ * communication.h 主核心
  *
  *  Created on: Jun 30, 2021
  *      Author: 29275
@@ -10,7 +10,7 @@
 
 #include "headfile.h"
 
-#define LINE_LEN                11      //数据长度
+#define LINE_LEN                16      //数据长度
 
 #define E_START                 0       //准备状态
 #define E_OK                    1       //成功

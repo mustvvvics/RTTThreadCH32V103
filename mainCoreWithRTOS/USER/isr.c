@@ -101,7 +101,7 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             encoder_get();//Ö÷ºË±àÂëÆ÷
         }
 
-        if (car_flag == 1) {
+        if (car_flag == 1 ) {
             expected_omega = PID_Loc(0,-position_front,&yaw_pid);
             speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
         }
