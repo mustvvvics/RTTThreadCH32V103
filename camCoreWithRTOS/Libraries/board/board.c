@@ -159,7 +159,7 @@ void rt_hw_console_output(const char *str)
 char rt_hw_console_getchar(void) //串口接收
 {
 //    uint32 dat;
-////    rt_mb_recv(uart_mb, &dat, RT_WAITING_FOREVER);//当没有接收数据的时候会去做其他事情 释放性能
+//    rt_mb_recv(uart_mb, &dat, RT_WAITING_FOREVER);
 //    //uart_getchar(DEBUG_UART, &dat);
 //    return (char)dat;
     return 0;

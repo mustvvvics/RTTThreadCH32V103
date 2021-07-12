@@ -265,20 +265,9 @@ void detectSBend() {
 
 // flagEnterRoundabout: 0 -- no roundabout, 1 -- left, -1 -- right
 void detectRoundabout() {
-    if (roundabouttimes != 0 && roundabouttimes < 50) {
-        roundabouttimes += 1;
+    if (flagEnterRoundabout != 0) {
         return;
     }
-
-    //if (flagEnterRoundabout == 0) {
-    //  flagEnterRoundabout = 1;
-    //  enterRoundaboutTimer = 0;
-    //  roundaboutPhase = 1;
-    //  return;
-    //} else {
-    //  return;
-    //}
-
     roundabouttimes = 0;
 
     detectUpperMissingLeft = detectLowerMissingLeft = 0;
@@ -554,6 +543,7 @@ void adaptThreeWayLane() {
 
 }
 
+
 void detectStartLine(Mat outMat) {
     startlineJumpingPointNum = 0;
     for (iterRow = 40; iterRow < imgRow; ++iterRow) {
@@ -566,6 +556,7 @@ void detectStartLine(Mat outMat) {
             pixelMeanPrevious = pixelMean;
         }
     }
+//    sprintf(txt,"sb=%05d",startlineJumpingPointNum);
 
     if (startlineJumpingPointNum > startlineJumpingPointNumThres) {
         flagEnterStartLine = 1;
@@ -575,7 +566,31 @@ void detectStartLine(Mat outMat) {
 }
 
 void detectOutOfBounds(Mat outMat) {
-    if (flagEnterOutbound) {
+    if (flagEnterOutbound == 1) {
+        if (confirmOutboundDelay == 0 && confirmOutboundDelay != 1) {
+            confirmOutboundDelay = 200;
+        } else if (confirmOutboundDelay == 1) {
+            confirmOutboundDelay = 0;
+
+            // recompare average pixel value
+            outboundAreaSum = 0;
+            for (iterRow = imgRow-1; iterRow > 45; --iterRow) {
+                for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
+                    outboundAreaSum += outMat[iterRow][iterCol];
+                }
+            }
+            if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
+                flagEnterOutbound = 2; // out of bounds is confirmed
+            } else {
+                flagEnterOutbound = 0;
+            }
+        } else {
+            --confirmOutboundDelay;
+        }
+        return;
+    }
+
+    if (flagEnterOutbound == 2) {
         if (exitOutboundDelay == 0 && exitOutboundDelay != 1) {
             exitOutboundDelay = 200;
         } else if (exitOutboundDelay == 1) {
@@ -589,11 +604,13 @@ void detectOutOfBounds(Mat outMat) {
 
     if (outboundAreaBenchmark == 0) {
         // init road info, get a sample of the front area as benchmark
+        outboundAreaBenchmark = 0;
         for (iterRow = imgRow-1; iterRow > 45; --iterRow) {
             for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
                 outboundAreaBenchmark += outMat[iterRow][iterCol];
             }
         }
+        return;
     }
 
     outboundAreaSum = 0;
@@ -604,7 +621,7 @@ void detectOutOfBounds(Mat outMat) {
     }
 
     if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
-        flagEnterOutbound = 1;
+        flagEnterOutbound = 1; // suspect to be out of bounds
     }
 }
 
@@ -612,13 +629,29 @@ void foresight() {
 
 }
 
+// 0 -- none, 1 -- threeWay,
+// 2 -- startLine, 3 -- brake
+void passParameter() {
+    flagCameraElement = 0;
+    if (flagEnterRoundabout != 0 || flagEnterOutbound != 0) {
+        flagCameraElement = 3;
+    }
+    if (flagEnterStartLine != 0) {
+        flagCameraElement = 2;
+    }
+}
+
 void laneAnalyze(Mat outMat){
     missCounterBoth = 0;
     missCounterLeft = 0;
     missCounterRight = 0;
 
+    //uart_putstr(UART_1,"#detectStartLine!\n");
     detectStartLine(outMat);
+
+    //uart_putstr(UART_1,"#detectOutOfBounds!\n");
     detectOutOfBounds(outMat);
+
 
     for (iterRow = imgRow-1; iterRow != 255; --iterRow){
         locateLaneByMeanSlide(outMat);
@@ -627,15 +660,21 @@ void laneAnalyze(Mat outMat){
     }
     laneCenterPrevious = laneCenter[45];
 
+    //uart_putstr(UART_1,"#countJitter!\n");
     countJitter();
 
     // detectSBend();
     //detectThreeWayRoad(outMat);
+    //uart_putstr(UART_1,"#detectRoundabout!\n");
     detectRoundabout();
+
     //detectCrossroad();
+    //uart_putstr(UART_1,"#detectSharpCurve!\n");
     detectSharpCurve();
 
+
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
+        //uart_putstr(UART_1,"#sharpCurveStatus!\n");
         adaptSharpCurve();
     }
 
@@ -647,7 +686,9 @@ void laneAnalyze(Mat outMat){
     for (iterRow=imgRow-1; iterRow > 43; --iterRow) {
         laneCenter[iterRow] = imgCol / 2 - 1;
     }
-
+//    uart_putstr(UART_1,"#passParameter!\n");
+    passParameter();
+//    uart_putstr(UART_1,"enenennenenene");
     // for (iterRow = imgRow - 1; iterRow < 255; --iterRow) {
     //  //printf("rowCenter %d: %d\n", iterRow, laneCenter[iterRow]);
     // }
@@ -667,9 +708,10 @@ void laneAnalyze(Mat outMat){
     //printf("roundaboutPhase: %d\n", roundaboutPhase);
     //printf("enterRoundaboutTimer: %d\n", enterRoundaboutTimer);
     //printf("startlineJumpingPointNum: %d\n", startlineJumpingPointNum);
+    //printf("outboundAreaBenchmark: %d\n", outboundAreaBenchmark);
     //printf("\n");
 
-    getLaneWidth();
+//    getLaneWidth();
 }
 
 void regression() {

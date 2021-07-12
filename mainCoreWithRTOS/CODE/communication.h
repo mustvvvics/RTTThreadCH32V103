@@ -10,7 +10,7 @@
 
 #include "headfile.h"
 
-#define LINE_LEN                16      //数据长度
+#define LINE_LEN                15      //数据长度
 
 #define E_START                 0       //准备状态
 #define E_OK                    1       //成功

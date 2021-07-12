@@ -10,12 +10,10 @@
 
 #include "headfile.h"
 
-#define LINE_LEN                16              //数据长度
+#define LINE_LEN                15              //数据长度
 extern uint8 temp_buff[LINE_LEN];
 extern int16 encoder_left_front,encoder_left_rear;
 extern int16 left,right;
-extern uint8 accelerate;
-extern uint8 elementFlagCam;
 
 void encoder_init(void);
 void get_sensor_data(void);

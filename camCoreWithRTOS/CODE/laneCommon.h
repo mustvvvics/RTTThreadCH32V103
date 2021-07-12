@@ -1,21 +1,26 @@
 #ifndef _laneCommon_h
 #define _laneCommon_h
 
+// **************** uncomment this ********************
 #include "headfile.h"
+// ****************************************************
 
+// ***************** comment this *********************
 // laneBinarize
 //#define uint8 unsigned char
 //#define uint16 unsigned short
 //#define uint32 unsigned int
 //#define uint64 unsigned long
-//
 //#define int8 char
 //#define int32 int
 //#define int16 short
+// ****************************************************
 
 #define imgRow 50
 #define imgCol 188
+// ***************** comment this *********************
 //typedef uint8 Mat[imgRow][imgCol];
+// ****************************************************
 
 #define max(x,y) ((x) > (y) ? (x) : (y))
 #define min(x,y) ((x) < (y) ? (x) : (y))
@@ -46,6 +51,8 @@ extern float detectDistance;
 #define enterRoundabout 1
 #define exitRoundabout  0
 extern int16 flagEnterRoundabout;
+extern uint16 areaDetectRoundaboutLeft;
+extern uint16 areaDetectRoundaboutRight;
 extern uint8 enterRoundaboutTimer;
 
 #define rangeCountJitter    20
@@ -125,10 +132,6 @@ extern uint16 detectPointSum;
 extern uint8 flagEnterThreeWay;
 extern uint8 flagDetectedThreeWayFeature;
 
-//extern uint16 areaDetectRoundabout;
-extern uint16 areaDetectRoundaboutLeft;
-extern uint16 areaDetectRoundaboutRight;
-
 extern uint8 missCounterLeft;
 extern uint8 missCounterRight;
 extern uint8 missCounterBoth;
@@ -174,6 +177,9 @@ extern int32 outboundAreaBenchmark;
 extern int32 outboundAreaSum;
 extern int32 outboundAreaThres;
 extern uint8 flagEnterOutbound;
-extern uint16 exitOutboundDelay;
+extern uint8 exitOutboundDelay;
+extern uint8 confirmOutboundDelay;
 
+extern uint8 accelerateRatio;
+extern uint8 flagCameraElement;
 #endif

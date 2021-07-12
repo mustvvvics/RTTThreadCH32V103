@@ -9,7 +9,6 @@
 int32 laneLocationLeft[imgRow] = {0};
 int32 laneLocationRight[imgRow] = {0};
 
-
 int32 laneCenter[imgRow] = {imgCol / 2};
 int32 laneCenterPrevious = imgCol / 2;
 
@@ -19,8 +18,14 @@ uint8 flagDetectRight[imgRow] = {0};
 float detectDistance = 2.0;
 
 // roundabout status flag
-uint8 enterRoundaboutLeft = 0;
-uint8 enterRoundaboutRight = 0;
+int16 flagEnterRoundabout = 0;
+uint16 areaDetectRoundaboutLeft = 0;
+uint16 areaDetectRoundaboutRight = 0;
+
+float slopeDetectRoundabout = 0;
+float roundaboutSlopeRowLocation = 0;
+uint8 roundaboutDetectionStartRow = 20;
+
 
 /* not activated
 ushort jitterBendRight = 0;
@@ -77,7 +82,6 @@ int32 laneJitterRight = 9999;
 uint8 countJitterBreakRowLeft = 0;
 uint8 countJitterBreakRowRight = 0;
 
-int16 flagEnterRoundabout = 0;
 
 int32 pixelMeanThres = 100;
 int32 pixelMeanPrevious = 0;
@@ -91,9 +95,6 @@ uint8 *flagDetectDesti;
 uint16 detectPointSum = 0;
 uint8 flagEnterThreeWay = 0;
 uint8 flagDetectedThreeWayFeature = 0;
-
-uint16 areaDetectRoundaboutLeft = 0;
-uint16 areaDetectRoundaboutRight = 0;
 
 uint8 missCounterLeft = 0;
 uint8 missCounterRight = 0;
@@ -113,9 +114,6 @@ uint8 detectLowerMissingRight = 0;
 uint8 missingLaneUpperRight = 0;
 uint8 missingLaneLowerRight = 0;
 
-float slopeDetectRoundabout = 0;
-float roundaboutSlopeRowLocation = 0;
-uint8 roundaboutDetectionStartRow = 20;
 
 uint8 enterRoundaboutTimer;
 uint16 curveError = 0;
@@ -140,6 +138,10 @@ uint8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
 int32 outboundAreaSum = 0;
-int32 outboundAreaThres = 0;
+int32 outboundAreaThres = 13000;
 uint8 flagEnterOutbound = 0;
-uint16 exitOutboundDelay = 0;
+uint8 exitOutboundDelay = 0;
+uint8 confirmOutboundDelay = 0;
+
+uint8 accelerateRatio = 10;
+uint8 flagCameraElement = 0;

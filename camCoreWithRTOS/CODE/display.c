@@ -10,31 +10,27 @@ void show_speed(void)
     if (displayFlag == 0) {
         sprintf(txt,"l_f=%05d|r_f=%05d",encoder_left_rear,encoder_left_front);
         ips114_showstr(0, 0, txt);
-        sprintf(txt,"cameraError = %05d",cameraError);
+        sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
         ips114_showstr(0, 1, txt);
+        sprintf(txt,"pMeanT=%03d,Dis=%03d",pixelMeanThres,Int2Float);
+        ips114_showstr(0, 2, txt);
     }
     else {
         sprintf(txt,"l_f=%05d|r_f=%05d",encoder_left_rear,encoder_left_front);
         oled_p6x8str(0, 0, txt);
-        sprintf(txt,"cameraError = %05d",cameraError);
+        sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
         oled_p6x8str(0, 1, txt);
-    }
-
-    if (displayFlag == 0) {
-        ips114_showstr(0,6,"TCP Init Ok");
-        sprintf(txt,"pMeanT=%d,det_Dis=%d",pixelMeanThres,Int2Float);
-        ips114_showstr(0, 2, txt);
-    }
-    else {
-        oled_p6x8str(0,6,"TCP Init Ok");
-        sprintf(txt,"pMeanT=%d,det_Dis=%d",pixelMeanThres,Int2Float);
+        sprintf(txt,"pMeanT=%03d,Dis=%03d",pixelMeanThres,Int2Float);
         oled_p6x8str(0, 2, txt);
-        sprintf(txt,"LJL=%04d LJR=%4d",laneJitterLeft, laneJitterRight);
+
+        sprintf(txt,"LJL=%04d|LJR=%4d",laneJitterLeft, laneJitterRight);
         oled_p6x8str(0, 3, txt);
-        sprintf(txt,"AreaRou=%6d",areaDetectRoundaboutLeft);
-        oled_p6x8str(0, 4, txt);
-        sprintf(txt,"Fg=%01d|AC=%02d",elementFlagCam,accelerate);
-        oled_p6x8str(0, 5, txt);
+        sprintf(txt,"AR_L=%06d",areaDetectRoundaboutLeft);
+        oled_p6x8str(0, 4, txt);//
+        sprintf(txt,"AR_R=%06d",areaDetectRoundaboutRight);
+        oled_p6x8str(0, 5, txt);//
+        sprintf(txt,"start=%03d",startlineJumpingPointNum);
+        oled_p6x8str(0, 6, txt);
 //        sprintf(txt,"OB=%5d OBB=%5d    ",outboundAreaBenchmark, outboundAreaSum);
 //        oled_p6x8str(0, 4, txt);
 //        sprintf(txt,"b2=%d,b3=%d",temp_buff[2],temp_buff[3]);
