@@ -10,8 +10,8 @@
 
 #include "headfile.h"
 
-extern uint16 fivems_tick;
-extern uint16 fives_tick;
+//extern uint16 fivems_tick;
+//extern uint16 fives_tick;
 extern int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 extern int16 position_front;
 
@@ -23,7 +23,7 @@ extern int32 expected_y;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
 extern int16 manual_y;
 extern int16 manual_z;
 extern int32 dx,dy,dz,dist;
-extern uint8 feedBadDog;
+//extern uint8 feedBadDog;
 
 //速度环PID参数
 //8000限幅
@@ -79,5 +79,7 @@ extern uint8 go_forward;
 extern uint8 go_backward;
 extern uint8 go_right;
 extern uint8 go_left;
+
+extern uint8 elementFlag;
 
 #endif /* CODE_VALUE_H_ */

@@ -138,8 +138,8 @@ uint16 startlineJumpingPointNum = 0;
 uint16 startlineJumpingPointNumThres = 50;
 uint8 flagEnterStartLine = 0;
 
-uint16 outboundAreaBenchmark = 0;
-uint16 outboundAreaSum = 0;
-uint16 outboundAreaThres = 0;
+int32 outboundAreaBenchmark = 0;
+int32 outboundAreaSum = 0;
+int32 outboundAreaThres = 0;
 uint8 flagEnterOutbound = 0;
 uint16 exitOutboundDelay = 0;

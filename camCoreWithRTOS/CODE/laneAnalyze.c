@@ -589,16 +589,16 @@ void detectOutOfBounds(Mat outMat) {
 
     if (outboundAreaBenchmark == 0) {
         // init road info, get a sample of the front area as benchmark
-        for (iterRow = imgRow-1; iterRow > 43; --iterRow) {
-            for (iterCol = imgCol-10; iterCol < imgCol+10; ++iterCol) {
+        for (iterRow = imgRow-1; iterRow > 45; --iterRow) {
+            for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
                 outboundAreaBenchmark += outMat[iterRow][iterCol];
             }
         }
     }
 
     outboundAreaSum = 0;
-    for (iterRow = imgRow-1; iterRow > 43; --iterRow) {
-        for (iterCol = imgCol-10; iterCol < imgCol+10; ++iterCol) {
+    for (iterRow = imgRow-1; iterRow > 45; --iterRow) {
+        for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
             outboundAreaSum += outMat[iterRow][iterCol];
         }
     }

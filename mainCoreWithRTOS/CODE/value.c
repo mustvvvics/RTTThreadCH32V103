@@ -7,18 +7,18 @@
 #include "headfile.h"
 
 
-uint16 fivems_tick=0;
-uint16 fives_tick=0;
+//uint16 fivems_tick=0;
+//uint16 fives_tick=0;
 int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 int16 position_front; //偏差
 
 //期望直线速度和角速度
 int16 expected_omega=0;
 int32 expected_y=0;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
-int16 manual_y=0;
+int16 manual_y=0; //遥控行驶
 int16 manual_z=0;
-int32 dx=0,dy=0,dz=0,dist;
-uint8 feedBadDog=1;
+int32 dx=0,dy=0,dz=0,dist;//路径累计
+//uint8 feedBadDog=1;
 
 //速度环PID参数
 //8000限幅
@@ -74,3 +74,7 @@ uint8 go_forward=0;
 uint8 go_backward=0;
 uint8 go_right=0;
 uint8 go_left=0;
+
+uint8 elementFlag = 0; //0:无元素 1:三叉  2:左环岛 3:右环岛 4:车库 5:刹车
+
+

@@ -16,9 +16,12 @@ void show_speed(void)
     ips114_showstr(0,3,txt);
 //    sprintf(txt,"ex_omega=%04d,po_fron=%04d",expected_omega,position_front);
 //    ips114_showstr(0,4,txt);
-
-
-
+    sprintf(txt,"SP=%03d,SI=%03d,SD=%03d=",(int16)S_P,(int16)S_I,(int16)S_D);
+    ips114_showstr(0,4,txt);
+    sprintf(txt,"AP=%03d,AI=%03d,AD=%03d=",(int16)yaw_w_P*1000,(int16)yaw_w_P*1000,(int16)yaw_w_P*1000);
+    ips114_showstr(0,5,txt);
+    sprintf(txt,"TP=%03d,TI=%03d,TD=%03d=",(int16)yaw_P*1000,(int16)yaw_I*1000,(int16)yaw_D*1000);
+    ips114_showstr(0,6,txt);
 }
 
 
@@ -28,7 +31,6 @@ void display_entry(void *parameter)
     {
         show_speed();
     }
-    
 }
 
 

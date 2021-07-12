@@ -29,21 +29,18 @@ void show_speed(void)
         oled_p6x8str(0,6,"TCP Init Ok");
         sprintf(txt,"pMeanT=%d,det_Dis=%d",pixelMeanThres,Int2Float);
         oled_p6x8str(0, 2, txt);
-//        sprintf(txt,"LLS=%07d",laneLocationShifted);
-//        oled_p6x8str(0, 3, txt);
-//        sprintf(txt,"LJL=%07d",laneJitterLeft);
+        sprintf(txt,"LJL=%04d LJR=%4d",laneJitterLeft, laneJitterRight);
+        oled_p6x8str(0, 3, txt);
+        sprintf(txt,"AreaRou=%6d",areaDetectRoundaboutLeft);
+        oled_p6x8str(0, 4, txt);
+//        sprintf(txt,"OB=%5d OBB=%5d    ",outboundAreaBenchmark, outboundAreaSum);
 //        oled_p6x8str(0, 4, txt);
-//        sprintf(txt,"LJR=%07d",laneJitterRight);
-//        oled_p6x8str(0, 5, txt);
 //        sprintf(txt,"b2=%d,b3=%d",temp_buff[2],temp_buff[3]);
 //        oled_p6x8str(0, 3, txt);
 //        sprintf(txt,"b5=%d,b6=%d",temp_buff[5],temp_buff[6]);
 //        oled_p6x8str(0, 4, txt);
 //        sprintf(txt,"left=%d,righ=%d",left,right);
-//        oled_p6x8str(0, 5, txt);
-
-
-
+//        oled_p6x8str(0, 5, txt);n
     }
 
 

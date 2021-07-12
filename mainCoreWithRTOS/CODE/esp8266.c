@@ -47,27 +47,37 @@ void Esp_Init(void)
 
     ESP8266_Clear();
 }
+int32 pidData;
+void recevePidData(int16 receiveWay){
 
+    if (receiveWay == 100) {
+        pidData = 100 * (esp8266_buf[9] - '0') + 10 * (esp8266_buf[10] - '0')
+                        + (esp8266_buf[11] - '0');
+    }
+    else if (receiveWay == 1000) {
+        pidData = 1000 * (esp8266_buf[9] - '0') + 100 * (esp8266_buf[10] - '0')
+                + 10 * (esp8266_buf[11] - '0') + (esp8266_buf[12] - '0');
+    }
+}
 
 void Tcp_Decode(void)
 {
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
-
 //    char txt[32];
-//    int32 Int2Float;
+
 //
-    if(strcmp((char *)esp8266_buf,"init\n") == 0) { //
+    if(strcmp((char *)esp8266_buf,"init\r\n") == 0) { //
         ips114_showstr(0,5,"TCP Init Ok");
         uart_putstr(UART_2,"#0008control\n");
     }
     /**************************************************************************/
     //启停
-    else if(strcmp((char *)esp8266_buf,"car_go\n") == 0){
+    else if(strcmp((char *)esp8266_buf,"car_go\r\n") == 0){
         car_flag = 1;
         uart_putstr(UART_2,"#0013received_go!\n");
     }
 
-    else if (strcmp((char *)esp8266_buf,"car_stop\n") == 0) {
+    else if (strcmp((char *)esp8266_buf,"car_stop\r\n") == 0) {
         car_flag =0;
         clearError();//清除累计误差
         uart_putstr(UART_2,"#0015received_stop!\n");
@@ -81,41 +91,69 @@ void Tcp_Decode(void)
         uart_putstr(UART_2,"#0016received_speed!\n");
     }
     //Turn_Kp:6026/n
-//    else if(esp8266_buf[6] == 'p' && esp8266_buf[0] == 'T')
-//    {
-//        sscanf(esp8266_buf,"Turn_Kp:%d\n",&Int2Float);
-//        uart_putstr(UART_2,"#0013received_Kp!\n");
-//        yaw_w_pid.Kp=(float)Int2Float*0.001f;
-//        ips114_showfloat(0,5,yaw_pid.Kp,3,3);
-//    }
-//    //Turn_Kd:19775/n yaw_w_pid.Ki
-//    else if(esp8266_buf[6] == 'i' && esp8266_buf[0] == 'T')
-//    {
-//        sscanf(esp8266_buf,"Turn_Ki:%d\n",&Int2Float);
-//        uart_putstr(UART_2,"#0013received_Kp!\n");
-//        yaw_w_pid.Ki=(float)Int2Float*0.001f;
-//        ips114_showfloat(0,6,yaw_pid.Kp,3,3);
-//    }
-//
-//    else if(esp8266_buf[6] == 'd' && esp8266_buf[0] == 'T')
-//    {
-//        sscanf(esp8266_buf,"Turn_Kd:%d\n",&Int2Float);
-//        uart_putstr(UART_2,"#0013received_Kd!\n");
-//        yaw_pid.Kd=(float)Int2Float*0.001f;
-//        ips114_showfloat(0,7,yaw_pid.Kd,3,3);
-//    }
+    /*********************************************************************************************/
+    //速度环pid整定   "Speed_Kp:%d\n"  float S_P=136;
+    else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'S'){
+        recevePidData(100);
+        uart_putstr(UART_2,"#0010Speed_Kp!\n");
+        S_P=(float)pidData;
+    }
+    else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'S'){
+        recevePidData(100);
+        uart_putstr(UART_2,"#0010Speed_Ki!\n");
+        S_I=(float)pidData;
+    }
+    else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'S'){
+        recevePidData(100);
+        uart_putstr(UART_2,"#0010Speed_Kd!\n");
+        S_D=(float)pidData;
+    }
+    /*********************************************************************************************/
+    //角速度环pid整定   "Angle_Kp:%d\n" float yaw_w_I=0.01; EG: 10  ---> 0.010
+    else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'A'){
+        recevePidData(1000);
+        uart_putstr(UART_2,"#0010Angle_Kp!\n");
+        yaw_w_P=(float)pidData*0.001f;
+    }
+    else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'A'){
+        recevePidData(1000);
+        uart_putstr(UART_2,"#0010Angle_Ki!\n");
+        yaw_w_I=(float)pidData*0.001f;
+    }
+    else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'A'){
+        recevePidData(1000);
+        uart_putstr(UART_2,"#0010Angle_Kd!\n");
+        yaw_w_D=(float)pidData*0.001f;
+    }
+    /*********************************************************************************************/
+    //转向环pid整定    "Turnn_Kp:%d\n"   eg: 4000 ----> 4
+    else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'T'){
+        recevePidData(1000);
+        uart_putstr(UART_2,"#0010Turnn_Kp!\n");
+        yaw_P=(float)pidData*0.001f;
+    }
+    else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'T'){
+        recevePidData(1000);
+        uart_putstr(UART_2,"#0010Turnn_Ki!\n");
+        yaw_I=(float)pidData*0.001f;
+    }
+    else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'T'){
+        recevePidData(1000);
+        uart_putstr(UART_2,"#0010Turnn_Kd!\n");
+        yaw_D=(float)pidData*0.001f;
+    }
     /**************************************************************************/
-    //控制
-    else if(strcmp((char *)esp8266_buf,"Forward\n") == 0)
+    //控制前后左右
+    else if(strcmp((char *)esp8266_buf,"Forward\r\n") == 0)
     {go_forward=1;uart_putstr(UART_2,"#0018received_Forward!\n");rt_mb_send(key_mailbox, 6);}
 
-    else if(strcmp((char *)esp8266_buf,"Backward\n") == 0)
+    else if(strcmp((char *)esp8266_buf,"Backward\r\n") == 0)
     {go_backward=1;uart_putstr(UART_2,"#0019received_Backward!\n");rt_mb_send(key_mailbox, 7);}
 
-    else if(strcmp((char *)esp8266_buf,"Right\n") == 0)
+    else if(strcmp((char *)esp8266_buf,"Right\r\n") == 0)
     {go_right=1;uart_putstr(UART_2,"#0016received_Right!\n");rt_mb_send(key_mailbox, 8);}
 
-    else if(strcmp((char *)esp8266_buf,"Left\n") == 0)
+    else if(strcmp((char *)esp8266_buf,"Left\r\n") == 0)
     {go_left=1;uart_putstr(UART_2,"#0015received_Left!\n");rt_mb_send(key_mailbox, 9);}
 
     ESP8266_Clear();
@@ -123,35 +161,18 @@ void Tcp_Decode(void)
 
 void manual_control(void)
 {
-    if(key_data==6)
-    {
-        clearError();
-        manual_y = 10;
-        manual_z = 0;
+    if(key_data==6){
+        clearError();manual_y = 10;manual_z = 0;
     }
-
-    if(key_data==7)
-    {
-        clearError();
-        manual_y=-10;
-        manual_z = 0;
-
+    if(key_data==7){
+        clearError();manual_y=-10;manual_z = 0;
     }
-
-    if(key_data==8)
-    {
-        clearError();
-        manual_z=-40;
-        manual_y = 0;
+    if(key_data==8){
+        clearError();manual_z=-40;manual_y = 0;
     }
-
-    if(key_data==9)
-    {
-        clearError();
-        manual_z=40;
-        manual_y = 0;
+    if(key_data==9){
+        clearError();manual_z=40;manual_y = 0;
     }
-
 }
 
 const char* message0 = ",";
@@ -189,7 +210,6 @@ void esp8266Init(void)
 
     esp8266_sem = rt_sem_create("esp8266", 0, RT_IPC_FLAG_FIFO);
 
-
     //创建线程
     tidEsp8266 = rt_thread_create("esp8266", esp8266Entry, RT_NULL, 1024, 2, 200);//倒数 心跳 优先级 stack_size
 
@@ -197,6 +217,5 @@ void esp8266Init(void)
     if(RT_NULL != tidEsp8266)
     {
         rt_thread_startup(tidEsp8266);
-//        rt_kprintf("8266_startup\n");
     }
 }

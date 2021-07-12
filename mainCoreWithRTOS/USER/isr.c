@@ -374,6 +374,7 @@ void USART2_IRQHandler(void)
         data_temp = (uint8)USART_ReceiveData(USART2);
 
         esp8266_buf[esp8266_cnt++] = data_temp;
+
         if (data_temp == 0x0A) { //接收到了换行符
             rt_sem_release(esp8266_sem);//释放信号量
         }

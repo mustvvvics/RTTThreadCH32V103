@@ -170,9 +170,9 @@ extern uint16 startlineJumpingPointNum;
 extern uint16 startlineJumpingPointNumThres;
 extern uint8 flagEnterStartLine;
 
-extern uint16 outboundAreaBenchmark;
-extern uint16 outboundAreaSum;
-extern uint16 outboundAreaThres;
+extern int32 outboundAreaBenchmark;
+extern int32 outboundAreaSum;
+extern int32 outboundAreaThres;
 extern uint8 flagEnterOutbound;
 extern uint16 exitOutboundDelay;
 
