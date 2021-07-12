@@ -10,6 +10,7 @@ int16 left,right;
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;
 
+
 int16 ABS(int16 x){
     return x>0?x:-x;
 }

@@ -47,9 +47,9 @@ void Esp_Init(void)
 
     ESP8266_Clear();
 }
-int32 pidData;
-void recevePidData(int16 receiveWay){
 
+int32 recevePidData(int16 receiveWay){
+    int32 pidData = 0;
     if (receiveWay == 100) {
         pidData = 100 * (esp8266_buf[9] - '0') + 10 * (esp8266_buf[10] - '0')
                         + (esp8266_buf[11] - '0');
@@ -58,13 +58,14 @@ void recevePidData(int16 receiveWay){
         pidData = 1000 * (esp8266_buf[9] - '0') + 100 * (esp8266_buf[10] - '0')
                 + 10 * (esp8266_buf[11] - '0') + (esp8266_buf[12] - '0');
     }
+    return pidData;
 }
 
 void Tcp_Decode(void)
 {
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
 //    char txt[32];
-
+    int32 dataChange;
 //
     if(strcmp((char *)esp8266_buf,"init\r\n") == 0) { //
         ips114_showstr(0,5,"TCP Init Ok");
@@ -94,53 +95,53 @@ void Tcp_Decode(void)
     /*********************************************************************************************/
     //速度环pid整定   "Speed_Kp:%d\n"  float S_P=136;
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'S'){
-        recevePidData(100);
+        dataChange = recevePidData(100);
         uart_putstr(UART_2,"#0010Speed_Kp!\n");
-        S_P=(float)pidData;
+        S_P=(float)dataChange;
     }
     else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'S'){
-        recevePidData(100);
+        dataChange = recevePidData(100);
         uart_putstr(UART_2,"#0010Speed_Ki!\n");
-        S_I=(float)pidData;
+        S_I=(float)dataChange;
     }
     else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'S'){
-        recevePidData(100);
+        dataChange = recevePidData(100);
         uart_putstr(UART_2,"#0010Speed_Kd!\n");
-        S_D=(float)pidData;
+        S_D=(float)dataChange;
     }
     /*********************************************************************************************/
     //角速度环pid整定   "Angle_Kp:%d\n" float yaw_w_I=0.01; EG: 10  ---> 0.010
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'A'){
-        recevePidData(1000);
+        dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Angle_Kp!\n");
-        yaw_w_P=(float)pidData*0.001f;
+        yaw_w_P=(float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'A'){
-        recevePidData(1000);
+        dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Angle_Ki!\n");
-        yaw_w_I=(float)pidData*0.001f;
+        yaw_w_I=(float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'A'){
-        recevePidData(1000);
+        dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Angle_Kd!\n");
-        yaw_w_D=(float)pidData*0.001f;
+        yaw_w_D=(float)dataChange*0.001f;
     }
     /*********************************************************************************************/
     //转向环pid整定    "Turnn_Kp:%d\n"   eg: 4000 ----> 4
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'T'){
-        recevePidData(1000);
+        dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Kp!\n");
-        yaw_P=(float)pidData*0.001f;
+        yaw_P=(float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'T'){
-        recevePidData(1000);
+        dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Ki!\n");
-        yaw_I=(float)pidData*0.001f;
+        yaw_I=(float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'T'){
-        recevePidData(1000);
+        dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Kd!\n");
-        yaw_D=(float)pidData*0.001f;
+        yaw_D=(float)dataChange*0.001f;
     }
     /**************************************************************************/
     //控制前后左右
