@@ -31,7 +31,7 @@ int main(void)
     //timer_pit_init();
 
     //舵机初始化，默认在中位上
-    pwm_init(PWM1_CH1_A8, 50, 680);//舵机 TIMER1  338  1015
+    pwm_init(PWM1_CH1_A8, 50, 670);//舵机 TIMER1  338 670 1000
 
     esp8266Init();
     PID_Init();
@@ -51,6 +51,7 @@ int main(void)
         rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
         if (key_data == 1) { //左
             car_flag = 0;
+            pwm_duty(PWM1_CH1_A8, 1000);
         }
         else if (key_data == 2) {
             if (car_flag == 0) {
@@ -63,9 +64,11 @@ int main(void)
         }
         else if (key_data == 3) { //上
             expected_y = expected_y + 10;
+            pwm_duty(PWM1_CH1_A8, 680);
         }
         else if (key_data == 4) { //右
             car_flag = 0;
+            pwm_duty(PWM1_CH1_A8, 338);
         }
         else if (key_data == 5) { //下
             expected_y = expected_y - 10;

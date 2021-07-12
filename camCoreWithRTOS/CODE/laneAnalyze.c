@@ -174,7 +174,7 @@ void countJitter() {
     }
 }
 
-// sharpCurveStatus: 
+// sharpCurveStatus:
 //  1   --  left big curve,
 //  2   --  left sharp curve,
 //  -1  --  right big curve,
@@ -293,9 +293,9 @@ void detectRoundabout() {
     slopeDetectRoundabout = roundaboutSlopeRowLocation = 0;
 
     // left lane
-    if (flagDetectLeft[20]) {
+    if (flagDetectLeft[roundaboutDetectionStartRow]) {
         // upper
-        for (iterRow = 20; iterRow > 1; iterRow--) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow > 1; iterRow--) {
             if (flagDetectLeft[iterRow-1] || flagDetectLeft[iterRow-2]) {
                 continue;
             }
@@ -305,7 +305,7 @@ void detectRoundabout() {
         }
 
         // lower
-        for (iterRow = 20; iterRow < imgRow-2; iterRow++) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-2; iterRow++) {
             if (flagDetectLeft[iterRow+1] || flagDetectLeft[iterRow+2]) {
                 continue;
             }
@@ -319,27 +319,20 @@ void detectRoundabout() {
                                        * laneWidth[49] / laneWidth[missingLaneLowerLeft];
             laneLocationShiftedUpper = (laneLocationLeft[missingLaneUpperLeft] -imgCol / 2) \
                                        * laneWidth[49] / laneWidth[missingLaneUpperLeft];
-            if (laneLocationShiftedLower - laneLocationShiftedUpper > 5 || laneLocationShiftedLower - laneLocationShiftedUpper < -5) {
+            if (laneLocationShiftedLower - laneLocationShiftedUpper > 5) {
                 return;
             }
-            roundaboutSlopeRowLocation = min(laneLocationLeft[laneLocationShiftedLower], laneLocationRight[laneLocationShiftedUpper]);
+            roundaboutSlopeRowLocation = min(laneLocationShiftedLower, laneLocationShiftedUpper);
             for (iterRow=missingLaneLowerLeft-1; iterRow>missingLaneUpperLeft+1; --iterRow) {
-                areaDetectRoundaboutLeft += laneLocationLeft[iterRow] - roundaboutSlopeRowLocation;
+                areaDetectRoundaboutLeft += (laneLocationLeft[iterRow] - imgCol / 2) \
+                                            * laneWidth[49] / laneWidth[iterRow]     \
+                                            - roundaboutSlopeRowLocation;
+            }
+            if (1 == 2) {
+
             }
             //printf("area roundabout: %d\n", areaDetectRoundaboutLeft);
             //printf("roundabout start row %d, end row %d\n", missingLaneLowerLeft, missingLaneUpperLeft);
-            // slopeDetectRoundabout = (laneLocationLeft[missingLaneUpperLeft] - laneLocationRight[missingLaneLowerLeft]) / (missingLaneLowerLeft - missingLaneUpperLeft);
-            // roundaboutSlopeRowLocation = laneLocationLeft[missingLaneLowerLeft-1];
-            // for (iterRow=missingLaneLowerLeft-1; iterRow>missingLaneUpperLeft+1; --iterRow, roundaboutSlopeRowLocation += slopeDetectRoundabout) {
-            //  areaDetectRoundaboutLeft += laneLocationLeft[iterRow] - (uint16)roundaboutSlopeRowLocation;
-            // }
-            // if (areaDetectRoundaboutLeft > 650) {
-            //  flagEnterRoundabout = 1;
-            //  roundabouttimes = 0;
-            //  //enterRoundaboutTimer = 0;
-            //  //roundaboutPhase = 1;
-            //  return;
-            // }
         }
     }
 
@@ -366,6 +359,7 @@ void detectRoundabout() {
             break;
         }
 
+        // TODO
         if (detectUpperMissingRight && detectLowerMissingRight) {
             slopeDetectRoundabout = (laneLocationRight[missingLaneLowerRight] - laneLocationRight[missingLaneUpperRight]) / (missingLaneLowerRight - missingLaneUpperRight);
             roundaboutSlopeRowLocation = laneLocationRight[missingLaneLowerRight-1];
@@ -646,7 +640,7 @@ void laneAnalyze(Mat outMat){
     }
 
     if (flagEnterRoundabout) {
-        adaptRoundaboutLane();
+//        adaptRoundaboutLane();
     }
 
     // add a strightline to help compute lane slope
@@ -675,7 +669,7 @@ void laneAnalyze(Mat outMat){
     //printf("startlineJumpingPointNum: %d\n", startlineJumpingPointNum);
     //printf("\n");
 
-    //getLaneWidth();
+    getLaneWidth();
 }
 
 void regression() {

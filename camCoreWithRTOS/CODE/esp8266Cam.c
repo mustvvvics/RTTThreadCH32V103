@@ -91,6 +91,7 @@ void sendMessage(void) {
     }
 
     uart_putstr(UART_1,message0);//1
+    rt_thread_mdelay(20);//new delay
 
     for (ii = 0; ii < imgRow; ++ii) {
         sprintf(txtA,"%04d ",laneLocationRight[ii]);//5
@@ -98,6 +99,7 @@ void sendMessage(void) {
     }
 
     uart_putstr(UART_1,message0);//1
+    rt_thread_mdelay(20);//new delay
 
     for (ii = 0; ii < imgRow; ++ii) {
         sprintf(txtB,"%04d ",laneCenter[ii]);//5
@@ -105,6 +107,7 @@ void sendMessage(void) {
     }
 
     uart_putstr(UART_1,message0);//1
+    rt_thread_mdelay(20);//new delay
 
     for (ii = 0; ii < imgRow; ++ii) {
         sprintf(txtC,"%01d ",flagDetectLeft[ii]);//3
@@ -112,6 +115,7 @@ void sendMessage(void) {
     }
 
     uart_putstr(UART_1,message0);//1
+    rt_thread_mdelay(20);//new delay
 
     for (ii = 0; ii < imgRow; ++ii) {
         sprintf(txtC,"%01d ",flagDetectRight[ii]);//3
@@ -119,6 +123,7 @@ void sendMessage(void) {
     }
 
     uart_putstr(UART_1,message0);//1
+    rt_thread_mdelay(20);//new delay
 
     //5+1+5+1+3+1+3+1+2+1+2+1+6+1+6=39
 //    sprintf(txtD,"%05d %05d %03d %03d %02d %02d %06d %06d",cameraError,slope,sharpCurveRow

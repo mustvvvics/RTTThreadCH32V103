@@ -35,12 +35,12 @@ void show_speed(void)
 //        oled_p6x8str(0, 4, txt);
 //        sprintf(txt,"LJR=%07d",laneJitterRight);
 //        oled_p6x8str(0, 5, txt);
-        sprintf(txt,"b2=%d,b3=%d",temp_buff[2],temp_buff[3]);
-        oled_p6x8str(0, 3, txt);
-        sprintf(txt,"b5=%d,b6=%d",temp_buff[5],temp_buff[6]);
-        oled_p6x8str(0, 4, txt);
-        sprintf(txt,"left=%d,righ=%d",left,right);
-        oled_p6x8str(0, 5, txt);
+//        sprintf(txt,"b2=%d,b3=%d",temp_buff[2],temp_buff[3]);
+//        oled_p6x8str(0, 3, txt);
+//        sprintf(txt,"b5=%d,b6=%d",temp_buff[5],temp_buff[6]);
+//        oled_p6x8str(0, 4, txt);
+//        sprintf(txt,"left=%d,righ=%d",left,right);
+//        oled_p6x8str(0, 5, txt);
 
 
 

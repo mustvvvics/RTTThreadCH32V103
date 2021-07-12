@@ -14,8 +14,8 @@ void show_speed(void)
     ips114_showstr(0,2,txt);
     sprintf(txt,"key=%02d,sp=%04d",key_data,expected_y);
     ips114_showstr(0,3,txt);
-    sprintf(txt,"ex_omega=%04d,po_fron=%04d",expected_omega,position_front);
-    ips114_showstr(0,4,txt);
+//    sprintf(txt,"ex_omega=%04d,po_fron=%04d",expected_omega,position_front);
+//    ips114_showstr(0,4,txt);
 
 
 

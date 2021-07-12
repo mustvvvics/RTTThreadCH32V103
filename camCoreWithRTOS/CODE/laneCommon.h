@@ -1,7 +1,7 @@
 #ifndef _laneCommon_h
 #define _laneCommon_h
 
-//#include "headfile.h"
+#include "headfile.h"
 
 // laneBinarize
 //#define uint8 unsigned char
@@ -149,6 +149,7 @@ extern uint8 missingLaneLowerRight;
 
 extern float slopeDetectRoundabout;
 extern float roundaboutSlopeRowLocation;
+extern uint8 roundaboutDetectionStartRow;
 extern uint16 curveError;
 extern int32 bigCurveThres;
 

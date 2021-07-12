@@ -57,7 +57,7 @@ void Tcp_Decode(void)
 //    int32 Int2Float;
 //
     if(strcmp((char *)esp8266_buf,"init\n") == 0) { //
-        ips114_showstr(0,4,"TCP Init Ok");
+        ips114_showstr(0,5,"TCP Init Ok");
         uart_putstr(UART_2,"#0008control\n");
     }
     /**************************************************************************/

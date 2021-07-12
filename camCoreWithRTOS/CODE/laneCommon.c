@@ -29,12 +29,13 @@ ushort jitterBendLeft = 0;
 
 // predefined lane half width
 int32 laneWidth[imgRow] = {
-    16, 17, 18, 19, 21, 22, 23, 25, 26, 27,
-    29, 31, 32, 33, 35, 36, 37, 39, 40, 41,
-    42, 44, 45, 46, 48, 49, 50, 52, 53, 55,
-    56, 57, 59, 60, 61, 63, 65, 65, 67, 68,
-    69, 71, 73, 73, 75, 77, 78, 79, 82, 83,
+    20, 26, 32, 32, 32, 32, 36, 36, 38, 40,
+    42, 44, 46, 46, 48, 52, 52, 52, 52, 56,
+    56, 56, 60, 62, 62, 64, 64, 68, 68, 68,
+    72, 72, 74, 78, 78, 80, 82, 82, 84, 84,
+    86, 88, 90, 92, 92, 94, 96, 96, 100, 100
 };
+
 
 
 // sharp curve
@@ -114,6 +115,7 @@ uint8 missingLaneLowerRight = 0;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
+uint8 roundaboutDetectionStartRow = 20;
 
 uint8 enterRoundaboutTimer;
 uint16 curveError = 0;
