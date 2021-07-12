@@ -44,7 +44,6 @@ int main(void)
     //开外部中断
     gpio_interrupt_init(B2, RISING, GPIO_INT_CONFIG);       //B2初始化为GPIO 上升沿触发
     nvic_init(EXTI2_IRQn, 1, 1, ENABLE);                    //EXTI2优先级配置，抢占优先级1，次优先级1
-
     while(1)
     {
         rt_thread_mdelay(20);//new delay

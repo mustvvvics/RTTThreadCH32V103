@@ -9,8 +9,6 @@ void timer1_pit_entry(void *parameter)
     uart_putbuff(UART_3, temp_buff, LINE_LEN);  //通过串口3将数据发送出去。
     GPIO_PIN_SET(B12);
     GPIO_PIN_RESET(B12);                         //A0引脚拉低
-
-
 }
 
 

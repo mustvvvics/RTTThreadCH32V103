@@ -13,6 +13,8 @@
 #define LINE_LEN                11              //数据长度
 extern uint8 temp_buff[LINE_LEN];
 extern int16 encoder_left_front,encoder_left_rear;
+extern int16 left,right;
+
 
 void encoder_init(void);
 void get_sensor_data(void);

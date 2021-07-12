@@ -21,6 +21,7 @@ void get_slave_data(uint8 data)
         {
             uart_num = 0;
             uart_flag = E_FRAME_HEADER_ERROR;
+//            rt_kprintf("HEADERR\n");
         }
     }
 
@@ -31,10 +32,12 @@ void get_slave_data(uint8 data)
         if(0xEE == temp_buff[LINE_LEN - 1])
         {
             uart_flag = E_OK;
+//            rt_kprintf("ok\n");
         }
         else    //接收到最后一个字节不是0xEE，帧尾错误
         {
             uart_flag = E_FRAME_RTAIL_ERROR;
+//            rt_kprintf("ERROR\n");
         }
         uart_num = 0;
     }

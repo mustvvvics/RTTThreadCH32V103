@@ -17,6 +17,8 @@ void show_speed(void)
     sprintf(txt,"ex_omega=%04d,po_fron=%04d",expected_omega,position_front);
     ips114_showstr(0,4,txt);
 
+
+
 }
 
 

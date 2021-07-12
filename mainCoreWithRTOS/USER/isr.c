@@ -93,47 +93,44 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
     if(SET == EXTI_GetITStatus(EXTI_Line2))
     {
 
-        if(uart_flag == E_OK)                           //µÈ´ý½ÓÊÕÊý¾Ý
+        while (uart_flag != E_OK);                        //µÈ´ý½ÓÊÕÊý¾Ý
         {
             AngleZ_Get();
             data_analysis(temp_buff);//Êý¾Ý½âÎö Í¼ÏñºË±àÂëÆ÷  Æ«²îÊý¾Ý
             uart_flag = E_START;
             encoder_get();//Ö÷ºË±àÂëÆ÷
         }
+
         if (car_flag == 1) {
             expected_omega = PID_Loc(0,-position_front,&yaw_pid);
             speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
-
-
         }
         else {
-//            speed_conversion(0,0,0);
             speed_conversion(0,manual_y,manual_z);
         }
-        //µç»ú¿ØÖÆËÙ¶È»·
-//
-//        motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-//        motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-//        motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-//        motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+         //µç»ú¿ØÖÆËÙ¶È»·
+    //
+    //        motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+    //        motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+    //        motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+    //        motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
 
-        motor1_ctl(4000);
-        motor2_ctl(4000);
-        motor3_ctl(4000);
-        motor4_ctl(4000);
-//        /***********************************************************************/
-//        //Ò£¿Ø
-//        if(count_en == 1)
-//        {
-//            //Àï³Ì¼Æ
-//            //dx += (encoder_data[0]-encoder_data[3])/2;
-//            dy += (encoder_data[3]-encoder_data[2]+encoder_data[1]-encoder_data[0])/4;//ËÄ¸öÂÖ×ÓÕýÖµÏà¼Ó
-//            dz += (-encoder_data[3]-encoder_data[2]-encoder_data[1]-encoder_data[0]);//×ó±ßÁ½¸öÏòÄÚ£¬ÓÒ±ßÁ½¸öÏòÍâ ->Ïò×óÐÐ½ø
-//            //dist = sqrt(dx*dx+dy*dy);
-//            //total_z += (int16)g_fGyroAngleSpeed_z;
-//            //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;//Çå¿Õ²¢¹Ø±ÕÀï³Ì¼Æ
-//        }
-
+         motor1_ctl(4000);
+         motor2_ctl(4000);
+         motor3_ctl(4000);
+         motor4_ctl(4000);
+    //        /***********************************************************************/
+    //        //Ò£¿Ø
+    //        if(count_en == 1)
+    //        {
+    //            //Àï³Ì¼Æ
+    //            //dx += (encoder_data[0]-encoder_data[3])/2;
+    //            dy += (encoder_data[3]-encoder_data[2]+encoder_data[1]-encoder_data[0])/4;//ËÄ¸öÂÖ×ÓÕýÖµÏà¼Ó
+    //            dz += (-encoder_data[3]-encoder_data[2]-encoder_data[1]-encoder_data[0]);//×ó±ßÁ½¸öÏòÄÚ£¬ÓÒ±ßÁ½¸öÏòÍâ ->Ïò×óÐÐ½ø
+    //            //dist = sqrt(dx*dx+dy*dy);
+    //            //total_z += (int16)g_fGyroAngleSpeed_z;
+    //            //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;//Çå¿Õ²¢¹Ø±ÕÀï³Ì¼Æ
+    //        }
 
 
         EXTI_ClearITPendingBit(EXTI_Line2);
@@ -403,6 +400,7 @@ void USART3_IRQHandler(void)/***************************************************
         dat_USART3 = (uint8)USART_ReceiveData(USART3);                //»ñÈ¡´®¿ÚÊý¾Ý
 
         get_slave_data(dat_USART3);                            //½«Ã¿Ò»¸ö×Ö½ÚµÄ´®¿ÚÊý¾Ý´æÈëtemp_buffÖÐ¡£
+
     }
 
     rt_interrupt_leave();       //ÍË³öÖÐ¶Ï

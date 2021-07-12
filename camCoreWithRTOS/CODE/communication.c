@@ -6,7 +6,7 @@
  */
 #include "headfile.h"
 
-
+int16 left,right;
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;
 
@@ -22,6 +22,7 @@ void encoder_init(void)
 
 void get_sensor_data(void)
 {
+    left = timer_quad_get(TIMER_3);
     if(gpio_get(B5))
         encoder_left_front = ABS(timer_quad_get(TIMER_3));
     else
@@ -30,6 +31,7 @@ void get_sensor_data(void)
     timer_quad_clear(TIMER_3);                      //清空计数器
 
     //读计数值
+    right = timer_quad_get(TIMER_2);
     if(gpio_get(B3))
         encoder_left_rear = -ABS(timer_quad_get(TIMER_2));
     else
