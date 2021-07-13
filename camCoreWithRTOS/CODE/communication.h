@@ -15,7 +15,7 @@
 
 extern uint8 temp_buff[LINE_LEN];
 extern int16 encoder_left_front,encoder_left_rear;
-extern int16 left,right;
+//extern int16 left,right;
 extern uint8 Gyro_buff[5];
 extern int16 gyroData;//ÍÓÂÝÒÇÊý¾Ý
 

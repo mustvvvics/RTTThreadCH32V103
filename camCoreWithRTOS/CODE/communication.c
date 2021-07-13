@@ -1,19 +1,13 @@
-/*
- * communication.c
- *
- *  Created on: Jun 30, 2021
- *      Author: 29275
- */
 #include "headfile.h"
 
-int16 left,right;
+//int16 left,right;
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
-int16 encoder_left_front,encoder_left_rear;
-uint8 Gyro_buff[GyroLINE_LEN];
-int16 gyroData;
+int16 encoder_left_front,encoder_left_rear;     //前轮左右编码器数值
+uint8 Gyro_buff[GyroLINE_LEN];                  //接收陀螺仪数据buff
+int16 gyroData;                                 //接收陀螺仪数据
+int16 slave_position=0;                         //传递误差
 
-
-int16 ABS(int16 x){
+int16 ABS(int16 x){                             //绝对值
     return x>0?x:-x;
 }
 
@@ -25,7 +19,7 @@ void encoder_init(void)
 
 void get_sensor_data(void)
 {
-    left = timer_quad_get(TIMER_3);
+//    left = timer_quad_get(TIMER_3);
     if(gpio_get(B5))
         encoder_left_front = ABS(timer_quad_get(TIMER_3));
     else
@@ -34,7 +28,7 @@ void get_sensor_data(void)
     timer_quad_clear(TIMER_3);                      //清空计数器
 
     //读计数值
-    right = timer_quad_get(TIMER_2);
+//    right = timer_quad_get(TIMER_2);
     if(gpio_get(B3))
         encoder_left_rear = -ABS(timer_quad_get(TIMER_2));
     else
@@ -43,7 +37,7 @@ void get_sensor_data(void)
     //清空计数器
     timer_quad_clear(TIMER_2);
 }
-int16 slave_position=0;
+
 void process_data(void)//根据协议处理数据，并存入temp_buff中
 {
     slave_position = cameraError;//传递误差
