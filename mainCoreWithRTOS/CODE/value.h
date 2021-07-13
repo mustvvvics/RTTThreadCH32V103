@@ -85,4 +85,6 @@ extern uint8 accelerate;
 extern uint8 ThreeWayIntersection;//三叉路口
 extern uint8 garage;//车库
 
+extern uint8 pidModel; //pid 调试
+
 #endif /* CODE_VALUE_H_ */

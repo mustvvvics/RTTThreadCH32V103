@@ -53,7 +53,9 @@ extern float detectDistance;
 extern int8 flagEnterRoundabout;
 extern int32 areaDetectRoundaboutLeft;
 extern int32 areaDetectRoundaboutRight;
-extern uint8 enterRoundaboutTimer;
+extern int32 areaDetectRoundaboutThres;
+extern uint8 exitRoundaboutTimer;
+//extern uint8 enterRoundaboutTimer;
 
 #define rangeCountJitter    20
 

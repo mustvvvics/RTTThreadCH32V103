@@ -101,15 +101,20 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             encoder_get();//Ö÷ºË±àÂëÆ÷
         }
 
-        if (car_flag == 1 ) {
+        if (car_flag == 1 && pidModel == 0 ) { //×ªÏò»·Õû¶¨
             expected_omega = PID_Loc(0,-position_front,&yaw_pid);
             speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
         }
+        else if (car_flag == 1 && pidModel == 1) {//ËÙ¶È»·Õû¶¨
+            speed_conversion(0,manual_y,0);
+        }
+        else if (car_flag == 1 && pidModel == 2) {
+            speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));//½Ç¶È»·Õû¶¨
+        }
+         //µç»ú¿ØÖÆËÙ¶È»·
         else {
             speed_conversion(0,manual_y,manual_z);
         }
-         //µç»ú¿ØÖÆËÙ¶È»·
-
             motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
             motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
             motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));

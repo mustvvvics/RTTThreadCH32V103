@@ -8,7 +8,9 @@ void show_speed(void)
     //ip in 7
     sprintf(txt,"l_f=%05d|r_f=%05d",encoder_data[3],encoder_data[2]);//
     ips114_showstr(0,0,txt);
-    sprintf(txt,"l_r=%05d|r_r=%05d",encoder_data[1],encoder_data[0]);
+//    sprintf(txt,"l_r=%05d|r_r=%05d",encoder_data[1],encoder_data[0]);
+//    ips114_showstr(0,1,txt)
+    sprintf(txt,"m_z=%03d,m_y=%03d,pidModel=%01d",manual_z,manual_y,pidModel); //查看速度
     ips114_showstr(0,1,txt);
     sprintf(txt,"car_flag=%01d|ERROR=%05d",car_flag,position_front);
     ips114_showstr(0,2,txt);
@@ -18,10 +20,13 @@ void show_speed(void)
 //    ips114_showstr(0,4,txt);
     sprintf(txt,"SP=%04d|SI=%04d|SD=%04d",(int16)S_P,(int16)S_I,(int16)S_D);
     ips114_showstr(0,4,txt);
-    sprintf(txt,"AP=%04d|AI=%04d|AD=%04d",(int16)(yaw_w_P*1000),(int16)(yaw_w_I*1000),(int16)(yaw_w_D*1000));
+    sprintf(txt,"AP=%04d|AI=%04d|AD=%04d",(int16)(yaw_w_pid.Kp*1000),
+            (int16)(yaw_w_pid.Ki*1000),(int16)(yaw_w_pid.Kd*1000));
     ips114_showstr(0,5,txt);
-    sprintf(txt,"TP=%04d|TI=%04d|TD=%04d",(int16)(yaw_P*1000),(int16)(yaw_I*1000),(int16)(yaw_D*1000));
+    sprintf(txt,"TP=%04d|TI=%04d|TD=%04d",(int16)(yaw_pid.Kp*1000),
+            (int16)(yaw_pid.Ki*1000),(int16)(yaw_pid.Kd*1000));
     ips114_showstr(0,6,txt);
+    sendMessage();//发送曲线
 }
 
 

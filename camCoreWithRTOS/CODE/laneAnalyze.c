@@ -266,9 +266,17 @@ void detectSBend() {
 // flagEnterRoundabout: 0 -- no roundabout, 1 -- left, -1 -- right
 void detectRoundabout() {
     if (flagEnterRoundabout != 0) {
-        return;
+        if (exitRoundaboutTimer == 0) {
+            exitRoundaboutTimer = 200;
+        } else if (exitRoundaboutTimer == 1) {
+            flagEnterRoundabout = 0;
+            exitRoundaboutTimer = 0;
+        } else {
+            --exitRoundaboutTimer;
+        }
     }
-    roundabouttimes = 0;
+//    roundabouttimes = 0;
+    flagEnterRoundabout = 0;
 
     detectUpperMissingLeft = detectLowerMissingLeft = 0;
     missingLaneUpperLeft = missingLaneLowerLeft = 0;
@@ -317,6 +325,9 @@ void detectRoundabout() {
                                             * laneWidth[49] / laneWidth[iterRow]     \
                                             - roundaboutSlopeRowLocation;
             }
+            if (areaDetectRoundaboutLeft > areaDetectRoundaboutThres) {
+                flagEnterRoundabout = 1;
+            }
             if (1 == 2) {
 
             }
@@ -357,7 +368,6 @@ void detectRoundabout() {
             }
             if (areaDetectRoundaboutRight > 650 && countJitterBreakRowLeft == 0) {
                 flagEnterRoundabout = -1;
-                enterRoundaboutTimer = 0;
             }
         }
     }
@@ -646,10 +656,12 @@ void laneAnalyze(Mat outMat){
     missCounterLeft = 0;
     missCounterRight = 0;
 
-    //uart_putstr(UART_1,"#detectStartLine!\n");
+    uart_putstr(UART_1,"1\n");
+//    rt_thread_mdelay(20);
     detectStartLine(outMat);
 
-    //uart_putstr(UART_1,"#detectOutOfBounds!\n");
+    uart_putstr(UART_1,"2\n");
+//    rt_thread_mdelay(20);
     detectOutOfBounds(outMat);
 
 
@@ -660,21 +672,25 @@ void laneAnalyze(Mat outMat){
     }
     laneCenterPrevious = laneCenter[45];
 
-    //uart_putstr(UART_1,"#countJitter!\n");
+    uart_putstr(UART_1,"3\n");
+//    rt_thread_mdelay(20);
     countJitter();
 
     // detectSBend();
     //detectThreeWayRoad(outMat);
-    //uart_putstr(UART_1,"#detectRoundabout!\n");
+    uart_putstr(UART_1,"4\n");
+//    rt_thread_mdelay(20);
     detectRoundabout();
 
     //detectCrossroad();
-    //uart_putstr(UART_1,"#detectSharpCurve!\n");
+    uart_putstr(UART_1,"5\n");
+//    rt_thread_mdelay(20);
     detectSharpCurve();
 
 
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
-        //uart_putstr(UART_1,"#sharpCurveStatus!\n");
+        uart_putstr(UART_1,"6\n");
+//        rt_thread_mdelay(20);
         adaptSharpCurve();
     }
 
@@ -686,8 +702,11 @@ void laneAnalyze(Mat outMat){
     for (iterRow=imgRow-1; iterRow > 43; --iterRow) {
         laneCenter[iterRow] = imgCol / 2 - 1;
     }
-//    uart_putstr(UART_1,"#passParameter!\n");
+    uart_putstr(UART_1,"7\n");
+//    rt_thread_mdelay(20);
     passParameter();
+    uart_putstr(UART_1,"8\n");
+
 //    uart_putstr(UART_1,"enenennenenene");
     // for (iterRow = imgRow - 1; iterRow < 255; --iterRow) {
     //  //printf("rowCenter %d: %d\n", iterRow, laneCenter[iterRow]);

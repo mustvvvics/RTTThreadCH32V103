@@ -27,7 +27,7 @@ void show_speed(void)
         oled_p6x8str(0, 3, txt);
         sprintf(txt,"AR_L=%07d",areaDetectRoundaboutLeft);
         oled_p6x8str(0, 4, txt);//
-        sprintf(txt,"AR_R=%07d",areaDetectRoundaboutRight);
+        sprintf(txt, "OBN=%5d OBB=%5d", outboundAreaSum, outboundAreaBenchmark);
         oled_p6x8str(0, 5, txt);//
         sprintf(txt,"start=%03d",startlineJumpingPointNum);
         oled_p6x8str(0, 6, txt);

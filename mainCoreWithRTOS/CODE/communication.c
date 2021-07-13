@@ -53,16 +53,16 @@ void data_analysis(uint8 *line)
     if(line[12] == 0xB4)   elementFlag  = line[13];
 
     switch (elementFlag) {
-        case '0'://无元素
+        case 0://无元素
 
             break;
-        case '1'://三叉
+        case 1://三叉
 
             break;
-        case '2':// 车库
+        case 2:// 车库
 
             break;
-        case '3': //刹车
+        case 3: //刹车
             car_flag = 0;
             break;
         default:

@@ -21,6 +21,9 @@ float detectDistance = 2.0;
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
+int32 areaDetectRoundaboutThres = 500;
+uint8 exitRoundaboutTimer=0;
+
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
@@ -115,7 +118,7 @@ uint8 missingLaneUpperRight = 0;
 uint8 missingLaneLowerRight = 0;
 
 
-uint8 enterRoundaboutTimer;
+//uint8 enterRoundaboutTimer;
 uint16 curveError = 0;
 int32 bigCurveThres = 100;
 

@@ -98,16 +98,28 @@ void Tcp_Decode(void)
         dataChange = recevePidData(100);
         uart_putstr(UART_2,"#0010Speed_Kp!\n");
         S_P=(float)dataChange;
+        motor1_pid.Kp = (float)dataChange;
+        motor2_pid.Kp = (float)dataChange;
+        motor3_pid.Kp = (float)dataChange;
+        motor4_pid.Kp = (float)dataChange;
     }
     else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'S'){
         dataChange = recevePidData(100);
         uart_putstr(UART_2,"#0010Speed_Ki!\n");
         S_I=(float)dataChange;
+        motor1_pid.Ki = (float)dataChange;
+        motor2_pid.Ki = (float)dataChange;
+        motor3_pid.Ki = (float)dataChange;
+        motor4_pid.Ki = (float)dataChange;
     }
     else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'S'){
         dataChange = recevePidData(100);
         uart_putstr(UART_2,"#0010Speed_Kd!\n");
         S_D=(float)dataChange;
+        motor1_pid.Kd = (float)dataChange;
+        motor2_pid.Kd = (float)dataChange;
+        motor3_pid.Kd = (float)dataChange;
+        motor4_pid.Kd = (float)dataChange;
     }
     /*********************************************************************************************/
     //角速度环pid整定   "Angle_Kp:%d\n" float yaw_w_I=0.01; EG: 10  ---> 0.010
@@ -115,16 +127,19 @@ void Tcp_Decode(void)
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Angle_Kp!\n");
         yaw_w_P=(float)dataChange*0.001f;
+        yaw_w_pid.Kp =(float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'A'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Angle_Ki!\n");
         yaw_w_I=(float)dataChange*0.001f;
+        yaw_w_pid.Ki =(float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'A'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Angle_Kd!\n");
         yaw_w_D=(float)dataChange*0.001f;
+        yaw_w_pid.Kd =(float)dataChange*0.001f;
     }
     /*********************************************************************************************/
     //转向环pid整定    "Turnn_Kp:%d\n"   eg: 4000 ----> 4
@@ -132,16 +147,19 @@ void Tcp_Decode(void)
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Kp!\n");
         yaw_P=(float)dataChange*0.001f;
+        yaw_pid.Kp = (float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'T'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Ki!\n");
         yaw_I=(float)dataChange*0.001f;
+        yaw_pid.Ki = (float)dataChange*0.001f;
     }
     else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'T'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Kd!\n");
         yaw_D=(float)dataChange*0.001f;
+        yaw_pid.Kd = (float)dataChange*0.001f;
     }
     /**************************************************************************/
     //控制前后左右
@@ -181,12 +199,33 @@ const char* message1 = "\n";
 void sendMessage(void) {
 //发送两个数据曲线进行分析
     char txtA[6];
-    sprintf(txtA,"%04d",expected_omega);
-    uart_putstr(UART_2,txtA);
-    uart_putstr(UART_2,message0);
-    sprintf(txtA,"%04d",g_fGyroAngleSpeed_z);
-    uart_putstr(UART_2,txtA);
-    uart_putstr(UART_2,message1);
+    if (pidModel == 1) { //速度环整定
+        sprintf(txtA,"%04d",Left_front);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",PID_Speed(Left_front,-encoder_data[3],&motor1_pid));uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+
+        sprintf(txtA,"%04d",Right_front);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",PID_Speed(Right_front,-encoder_data[2],&motor2_pid));uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+
+        sprintf(txtA,"%04d",Left_rear);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+
+        sprintf(txtA,"%04d",Right_rear);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));uart_putstr(UART_2,txtA);
+
+        uart_putstr(UART_2,message1);
+    }
+    else if (pidModel == 2) { //角度环整定
+        sprintf(txtA,"%04d",manual_z);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));uart_putstr(UART_2,txtA);
+
+        uart_putstr(UART_2,message1);
+    }
+    else if (car_flag == 1){ //转向环整定
+        sprintf(txtA,"%04d",0);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",PID_Loc(0,-position_front,&yaw_pid));uart_putstr(UART_2,txtA);
+
+        uart_putstr(UART_2,message1);
+    }
 }
 
 void esp8266Entry(void *parameter)

@@ -80,4 +80,5 @@ uint8 accelerate = 10;//加速因子  两位数 eg：23   ------>  2 . 3
 uint8 ThreeWayIntersection;//三叉路口
 uint8 garage;//车库
 
+uint8 pidModel; //pid 调试
 
