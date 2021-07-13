@@ -10,7 +10,9 @@ void show_speed(void)
 //    ips114_showstr(0,0,txt);
 //    sprintf(txt,"l_r=%05d|r_r=%05d",encoder_data[1],encoder_data[0]);
 //    ips114_showstr(0,1,txt)
-    sprintf(txt,"timeControl=%05d",timeControl);//
+//    sprintf(txt,"timeControl=%05d",timeControl);//
+//    ips114_showstr(0,0,txt);
+    sprintf(txt,"GA=%05d",g_fGyroAngleSpeed_z);//
     ips114_showstr(0,0,txt);
 //    sprintf(txt,"T1=%05d,T2=%05d",timet1,timet2);//
 //    ips114_showstr(0,1,txt);

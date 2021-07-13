@@ -656,11 +656,11 @@ void laneAnalyze(Mat outMat){
     missCounterLeft = 0;
     missCounterRight = 0;
 
-    uart_putstr(UART_1,"1\n");
+    //uart_putstr(UART_1,"1\n");
 //    rt_thread_mdelay(20);
     detectStartLine(outMat);
 
-    uart_putstr(UART_1,"2\n");
+    //uart_putstr(UART_1,"2\n");
 //    rt_thread_mdelay(20);
     detectOutOfBounds(outMat);
 
@@ -672,24 +672,24 @@ void laneAnalyze(Mat outMat){
     }
     laneCenterPrevious = laneCenter[45];
 
-    uart_putstr(UART_1,"3\n");
+    //uart_putstr(UART_1,"3\n");
 //    rt_thread_mdelay(20);
     countJitter();
 
     // detectSBend();
     //detectThreeWayRoad(outMat);
-    uart_putstr(UART_1,"4\n");
+    //uart_putstr(UART_1,"4\n");
 //    rt_thread_mdelay(20);
     detectRoundabout();
 
     //detectCrossroad();
-    uart_putstr(UART_1,"5\n");
+    //uart_putstr(UART_1,"5\n");
 //    rt_thread_mdelay(20);
     detectSharpCurve();
 
 
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
-        uart_putstr(UART_1,"6\n");
+        //uart_putstr(UART_1,"6\n");
 //        rt_thread_mdelay(20);
         adaptSharpCurve();
     }
@@ -702,12 +702,12 @@ void laneAnalyze(Mat outMat){
     for (iterRow=imgRow-1; iterRow > 43; --iterRow) {
         laneCenter[iterRow] = imgCol / 2 - 1;
     }
-    uart_putstr(UART_1,"7\n");
+    //uart_putstr(UART_1,"7\n");
 //    rt_thread_mdelay(20);
     passParameter();
-    uart_putstr(UART_1,"8\n");
+    //uart_putstr(UART_1,"8\n");
 
-//    uart_putstr(UART_1,"enenennenenene");
+//    //uart_putstr(UART_1,"enenennenenene");
     // for (iterRow = imgRow - 1; iterRow < 255; --iterRow) {
     //  //printf("rowCenter %d: %d\n", iterRow, laneCenter[iterRow]);
     // }

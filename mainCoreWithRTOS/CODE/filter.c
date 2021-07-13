@@ -6,15 +6,15 @@
  */
 #include "headfile.h"
 
-float angle_z;
-float a;
-float dt = 0.005;//互补滤波器控制周期 5ms测一次
-float ComplementaryFilter(float acc, float gyro, float dt)
-{
-    a = 0.98;
-    angle_z = a * (angle_z + gyro * dt) + (1 - a) * (acc);
-    return angle_z;
-}
+//float angle_z;
+//float a;
+//float dt = 0.005;//互补滤波器控制周期 5ms测一次
+//float ComplementaryFilter(float acc, float gyro, float dt)
+//{
+//    a = 0.98;
+//    angle_z = a * (angle_z + gyro * dt) + (1 - a) * (acc);
+//    return angle_z;
+//}
 //对原始数据处理   得到3个轴的加速度数据 和 3个轴的角速度数据 这里只用到了Z轴，所以写一个函数，只对Z轴加速度，角速度，最终角度进行姿态结算
 void AngleZ_Get(void)
 {

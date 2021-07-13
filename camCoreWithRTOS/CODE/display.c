@@ -1,6 +1,6 @@
 #include "headfile.h"
 
-int16 displayFlag = 1;
+int16 displayFlag = 0;
 
 
 void show_speed(void)
@@ -16,29 +16,25 @@ void show_speed(void)
         ips114_showstr(0, 2, txt);
     }
     else {
-        sprintf(txt,"l_f=%05d|r_f=%05d",encoder_left_rear,encoder_left_front);
+//        sprintf(txt,"l_f=%05d|r_f=%05d",encoder_left_rear,encoder_left_front);
+//        oled_p6x8str(0, 0, txt); //
+        sprintf(txt,"gyroData=%05d",gyroData);
         oled_p6x8str(0, 0, txt);
-        sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
-        oled_p6x8str(0, 1, txt);
-        sprintf(txt,"pMeanT=%03d,Dis=%03d",pixelMeanThres,Int2Float);
-        oled_p6x8str(0, 2, txt);
 
-        sprintf(txt,"LJL=%04d|LJR=%4d",laneJitterLeft, laneJitterRight);
-        oled_p6x8str(0, 3, txt);
-        sprintf(txt,"AR_L=%07d",areaDetectRoundaboutLeft);
-        oled_p6x8str(0, 4, txt);//
-        sprintf(txt, "OBN=%5d OBB=%5d", outboundAreaSum, outboundAreaBenchmark);
-        oled_p6x8str(0, 5, txt);//
-        sprintf(txt,"start=%03d",startlineJumpingPointNum);
-        oled_p6x8str(0, 6, txt);
-//        sprintf(txt,"OB=%5d OBB=%5d    ",outboundAreaBenchmark, outboundAreaSum);
-//        oled_p6x8str(0, 4, txt);
-//        sprintf(txt,"b2=%d,b3=%d",temp_buff[2],temp_buff[3]);
+
+//        sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
+//        oled_p6x8str(0, 1, txt);
+//        sprintf(txt,"pMeanT=%03d,Dis=%03d",pixelMeanThres,Int2Float);
+//        oled_p6x8str(0, 2, txt);
+//
+//        sprintf(txt,"LJL=%04d|LJR=%4d",laneJitterLeft, laneJitterRight);
 //        oled_p6x8str(0, 3, txt);
-//        sprintf(txt,"b5=%d,b6=%d",temp_buff[5],temp_buff[6]);
-//        oled_p6x8str(0, 4, txt);
-//        sprintf(txt,"left=%d,righ=%d",left,right);
-//        oled_p6x8str(0, 5, txt);n
+//        sprintf(txt,"AR_L=%07d",areaDetectRoundaboutLeft);
+//        oled_p6x8str(0, 4, txt);//
+//        sprintf(txt, "OBN=%5d OBB=%5d", outboundAreaSum, outboundAreaBenchmark);
+//        oled_p6x8str(0, 5, txt);//
+//        sprintf(txt,"start=%03d",startlineJumpingPointNum);
+//        oled_p6x8str(0, 6, txt);
     }
 
 
@@ -53,7 +49,9 @@ void display_entry(void *parameter)
 {
     while(1)
     {
+        gpio_set(B15, 0);
         show_speed();
+        gpio_set(B15, 1);
     }
     
 }

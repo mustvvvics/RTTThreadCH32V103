@@ -342,14 +342,27 @@ void USART2_IRQHandler(void)
 
     rt_interrupt_leave();       //退出中断
 }
-
+uint8 Gyro_USART3;
+//vuint8  Gyrouart_flag;                   //接收数据标志位
 void USART3_IRQHandler(void)
 {
     rt_interrupt_enter();       //进入中断
-
+    static uint8 num = 0;
     //获取中断标志位
-    //清除中断标志位
+    if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
+    {
+        USART_ClearITPendingBit(USART3, USART_IT_RXNE);
+        Gyro_USART3 = (uint8)USART_ReceiveData(USART3);                //获取串口数据
+        Gyro_buff[num++] = Gyro_USART3;
 
+        if (Gyro_buff[num-1]==  0xEE){
+            num = 0;
+            gyroData_analysis(Gyro_buff);
+//            Gyrouart_flag = 1;
+        }
+
+    }
+    //清除中断标志位
     rt_interrupt_leave();       //退出中断
 }
 

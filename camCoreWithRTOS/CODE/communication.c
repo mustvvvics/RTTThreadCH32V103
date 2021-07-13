@@ -9,6 +9,9 @@
 int16 left,right;
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;
+uint8 Gyro_buff[GyroLINE_LEN];
+int16 gyroData;
+
 
 int16 ABS(int16 x){
     return x>0?x:-x;
@@ -68,3 +71,13 @@ void process_data(void)//根据协议处理数据，并存入temp_buff中
     temp_buff[14] = 0xEE;                        //帧尾
 }
 
+
+
+
+
+void gyroData_analysis(uint8 *line)
+{
+
+    if(line[1] == 0xB0)    gyroData = ((int16)line[2] << 8) | line[3];
+
+}

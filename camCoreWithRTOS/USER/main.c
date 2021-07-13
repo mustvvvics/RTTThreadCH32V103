@@ -35,9 +35,14 @@ int main(void)
     display_init();
     encoder_init();
     timer_pit_init();//软定时器初始化
-//
+
+    uart_init(UART_3,115200,UART3_TX_B10,UART3_RX_B11);//通讯
+
+    uart_rx_irq(UART_3, ENABLE);                            //默认抢占优先级1 次优先级0。
+    nvic_init((IRQn_Type)(53 + UART_3), 0, 0, ENABLE);      //将串口3的抢占优先级设置为最高，次优先级设置为最高。
+
+
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
-    uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);//通讯
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 
     esp8266Init();

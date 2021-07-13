@@ -67,7 +67,7 @@ void Tcp_Decode(void)
         detectDistance=(float)Int2Float*0.1f;
         uart_putstr(UART_1,"#0025received_detectDistance!\n");
     }
-    gpio_set(B15, 1);
+
 
     ESP8266_Clear();
 }
@@ -147,6 +147,7 @@ void sendMessage(void) {
 void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
+
     display_is_working = 1;
 //    esp8266_buf[esp8266_cnt-3] = '\0';//消除显示乱码
     esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
@@ -157,8 +158,11 @@ void esp8266Entry(void *parameter)
     while(1)
     {
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
+//        gpio_set(B15, 0);
         Tcp_Decode();
+//        gpio_set(B15, 1);
     }
+
 }
 
 

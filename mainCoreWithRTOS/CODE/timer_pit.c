@@ -1,17 +1,19 @@
 #include "headfile.h"
 
+uint8 Gyro_buff[5];
+
 void timer1_pit_entry(void *parameter)
 {
-//    static uint32 timeControl;
-//    timeControl++;
+    //发送陀螺仪数据
+    Gyro_buff[0] = 0xD8;                         //帧头
 
+    Gyro_buff[1] = 0xB0;                         //功能字
+    Gyro_buff[2] = g_fGyroAngleSpeed_z>>8;        //数据高8位
+    Gyro_buff[3] = g_fGyroAngleSpeed_z&0xFF;      //数据低8位
 
-    //采集陀螺仪数据
-    //get_icm20602_gyro_spi();
-    
-
-
-
+    Gyro_buff[4] = 0xEE;                        //帧尾
+    uart_putbuff(UART_3, Gyro_buff, 5);  //通过串口3将数据发送出去。
+    uart_putbuff(UART_1, Gyro_buff, 5);
 }
 
 
@@ -20,13 +22,11 @@ void timer_pit_init(void)
     rt_timer_t timer;
     
     //创建一个定时器 周期运行
-    timer = rt_timer_create("timer1", timer1_pit_entry, RT_NULL, 2, RT_TIMER_FLAG_PERIODIC);
+    timer = rt_timer_create("timer1", timer1_pit_entry, RT_NULL, 4, RT_TIMER_FLAG_PERIODIC);
     
     //启动定时器
     if(RT_NULL != timer)
     {
         rt_timer_start(timer);
     }
-
-    
 }
