@@ -18,12 +18,12 @@ float detectDistance = 2.0;
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
-int32 areaDetectRoundaboutThres = 300;
+int32 areaDetectRoundaboutThres = 500;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
 uint8 roundaboutDetectionStartRow = 20;
-uint8 exitRoundaboutDelay = 0;
+uint16 exitRoundaboutDelay = 0;
 
 /* not activated
 ushort jitterBendRight = 0;
@@ -127,7 +127,7 @@ int32 laneLocationShiftedLower = 0;
 int32 laneLocationShiftedUpper = 0;
 
 uint16 startlineJumpingPointNum = 0;
-uint16 startlineJumpingPointNumThres = 40;
+uint16 startlineJumpingPointNumThres = 50;
 uint8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;

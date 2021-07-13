@@ -8,10 +8,6 @@
 #ifndef CODE_ESP8266_H_
 #define CODE_ESP8266_H_
 
-
-#define REV_OK      0
-#define REV_WAIT    1
-
 extern rt_sem_t esp8266_sem;
 extern rt_sem_t control_sem;
 void clearError(void);

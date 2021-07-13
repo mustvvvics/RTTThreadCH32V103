@@ -2,8 +2,6 @@
 
 void timer1_pit_entry(void *parameter)
 {
-    //static uint32 time;
-    //time++;
     get_sensor_data();                          //获取传感器数据。
     process_data();                             //根据协议处理数据，并存入temp_buff中。
     uart_putbuff(UART_3, temp_buff, LINE_LEN);  //通过串口3将数据发送出去。
@@ -17,7 +15,7 @@ void timer_pit_init(void)
     rt_timer_t timer;
     
     //创建一个定时器 周期运行
-    timer = rt_timer_create("timer1", timer1_pit_entry, RT_NULL, 4, RT_TIMER_FLAG_PERIODIC);
+    timer = rt_timer_create("timer1", timer1_pit_entry, RT_NULL, 4, RT_TIMER_FLAG_PERIODIC); //四个心跳4ms 作为同步周期 也就是控制周期
     
     //启动定时器
     if(RT_NULL != timer)

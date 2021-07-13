@@ -3,9 +3,6 @@
 
 #include "headfile.h"
 
-extern int16 displayFlag;
-
-
 void display_init(void);
     
 #endif
