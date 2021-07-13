@@ -18,9 +18,9 @@ uint8 flagDetectRight[imgRow] = {0};
 float detectDistance = 2.0;
 
 // roundabout status flag
-int16 flagEnterRoundabout = 0;
-uint16 areaDetectRoundaboutLeft = 0;
-uint16 areaDetectRoundaboutRight = 0;
+int8 flagEnterRoundabout = 0;
+int32 areaDetectRoundaboutLeft = 0;
+int32 areaDetectRoundaboutRight = 0;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;

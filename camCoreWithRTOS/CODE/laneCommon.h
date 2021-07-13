@@ -50,9 +50,9 @@ extern float detectDistance;
 // roundabout status flag
 #define enterRoundabout 1
 #define exitRoundabout  0
-extern int16 flagEnterRoundabout;
-extern uint16 areaDetectRoundaboutLeft;
-extern uint16 areaDetectRoundaboutRight;
+extern int8 flagEnterRoundabout;
+extern int32 areaDetectRoundaboutLeft;
+extern int32 areaDetectRoundaboutRight;
 extern uint8 enterRoundaboutTimer;
 
 #define rangeCountJitter    20

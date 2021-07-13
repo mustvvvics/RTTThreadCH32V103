@@ -25,9 +25,9 @@ void show_speed(void)
 
         sprintf(txt,"LJL=%04d|LJR=%4d",laneJitterLeft, laneJitterRight);
         oled_p6x8str(0, 3, txt);
-        sprintf(txt,"AR_L=%06d",areaDetectRoundaboutLeft);
+        sprintf(txt,"AR_L=%07d",areaDetectRoundaboutLeft);
         oled_p6x8str(0, 4, txt);//
-        sprintf(txt,"AR_R=%06d",areaDetectRoundaboutRight);
+        sprintf(txt,"AR_R=%07d",areaDetectRoundaboutRight);
         oled_p6x8str(0, 5, txt);//
         sprintf(txt,"start=%03d",startlineJumpingPointNum);
         oled_p6x8str(0, 6, txt);
