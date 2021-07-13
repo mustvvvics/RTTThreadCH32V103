@@ -9,7 +9,7 @@
 #define REV_WAIT    1
 
 extern rt_sem_t esp8266_sem;
-extern int8 display_is_working;
+//extern int8 display_is_working;
 extern int32 Int2Float;
 
 void Esp_Init(void);

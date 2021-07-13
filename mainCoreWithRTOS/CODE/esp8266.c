@@ -68,7 +68,7 @@ void Tcp_Decode(void)
     int32 dataChange;
 //
     if(strcmp((char *)esp8266_buf,"init\r\n") == 0) { //
-        ips114_showstr(0,5,"TCP Init Ok");
+//        ips114_showstr(0,5,"TCP Init Ok");
         uart_putstr(UART_2,"#0008control\n");
     }
     /**************************************************************************/
@@ -233,6 +233,8 @@ void esp8266Entry(void *parameter)
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
     esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
     ips114_showstr(0,7,esp8266_buf);
+//    oled_p6x8str(0, 5, esp8266_buf);
+
     ESP8266_Clear();
     while(1)
     {

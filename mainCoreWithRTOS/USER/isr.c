@@ -104,25 +104,45 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             uart_flag = E_START;
             encoder_get();//Ö÷ºË±àÂëÆ÷
         }
-
-        if (car_flag == 1 && pidModel == 0 ) { //×ªÏò»·Õû¶¨
-            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-            speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+        if (car_flag == 1) {
+            carFlagPre = car_flag;
+            if (car_flag == 1 && pidModel == 0 ) { //×ªÏò»·Õû¶¨
+                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+                 speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+             }
+             else if (car_flag == 1 && pidModel == 1) {//ËÙ¶È»·Õû¶¨
+                 speed_conversion(0,manual_y,0);
+             }
+             else if (car_flag == 1 && pidModel == 2) {
+                 speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));//½Ç¶È»·Õû¶¨
+             }
+             motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+             motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+             motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+             motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
-        else if (car_flag == 1 && pidModel == 1) {//ËÙ¶È»·Õû¶¨
-            speed_conversion(0,manual_y,0);
-        }
-        else if (car_flag == 1 && pidModel == 2) {
-            speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));//½Ç¶È»·Õû¶¨
+        else if (carFlagPre == 1 && car_flag == 0) { // ¼ì²âÏÂ½µÑØ ·ÅËÉ¿ØÖÆ
+            clearError();
+            motor1_ctl(0);motor2_ctl(0);motor3_ctl(0);motor4_ctl(0);
+            carFlagPre = 0;
         }
          //µç»ú¿ØÖÆËÙ¶È»·
-        else {
+        else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {
             speed_conversion(0,manual_y,manual_z);
-        }
             motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
             motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
             motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
             motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+        }
+        else {
+//            speed_conversion(0,manual_y,manual_z);
+            speed_conversion(0,0,0);
+            motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+            motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+            motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+            motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+        }
+
 
     //        /***********************************************************************/
     //        //Ò£¿Ø

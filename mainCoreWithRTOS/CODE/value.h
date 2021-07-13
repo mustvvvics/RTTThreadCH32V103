@@ -16,7 +16,7 @@ extern int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 extern int16 position_front;
 
 extern uint8 car_flag;
-
+extern uint8 carFlagPre;
 //期望直线速度和角速度
 extern int16 expected_omega;
 extern int32 expected_y;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90

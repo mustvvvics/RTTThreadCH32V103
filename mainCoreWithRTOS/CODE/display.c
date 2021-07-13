@@ -5,6 +5,7 @@
 void show_speed(void)
 {
     char txt[32]={0};
+
     //ip in 7
 //    sprintf(txt,"l_f=%05d|r_f=%05d",encoder_data[3],encoder_data[2]);//
 //    ips114_showstr(0,0,txt);
@@ -12,6 +13,7 @@ void show_speed(void)
 //    ips114_showstr(0,1,txt)
 //    sprintf(txt,"timeControl=%05d",timeControl);//
 //    ips114_showstr(0,0,txt);
+/**********************************************************************/
     sprintf(txt,"GA=%05d",g_fGyroAngleSpeed_z);//
     ips114_showstr(0,0,txt);
 //    sprintf(txt,"T1=%05d,T2=%05d",timet1,timet2);//
@@ -32,7 +34,9 @@ void show_speed(void)
     sprintf(txt,"TP=%04d|TI=%04d|TD=%04d",(int16)(yaw_pid.Kp*1000),
             (int16)(yaw_pid.Ki*1000),(int16)(yaw_pid.Kd*1000));
     ips114_showstr(0,6,txt);
-    sendMessage();//发送曲线
+//
+//    sendMessage();//发送曲线
+    /**********************************************************************/
 }
 
 
@@ -52,6 +56,7 @@ void display_init(void)
 
     //初始化屏幕
     ips114_init();
+//    oled_init();
     
     //创建显示线程 优先级设置为5
     tid1 = rt_thread_create("display", display_entry, RT_NULL, 1024, 5, 50);

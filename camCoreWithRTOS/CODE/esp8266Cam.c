@@ -4,7 +4,7 @@
 rt_sem_t esp8266_sem;
 
 int32 Int2Float;
-int8 display_is_working = 0;
+//int8 display_is_working = 0;
 void ESP8266_Clear(void)
 {
     memset(esp8266_buf, 0, sizeof(esp8266_buf));
@@ -38,7 +38,7 @@ void Tcp_Decode(void)
 
 //    char txt[32]={0};
 
-    while (display_is_working) {rt_thread_mdelay(20);}
+//    while (display_is_working) {rt_thread_mdelay(20);}
 
     if(strcmp((char *)esp8266_buf,"init\r\n") == 0){
         uart_putstr(UART_1,"#0007camera\n");
@@ -66,6 +66,13 @@ void Tcp_Decode(void)
         Int2Float = 10 * (esp8266_buf[5] - '0') + (esp8266_buf[6] - '0');
         detectDistance=(float)Int2Float*0.1f;
         uart_putstr(UART_1,"#0025received_detectDistance!\n");
+    }
+    else if(esp8266_buf[2] == 'o' && esp8266_buf[3] == 'p')  //slopeRow:11-22
+    {
+//        sscanf(esp8266_buf,"laDs:%d",&Int2Float);
+        slopeRowStart =(uint8)(10 * (esp8266_buf[9] - '0') + (esp8266_buf[10] - '0'));
+        slopeRowEnd =(uint8)(10 * (esp8266_buf[12] - '0') + (esp8266_buf[13] - '0'));
+        uart_putstr(UART_1,"#0010slopeRow!\n");
     }
 
 
@@ -148,12 +155,13 @@ void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
 
-    display_is_working = 1;
+//    display_is_working = 1;
 //    esp8266_buf[esp8266_cnt-3] = '\0';//消除显示乱码
     esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
 //    esp8266_buf[esp8266_cnt-1] = '\0';//消除显示乱码
-    oled_p6x8str(0,7,esp8266_buf);
-    display_is_working = 0;
+//    oled_p6x8str(0,7,esp8266_buf);
+    ips114_showstr(0,7,esp8266_buf);
+//    display_is_working = 0;
     ESP8266_Clear();
     while(1)
     {

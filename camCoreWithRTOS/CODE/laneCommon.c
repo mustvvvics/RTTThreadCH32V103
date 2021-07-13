@@ -1,9 +1,6 @@
 #include "headfile.h"
 //#include "laneCommon.h"
 
-// Mat outMat;  // this is used to store the results in thresholdAdapt
-//
-
 // laneAnalyze
 // lane location for each row
 int32 laneLocationLeft[imgRow] = {0};
@@ -21,14 +18,12 @@ float detectDistance = 2.0;
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
-int32 areaDetectRoundaboutThres = 500;
-uint8 exitRoundaboutTimer=0;
-
+int32 areaDetectRoundaboutThres = 300;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
 uint8 roundaboutDetectionStartRow = 20;
-
+uint8 exitRoundaboutDelay = 0;
 
 /* not activated
 ushort jitterBendRight = 0;
@@ -43,8 +38,6 @@ int32 laneWidth[imgRow] = {
     72, 72, 74, 78, 78, 80, 82, 82, 84, 84,
     86, 88, 90, 92, 92, 94, 96, 96, 100, 100
 };
-
-
 
 // sharp curve
 uint8 sharpCurveRow = 0;
@@ -61,7 +54,7 @@ uint8 location = 0;
 */
 
 int32 slope = 0;
-uint8 slopeRowStart=0, slopeRowEnd=0;
+uint8 slopeRowStart=48, slopeRowEnd=35;
 uint8 specialCaseStart = 0;
 
 int32 cameraError = 0;
@@ -117,8 +110,6 @@ uint8 detectLowerMissingRight = 0;
 uint8 missingLaneUpperRight = 0;
 uint8 missingLaneLowerRight = 0;
 
-
-//uint8 enterRoundaboutTimer;
 uint16 curveError = 0;
 int32 bigCurveThres = 100;
 
@@ -136,7 +127,7 @@ int32 laneLocationShiftedLower = 0;
 int32 laneLocationShiftedUpper = 0;
 
 uint16 startlineJumpingPointNum = 0;
-uint16 startlineJumpingPointNumThres = 50;
+uint16 startlineJumpingPointNumThres = 40;
 uint8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;

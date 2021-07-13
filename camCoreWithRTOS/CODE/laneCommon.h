@@ -11,6 +11,7 @@
 //#define uint16 unsigned short
 //#define uint32 unsigned int
 //#define uint64 unsigned long
+//
 //#define int8 char
 //#define int32 int
 //#define int16 short
@@ -24,6 +25,7 @@
 
 #define max(x,y) ((x) > (y) ? (x) : (y))
 #define min(x,y) ((x) < (y) ? (x) : (y))
+#define abs(x) ((x) > 0 ? (x) : (-x))
 
 #define rangeBiNear 10
 
@@ -54,8 +56,7 @@ extern int8 flagEnterRoundabout;
 extern int32 areaDetectRoundaboutLeft;
 extern int32 areaDetectRoundaboutRight;
 extern int32 areaDetectRoundaboutThres;
-extern uint8 exitRoundaboutTimer;
-//extern uint8 enterRoundaboutTimer;
+extern uint8 exitRoundaboutDelay;
 
 #define rangeCountJitter    20
 

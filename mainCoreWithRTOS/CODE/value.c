@@ -32,12 +32,12 @@ float yaw_w_I=0.01;//0.06;//  0.02
 float yaw_w_D=0.15;//0.26;//0.15   0
 
 //待整定 转向环参数
-float yaw_P=4;//2.9->50;
+float yaw_P=5;//2.9->50;
 float yaw_I=0;
 float yaw_D=0;
 
 uint8 car_flag=0;
-
+uint8 carFlagPre = 0;
 //电机PWM限幅
 uint16 limit_pwm=10000;
 
