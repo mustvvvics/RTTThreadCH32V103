@@ -89,6 +89,10 @@ void EXTI1_IRQHandler(void)
 void EXTI2_IRQHandler(void)//************************************************±àÂëÆ÷****************************************
 {
     rt_interrupt_enter();    //½øÈëÖĞ¶Ï
+    timet1 = rt_tick_get();
+    timeControl = timet1 - timet2;
+    timet2 = timet1;
+
 
     if(SET == EXTI_GetITStatus(EXTI_Line2))
     {
@@ -136,6 +140,7 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
 
         EXTI_ClearITPendingBit(EXTI_Line2);
     }
+
 
     rt_interrupt_leave();    //ÍË³öÖĞ¶Ï
 }

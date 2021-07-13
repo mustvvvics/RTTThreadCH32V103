@@ -81,4 +81,6 @@ uint8 ThreeWayIntersection;//三叉路口
 uint8 garage;//车库
 
 uint8 pidModel; //pid 调试
-
+rt_tick_t timet1 = 0;
+rt_tick_t timet2 = 0;
+rt_tick_t timeControl = 0;

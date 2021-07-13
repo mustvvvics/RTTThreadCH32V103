@@ -6,12 +6,16 @@ void show_speed(void)
 {
     char txt[32]={0};
     //ip in 7
-    sprintf(txt,"l_f=%05d|r_f=%05d",encoder_data[3],encoder_data[2]);//
-    ips114_showstr(0,0,txt);
+//    sprintf(txt,"l_f=%05d|r_f=%05d",encoder_data[3],encoder_data[2]);//
+//    ips114_showstr(0,0,txt);
 //    sprintf(txt,"l_r=%05d|r_r=%05d",encoder_data[1],encoder_data[0]);
 //    ips114_showstr(0,1,txt)
-    sprintf(txt,"m_z=%03d,m_y=%03d,pidModel=%01d",manual_z,manual_y,pidModel); //查看速度
-    ips114_showstr(0,1,txt);
+    sprintf(txt,"timeControl=%05d",timeControl);//
+    ips114_showstr(0,0,txt);
+//    sprintf(txt,"T1=%05d,T2=%05d",timet1,timet2);//
+//    ips114_showstr(0,1,txt);
+//    sprintf(txt,"m_z=%03d,m_y=%03d,pidModel=%01d",manual_z,manual_y,pidModel); //查看速度
+//    ips114_showstr(0,1,txt);
     sprintf(txt,"car_flag=%01d|ERROR=%05d",car_flag,position_front);
     ips114_showstr(0,2,txt);
     sprintf(txt,"key=%01d|Fg=%01d|sp=%03d|AC=%02d",key_data,elementFlag,expected_y,accelerate);

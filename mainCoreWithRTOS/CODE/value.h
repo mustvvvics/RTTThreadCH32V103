@@ -86,5 +86,7 @@ extern uint8 ThreeWayIntersection;//三叉路口
 extern uint8 garage;//车库
 
 extern uint8 pidModel; //pid 调试
-
+extern rt_tick_t timet1;
+extern rt_tick_t timet2;
+extern rt_tick_t timeControl;
 #endif /* CODE_VALUE_H_ */
