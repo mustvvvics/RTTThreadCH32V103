@@ -25,7 +25,7 @@ void clearError(void){//清空误差
     go_left=0;go_right=0;
     pidModel = 0;
 }
-
+uint8 moterPid;
 void transfetFunction(int8 targetRow,char *targetBuff){
 
     if ((1 - menuY) == targetRow){
@@ -65,39 +65,58 @@ void transfetFunction(int8 targetRow,char *targetBuff){
         sprintf(targetBuff,"Angle_D=%04d",(int16)(yaw_w_pid.Kd*1000));
     }
     else if ((13 - menuY) == targetRow) {
-        sprintf(targetBuff,"Turnn_P=%04d",(int16)(yaw_pid.Kp*1000));
+        sprintf(targetBuff,"Turnn_P=%04d",(int16)(yaw_pid.Kp*100));
     }
     else if ((14 - menuY) == targetRow) {
-        sprintf(targetBuff,"Turnn_I=%04d",(int16)(yaw_pid.Ki*1000));
+        sprintf(targetBuff,"Turnn_I=%04d",(int16)(yaw_pid.Ki*100));
     }
     else if ((15 - menuY) == targetRow) {
-        sprintf(targetBuff,"Turnn_D=%04d",(int16)(yaw_pid.Kd*1000));
+        sprintf(targetBuff,"Turnn_D=%04d",(int16)(yaw_pid.Kd*100));
+    }
+    else if ((16 - menuY) == targetRow) {
+        sprintf(targetBuff,"moterPid=%03d",moterPid);
     }
     else {
-        sprintf(targetBuff,"            ");
+        sprintf(targetBuff,"              ");
     }
 }
 /*
 *Assign value to data
 */
 void assignValue(void){
-    if (key_data == 4) { //increase
+    int8 signData;
+    if (key_data == 4) {signData = 1; }//increase
+    if (key_data == 1) {signData = -1;} //decrease
+    if (key_data == 4 || key_data == 1) {
         switch (menuY + 3) {
-            case 3:expected_y = expected_y + 10;;break;
-            case 4:manual_z = manual_z + 10;break;
-            case 5:manual_y = manual_y + 10;break;
-            case 6:pidModel = pidModel + 1;break;
-
-            default:break;
-        }
-    }
-    if (key_data == 1) { //decrease
-        switch (menuY + 3) {
-            case 3:expected_y = expected_y - 10;break;
-            case 4:manual_z = manual_z - 10;break;
-            case 5:manual_y = manual_y - 10;break;
-            case 6:pidModel = pidModel - 1;break;
-
+            case 3:expected_y = expected_y + 10 * signData;;break;
+            case 4:manual_z = manual_z + 10 * signData;break;
+            case 5:manual_y = manual_y + 10 * signData;break;
+            case 6:pidModel = pidModel + 1 * signData;break;
+            case 7:
+                S_P= S_P + 1 * signData;
+                motor1_pid.Kp = motor1_pid.Kp + 1 * signData;
+                motor2_pid.Kp = motor2_pid.Kp + 1 * signData;
+                motor3_pid.Kp = motor3_pid.Kp + 1 * signData;
+                motor4_pid.Kp = motor4_pid.Kp + 1 * signData;
+                break;
+            case 8:
+                S_I= S_I + 1 * signData;
+                motor1_pid.Ki = motor1_pid.Ki + 1 * signData;
+                motor2_pid.Ki = motor2_pid.Ki + 1 * signData;
+                motor3_pid.Ki = motor3_pid.Ki + 1 * signData;
+                motor4_pid.Ki = motor4_pid.Ki + 1 * signData;
+                break;
+            case 9:
+                S_D= S_D + 1 * signData;
+                motor1_pid.Kd = motor1_pid.Kd + 1 * signData;
+                motor2_pid.Kd = motor2_pid.Kd + 1 * signData;
+                motor3_pid.Kd = motor3_pid.Kd + 1 * signData;
+                motor4_pid.Kd = motor4_pid.Kd + 1 * signData;
+                break;
+            case 16:
+                moterPid = moterPid + 1 * signData;
+                break;
             default:break;
         }
     }
@@ -107,11 +126,11 @@ void assignValue(void){
 *Disaplay Menu
 */
 void disaplayMenu(void){
-
+    uint8 maxMenuRow = 16;
     char txt1[20]={0},txt2[20]={0},txt3[20]={0},txt4[20]={0},
                       txt5[20]={0},txt6[20]={0},txt7[20]={0};
     if (menuY < 0) {menuY = 0;} //限制选择范围
-    else if (menuY > 12) {menuY = 12;} //max - 3;now max = 15
+    else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
     assignValue();//更改数值
 
     transfetFunction(1,txt1);

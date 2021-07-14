@@ -6,7 +6,7 @@ void show_speed(void)
 
 //        sprintf(txt,"l_f=%05d|r_f=%05d",encoder_left_rear,encoder_left_front);
 //        ips114_showstr(0, 0, txt);//slopeRowStart
-    sprintf(txt,"Start=%03d|End=%03d",slopeRowStart,slopeRowEnd);
+    sprintf(txt,"Start=%03d|End=%03d|t=%03d",slopeRowStart,slopeRowEnd,timeControl);
     ips114_showstr(0, 0, txt);
     sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
     ips114_showstr(0, 1, txt);

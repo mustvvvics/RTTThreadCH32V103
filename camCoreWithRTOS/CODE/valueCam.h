@@ -19,5 +19,8 @@ extern uint16 esp8266_cnt;
 //摄像头数据回传标志位
 extern uint8 CameraShow_flag;
 
+extern rt_tick_t timet1;           //计算运行时间
+extern rt_tick_t timet2;
+extern rt_tick_t timeControl;
 
 #endif /* CODE_VALUECAM_H_ */

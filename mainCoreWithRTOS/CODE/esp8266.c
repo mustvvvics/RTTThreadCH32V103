@@ -122,20 +122,21 @@ void Tcp_Decode(void)
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'T'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Kp!\n");
-        yaw_P=(float)dataChange*0.001f;
-        yaw_pid.Kp = (float)dataChange*0.001f;
+        yaw_P=(float)dataChange*0.01f;
+        yaw_pid.Kp = (float)dataChange*0.01f;
+
     }
     else if(esp8266_buf[7] == 'i' && esp8266_buf[0] == 'T'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Ki!\n");
-        yaw_I=(float)dataChange*0.001f;
-        yaw_pid.Ki = (float)dataChange*0.001f;
+        yaw_I=(float)dataChange*0.01f;
+        yaw_pid.Ki = (float)dataChange*0.01f;
     }
     else if(esp8266_buf[7] == 'd' && esp8266_buf[0] == 'T'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Kd!\n");
-        yaw_D=(float)dataChange*0.001f;
-        yaw_pid.Kd = (float)dataChange*0.001f;
+        yaw_D=(float)dataChange*0.01f;
+        yaw_pid.Kd = (float)dataChange*0.01f;
     }
     /**************************************************************************/
     //控制前后左右

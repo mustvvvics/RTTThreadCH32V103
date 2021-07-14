@@ -156,9 +156,9 @@ void EXTI2_IRQHandler(void)
     //        if(count_en == 1)
     //        {
     //            //里程计
-    //            dx += (encoder_data[0]-encoder_data[3])/2;
-    //            dy += (encoder_data[3]-encoder_data[2]+encoder_data[1]-encoder_data[0])/4;//四个轮子正值相加
-    //            dz += (-encoder_data[3]-encoder_data[2]-encoder_data[1]-encoder_data[0]);//左边两个向内，右边两个向外 ->向左行进
+    //            dx += (-encoder_data[3] + encoder_data[0] + encoder_data[2] - encoder_data[1])/4;  //左边两个向内，右边两个向外 ->向左行进
+    //            dy += (encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;//四个轮子正值相加
+    //            dz += (-encoder_data[3] - encoder_data[0] + encoder_data[2] + encoder_data[1])/4;
     //            //dist = sqrt(dx*dx+dy*dy);
     //            //total_z += (int16)g_fGyroAngleSpeed_z;
     //            //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;//清空并关闭里程计
