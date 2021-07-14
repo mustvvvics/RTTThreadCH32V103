@@ -50,6 +50,10 @@ int16 Left_front;
 int16 Right_front;
 int16 Right_rear;
 
+float leftRearADRC;
+float leftFrontADRC;
+float rightFrontADRC;
+float rightRearADRC;
 
 //陀螺仪角速率积分
 int32 total_z=0;

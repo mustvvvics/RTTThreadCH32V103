@@ -47,6 +47,11 @@ extern int16 Left_front;
 extern int16 Right_front;
 extern int16 Right_rear;
 
+extern float leftRearADRC;
+extern float leftFrontADRC;
+extern float rightFrontADRC;
+extern float rightRearADRC;
+
 //陀螺仪角速率积分
 extern int32 total_z;
 ////舵机输出占空比

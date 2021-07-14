@@ -41,39 +41,13 @@ int main(void)
     nvic_init(EXTI2_IRQn, 1, 1, ENABLE);                    //EXTI2优先级配置，抢占优先级1，次优先级1
     while(1)
     {
-        rt_thread_mdelay(10);//new delay
-        //    sendMessage();//发送曲线/
-//        rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
-//        if (key_data == 1) { //左     角度环整定
-////            car_flag = 0;
-//////            pwm_duty(PWM1_CH1_A8, 1000);
-////            pidModel = 1;
-//        }
-//        else if (key_data == 2) {
-////            if (car_flag == 0) {
-////                car_flag = 1;
-////            }
-////            else {
-////                car_flag = 0;
-////                clearError();//清除累计误差
-////            }
-//        }
-//        else if (key_data == 3) { //上
-////            expected_y = expected_y + 10;
-////            manual_y = manual_y + 10;
-////            manual_z = manual_z + 10;
-////            pwm_duty(PWM1_CH1_A8, 680);
-//        }
-//        else if (key_data == 4) { //右
-////            car_flag = 0;
-//////            pwm_duty(PWM1_CH1_A8, 338);
-////            pidModel = 2;
-//        }
-//        else if (key_data == 5) { //下
-////            expected_y = expected_y - 10;
-////            manual_y = manual_y - 10;
-////            manual_z = manual_z - 10;
-//        }
+//        char txt[32];
+        rt_thread_mdelay(4);//new delay
+        sendMessage();//发送曲线
+//        sprintf(txt,"carF=%01d|ERR=%05d|GA=%05d",car_flag,position_front,g_fGyroAngleSpeed_z);
+//        ips114_showstr(0,1,txt);
+//        sprintf(txt,"key=%02d|Fg=%01d|+AC=%02d",key_data,elementFlag,accelerate);
+//        ips114_showstr(0,2,txt);
 //        else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {//遥控
 //            manual_control();
 //        }

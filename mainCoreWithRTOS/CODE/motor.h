@@ -16,6 +16,8 @@
 #define MOTOR2_A   C11               //定义2电机正反转引脚
 #define MOTOR2_B   PWM4_CH2_B7      //定义2电机PWM引脚
 
+
+
 void motor_init(void);
 void motor1_ctl(int32 speed1_power);
 void motor2_ctl(int32 speed2_power);

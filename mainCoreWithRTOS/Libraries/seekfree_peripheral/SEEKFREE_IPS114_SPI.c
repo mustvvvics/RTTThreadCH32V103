@@ -325,6 +325,27 @@ void ips114_showcharBlack(uint16 x,uint16 y,const int8 dat) //上下切换显示使用
     }
 }
 
+void ips114_showcharGRAY(uint16 x,uint16 y,const int8 dat) //上下切换显示使用
+{
+    uint8 i,j;
+    uint8 temp;
+
+    for(i=0; i<16; i++)
+    {
+        ips114_set_region(x,y+i,x+7,y+i);
+        temp = tft_ascii[dat-32][i];//减32因为是取模是从空格开始取得 空格在ascii中序号是32
+        for(j=0; j<8; j++)
+        {
+            if(temp&0x01)
+            {
+                ips114_writedata_16bit(WHITE); //定义写字笔的颜色
+            }
+            else            ips114_writedata_16bit(GRAY); //定义背景颜色
+            temp>>=1;
+        }
+    }
+}
+
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      液晶显示字符串
 //  @param      x     	        坐标x方向的起点  参数范围 0 -（IPS114_X_MAX-1）
@@ -358,6 +379,17 @@ void ips114_showstrBlack(uint16 x,uint16 y,const int8 dat[]) //上下切换显示使用
     }
 }
 
+void ips114_showstrGRAY(uint16 x,uint16 y,const int8 dat[]) //上下切换显示使用
+{
+    uint16 j;
+
+    j = 0;
+    while(dat[j] != '\0')
+    {
+        ips114_showcharGRAY(x+8*j,y*16,dat[j]);
+        j++;
+    }
+}
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      液晶显示8位有符号
 //  @param      x     	        坐标x方向的起点  参数范围 0 -（IPS114_X_MAX-1）

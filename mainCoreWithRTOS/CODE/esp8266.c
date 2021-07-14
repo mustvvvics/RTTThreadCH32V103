@@ -8,26 +8,6 @@ void ESP8266_Clear(void)
     esp8266_cnt = 0;
 }
 
-void clearError(void){
-    expected_omega = 0;
-    position_front = 0;
-    g_fGyroAngleSpeed_z = 0;
-//    expected_y = 0;
-    speed_conversion(0,0,0);
-    yaw_pid.LocSum = 0;
-    yaw_pid.Ek = 0;
-    yaw_pid.Ek1 = 0;
-    yaw_w_pid.target_val = 0;
-    yaw_w_pid.err_next = 0;
-    yaw_w_pid.err = 0;
-    yaw_w_pid.err_last = 0;
-    yaw_w_pid.actual_val = 0;
-    manual_y=0;manual_z=0;
-    go_forward=0;go_backward=0;
-    go_left=0;go_right=0;
-    pidModel = 0;
-}
-
 void Esp_Init(void)
 {
     //初始化串口2
@@ -174,60 +154,62 @@ void Tcp_Decode(void)
     ESP8266_Clear();
 }
 
-void manual_control(void)               //遥控行进
-{
-    if(key_data==6){
-        clearError();manual_y = 10;manual_z = 0;
-    }
-    if(key_data==7){
-        clearError();manual_y=-10;manual_z = 0;
-    }
-    if(key_data==8){
-        clearError();manual_z=-40;manual_y = 0;
-    }
-    if(key_data==9){
-        clearError();manual_z=40;manual_y = 0;
-    }
-}
-
 const char* message0 = ",";
 const char* message1 = "\n";
 void sendMessage(void) {                //发送数据曲线进行分析
     char txtA[6];
-    if (pidModel == 1) { //速度环整定
-        sprintf(txtA,"%04d",Left_front);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",PID_Speed(Left_front,-encoder_data[3],&motor1_pid));uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+    if (pidModel == 2) { //速度环整定
+        sprintf(txtA,"%04d",(int16)(leftFrontADRC ) );
+        uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",(int16)( leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid) ));
+        uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
 
-        sprintf(txtA,"%04d",Right_front);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",PID_Speed(Right_front,-encoder_data[2],&motor2_pid));uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",(int16)( rightFrontADRC) );
+        uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",(int16)( rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid) ));
+        uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
 
-        sprintf(txtA,"%04d",Left_rear);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",(int16)( rightRearADRC) );
+        uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",(int16)( rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid) ));
+        uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
 
-        sprintf(txtA,"%04d",Right_rear);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));uart_putstr(UART_2,txtA);
+
+        sprintf(txtA,"%04d",(int16)( leftRearADRC) );
+        uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",(int16)( leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid) ));
+        uart_putstr(UART_2,txtA);
 
         uart_putstr(UART_2,message1);
     }
-    else if (pidModel == 2) { //角度环整定
+    else if (pidModel == 3) { //角度环整定
         sprintf(txtA,"%04d",manual_z);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));uart_putstr(UART_2,txtA);
+        sprintf(txtA,"%04d",(int16)PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));uart_putstr(UART_2,txtA);
 
         uart_putstr(UART_2,message1);
     }
-    else if (car_flag == 1){ //转向环整定
+    else if (pidModel == 4){ //转向环整定
         sprintf(txtA,"%04d",0);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",PID_Loc(0,-position_front,&yaw_pid));uart_putstr(UART_2,txtA);
+        sprintf(txtA,"%04d",(int16)PID_Loc(0,-position_front,&yaw_pid));uart_putstr(UART_2,txtA);
 
         uart_putstr(UART_2,message1);
     }
+    else if (pidModel == 1){ //转向环整定
+        sprintf(txtA,"%04d",-encoder_data[3]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",-encoder_data[2]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",-encoder_data[0]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        sprintf(txtA,"%04d",-encoder_data[1]);uart_putstr(UART_2,txtA);
+        uart_putstr(UART_2,message1);
+
+    }
+
 }
 
 void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
     esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
-    ips114_showstr(0,7,esp8266_buf);
+    ips114_showstrGRAY(45,0,esp8266_buf);
     ESP8266_Clear();
     while(1)
     {

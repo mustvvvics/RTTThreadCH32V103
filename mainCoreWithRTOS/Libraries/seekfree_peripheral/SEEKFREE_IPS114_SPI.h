@@ -108,6 +108,7 @@ void ips114_drawpoint(uint16 x,uint16 y,uint16 color);
 void ips114_showchar(uint16 x,uint16 y,const int8 dat);
 void ips114_showstr(uint16 x,uint16 y,const int8 dat[]);
 void ips114_showstrBlack(uint16 x,uint16 y,const int8 dat[]);//上下切换显示使用
+void ips114_showstrGRAY(uint16 x,uint16 y,const int8 dat[]);//标题显示
 void ips114_showint8(uint16 x,uint16 y,int8 dat);
 void ips114_showuint8(uint16 x,uint16 y,uint8 dat);
 void ips114_showint16(uint16 x,uint16 y,int16 dat);

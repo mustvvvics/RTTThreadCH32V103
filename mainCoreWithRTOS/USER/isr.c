@@ -95,6 +95,23 @@ void EXTI2_IRQHandler(void)
             uart_flag = E_START;
             encoder_get();                                  //主核编码器
         }
+        /*******************************************************//*******************************************************/
+        //for test
+//        if (car_flag == 1) {
+//            speed_conversion(0,expected_y * 10,0);
+//            motor1_ctl(Left_front);
+//            motor2_ctl(Right_front);
+//            motor3_ctl(Right_rear);
+//            motor4_ctl(Left_rear);
+//        }
+//        if (car_flag == 1) {
+//            speed_conversion(0,expected_y,0);
+//            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+//            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+//            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+//            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+//        }
+        /*******************************************************//*******************************************************/
         if (car_flag == 1) {
             carFlagPre = car_flag;
             if (car_flag == 1 && pidModel == 0 ) { //转向环整定
@@ -110,10 +127,10 @@ void EXTI2_IRQHandler(void)
 //            else if (elementFlag == 1) {                  //三叉路口
 //
 //            }
-                motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-                motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-                motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-                motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
         else if (carFlagPre == 1 && car_flag == 0) { // 检测下降沿 放松控制
             clearError();
@@ -123,17 +140,17 @@ void EXTI2_IRQHandler(void)
         //遥控
         else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {
             speed_conversion(0,manual_y,manual_z);
-            motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-            motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-            motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-            motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
         else {
             speed_conversion(0,0,0);
-            motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-            motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-            motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-            motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
 
     //        if(count_en == 1)
