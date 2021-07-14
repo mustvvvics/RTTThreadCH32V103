@@ -17,10 +17,7 @@
  * @date            2020-12-04
  ********************************************************************************************************************/
 
-
 #include "headfile.h"
-
-
 
 void WWDG_IRQHandler(void) __attribute__((interrupt()));
 void HardFault_Handler(void) __attribute__((interrupt()));
@@ -43,22 +40,11 @@ void TIM1_BRK_IRQHandler(void) __attribute__((interrupt()));
 void TIM1_UP_IRQHandler(void) __attribute__((interrupt()));
 void TIM1_TRG_COM_IRQHandler(void) __attribute__((interrupt()));
 void TIM1_CC_IRQHandler(void) __attribute__((interrupt()));
-
 void TIM3_IRQHandler(void) __attribute__((interrupt()));
 void TIM4_IRQHandler(void) __attribute__((interrupt()));
-//void I2C1_EV_IRQHandler(void) __attribute__((interrupt()));
-//void I2C1_ER_IRQHandler(void) __attribute__((interrupt()));
-//void I2C2_EV_IRQHandler(void) __attribute__((interrupt()));
-//void I2C2_ER_IRQHandler(void) __attribute__((interrupt()));
-//void SPI1_IRQHandler(void) __attribute__((interrupt()));
-//void SPI2_IRQHandler(void) __attribute__((interrupt()));
-
 void USART2_IRQHandler(void) __attribute__((interrupt()));
 void USART3_IRQHandler(void) __attribute__((interrupt()));
 void EXTI15_10_IRQHandler(void) __attribute__((interrupt()));
-//void RTCAlarm_IRQHandler(void) __attribute__((interrupt()));
-//void USBWakeUp_IRQHandler(void) __attribute__((interrupt()));
-//void USBHD_IRQHandler(void) __attribute__((interrupt()));
 
 void EXTI0_IRQHandler(void)
 {
@@ -84,49 +70,57 @@ void EXTI1_IRQHandler(void)
 
     rt_interrupt_leave();   //ÍË³öÖĞ¶Ï
 }
-
-
-void EXTI2_IRQHandler(void)//************************************************±àÂëÆ÷****************************************
+/************************************************************************************************/
+/*
+ * Íâ²¿ÖĞ¶Ï Í¬²½Òı½ÅÀ­Æğ
+ */
+/************************************************************************************************/
+void EXTI2_IRQHandler(void)
 {
     rt_interrupt_enter();    //½øÈëÖĞ¶Ï
-    timet1 = rt_tick_get();
-    timeControl = timet1 - timet2;
-    timet2 = timet1;
-
+/*
+ * ¼ÆÊ±Æ÷:¼ÆËãÔËĞĞÊ±¼ä
+ */
+//    timet1 = rt_tick_get();
+//    timeControl = timet1 - timet2;
+//    timet2 = timet1;
 
     if(SET == EXTI_GetITStatus(EXTI_Line2))
     {
 
-        while (uart_flag != E_OK);                        //µÈ´ı½ÓÊÕÊı¾İ
+        while (uart_flag != E_OK);                          //µÈ´ı½ÓÊÕÊı¾İ
         {
             AngleZ_Get();
-            data_analysis(temp_buff);//Êı¾İ½âÎö Í¼ÏñºË±àÂëÆ÷  Æ«²îÊı¾İ
+            data_analysis(temp_buff);                       //Êı¾İ½âÎö Í¼ÏñºË±àÂëÆ÷  Æ«²îÊı¾İ
             uart_flag = E_START;
-            encoder_get();//Ö÷ºË±àÂëÆ÷
+            encoder_get();                                  //Ö÷ºË±àÂëÆ÷
         }
         if (car_flag == 1) {
             carFlagPre = car_flag;
             if (car_flag == 1 && pidModel == 0 ) { //×ªÏò»·Õû¶¨
-                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-                 speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
-             }
-             else if (car_flag == 1 && pidModel == 1) {//ËÙ¶È»·Õû¶¨
-                 speed_conversion(0,manual_y,0);
-             }
-             else if (car_flag == 1 && pidModel == 2) {
-                 speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));//½Ç¶È»·Õû¶¨
-             }
-             motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-             motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-             motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-             motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+                expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+                speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+            }
+                else if (car_flag == 1 && pidModel == 1) {//ËÙ¶È»·Õû¶¨
+                speed_conversion(0,manual_y,0);
+            }
+                else if (car_flag == 1 && pidModel == 2) {
+                speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));//½Ç¶È»·Õû¶¨
+            }
+//            else if (elementFlag == 1) {                  //Èı²æÂ·¿Ú
+//
+//            }
+                motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+                motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+                motor3_ctl(PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+                motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
         else if (carFlagPre == 1 && car_flag == 0) { // ¼ì²âÏÂ½µÑØ ·ÅËÉ¿ØÖÆ
             clearError();
             motor1_ctl(0);motor2_ctl(0);motor3_ctl(0);motor4_ctl(0);
             carFlagPre = 0;
         }
-         //µç»ú¿ØÖÆËÙ¶È»·
+        //Ò£¿Ø
         else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {
             speed_conversion(0,manual_y,manual_z);
             motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
@@ -135,7 +129,6 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
         else {
-//            speed_conversion(0,manual_y,manual_z);
             speed_conversion(0,0,0);
             motor1_ctl(PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
             motor2_ctl(PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
@@ -143,25 +136,18 @@ void EXTI2_IRQHandler(void)//************************************************±àÂ
             motor4_ctl(PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
 
-
-    //        /***********************************************************************/
-    //        //Ò£¿Ø
     //        if(count_en == 1)
     //        {
     //            //Àï³Ì¼Æ
-    //            //dx += (encoder_data[0]-encoder_data[3])/2;
+    //            dx += (encoder_data[0]-encoder_data[3])/2;
     //            dy += (encoder_data[3]-encoder_data[2]+encoder_data[1]-encoder_data[0])/4;//ËÄ¸öÂÖ×ÓÕıÖµÏà¼Ó
     //            dz += (-encoder_data[3]-encoder_data[2]-encoder_data[1]-encoder_data[0]);//×ó±ßÁ½¸öÏòÄÚ£¬ÓÒ±ßÁ½¸öÏòÍâ ->Ïò×óĞĞ½ø
     //            //dist = sqrt(dx*dx+dy*dy);
     //            //total_z += (int16)g_fGyroAngleSpeed_z;
     //            //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;//Çå¿Õ²¢¹Ø±ÕÀï³Ì¼Æ
     //        }
-
-
         EXTI_ClearITPendingBit(EXTI_Line2);
     }
-
-
     rt_interrupt_leave();    //ÍË³öÖĞ¶Ï
 }
 
@@ -384,16 +370,12 @@ void TIM4_IRQHandler(void)
 }
 
 //´®¿Ú1 ¶¨ÒåÔÚÁËboard.cÖĞ£¬ÓÃÓÚ½ÓÊÕ´®¿ÚÄÚÈİ²¢Í¨¹ıÓÊ¼ş·¢ËÍ¸øfinshÏß³Ì
-//void USART1_IRQHandler(void)
-//{
-//    rt_interrupt_enter();       //½øÈëÖĞ¶Ï
-//
-//    //»ñÈ¡ÖĞ¶Ï±êÖ¾Î»
-//    //Çå³ıÖĞ¶Ï±êÖ¾Î»
-//
-//    rt_interrupt_leave();       //ÍË³öÖĞ¶Ï
-//}
 
+/**************************************************************************************************************************/
+/*
+ * ´®¿Ú2½ÓÊÕÖĞ¶Ï ,ÓÃÓÚ½ÓÊÕ8266ĞÅºÅ
+ */
+/**************************************************************************************************************************/
 void USART2_IRQHandler(void)
 {
     rt_interrupt_enter();       //½øÈëÖĞ¶Ï
@@ -408,26 +390,26 @@ void USART2_IRQHandler(void)
         if (data_temp == 0x0A) { //½ÓÊÕµ½ÁË»»ĞĞ·û
             rt_sem_release(esp8266_sem);//ÊÍ·ÅĞÅºÅÁ¿
         }
-
     }
 
     rt_interrupt_leave();       //ÍË³öÖĞ¶Ï
 }
 
-void USART3_IRQHandler(void)/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+/*
+ *´®¿Ú3 ½ÓÊÕÖĞ¶Ï ½ÓÊÕÍ¼ÏñºÍÊı¾İ
+ */
+/**************************************************************************************************************************/
+void USART3_IRQHandler(void)
 {
     rt_interrupt_enter();       //½øÈëÖĞ¶Ï
 
     uint8 dat_USART3;
-    //»ñÈ¡ÖĞ¶Ï±êÖ¾Î»
-    //Çå³ıÖĞ¶Ï±êÖ¾Î»
     if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
     {
         USART_ClearITPendingBit(USART3, USART_IT_RXNE);
         dat_USART3 = (uint8)USART_ReceiveData(USART3);                //»ñÈ¡´®¿ÚÊı¾İ
-
-        get_slave_data(dat_USART3);                            //½«Ã¿Ò»¸ö×Ö½ÚµÄ´®¿ÚÊı¾İ´æÈëtemp_buffÖĞ¡£
-
+        get_slave_data(dat_USART3);                                   //½«Ã¿Ò»¸ö×Ö½ÚµÄ´®¿ÚÊı¾İ´æÈëtemp_buffÖĞ¡£
     }
 
     rt_interrupt_leave();       //ÍË³öÖĞ¶Ï

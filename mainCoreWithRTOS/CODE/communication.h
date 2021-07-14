@@ -18,7 +18,7 @@
 #define E_FRAME_RTAIL_ERROR     3       //帧尾错误
 
 extern vuint8  uart_flag;                   //接收数据标志位
-extern uint8   temp_buff[LINE_LEN];             //主机用于接收数据的BUFF
+extern uint8   temp_buff[LINE_LEN];         //主机用于接收数据的BUFF
 
 void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);

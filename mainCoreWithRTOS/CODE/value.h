@@ -1,32 +1,21 @@
-/*
- * value.h
- *
- *  Created on: Jun 9, 2021
- *      Author: 29275
- */
-
 #ifndef CODE_VALUE_H_
 #define CODE_VALUE_H_
 
 #include "headfile.h"
 
-//extern uint16 fivems_tick;
-//extern uint16 fives_tick;
 extern int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 extern int16 position_front;
 
 extern uint8 car_flag;
 extern uint8 carFlagPre;
-//期望直线速度和角速度
+
 extern int16 expected_omega;
-extern int32 expected_y;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
+extern int32 expected_y;
 extern int16 manual_y;
 extern int16 manual_z;
-extern int32 dx,dy,dz,dist;
-//extern uint8 feedBadDog;
 
-//速度环PID参数
-//8000限幅
+
+//速度环PID参数 8000限幅
 extern float S_P;
 extern float S_I;
 extern float S_D;
@@ -53,28 +42,22 @@ extern PID motor4_pid;
 extern PID yaw_w_pid;
 extern PID_LocTypeDef yaw_pid;
 
-
-//四个轮子的目标速度值
 extern int16 Left_rear;
 extern int16 Left_front;
 extern int16 Right_front;
 extern int16 Right_rear;
 
-
 //陀螺仪角速率积分
 extern int32 total_z;
-//舵机输出占空比
-extern uint16 duty;
+////舵机输出占空比
+//extern uint16 duty;
 //串口接收缓冲区
 extern uint8 esp8266_buf[64];
 //串口接收计数变量
 extern uint16 esp8266_cnt;
-//IP地址接收标志位
-extern uint8 IP_Start_Rec;
 //摄像头数据回传标志位
 extern uint8 CameraShow_flag;
 
-extern uint8 count_en;
 extern uint8 go_forward;
 extern uint8 go_backward;
 extern uint8 go_right;
@@ -82,10 +65,10 @@ extern uint8 go_left;
 
 extern uint8 elementFlag;
 extern uint8 accelerate;
-extern uint8 ThreeWayIntersection;//三叉路口
-extern uint8 garage;//车库
+extern uint8 ThreeWayIntersection;
+extern uint8 garage;
 
-extern uint8 pidModel; //pid 调试
+extern uint8 pidModel;
 extern rt_tick_t timet1;
 extern rt_tick_t timet2;
 extern rt_tick_t timeControl;

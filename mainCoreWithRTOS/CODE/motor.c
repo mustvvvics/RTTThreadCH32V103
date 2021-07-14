@@ -2,11 +2,6 @@
 
 void motor_init(void)
 {
-    //初始化电机PWM引脚和方向引脚
-
-    //桌大大的推文中，建议电磁组电机频率选用13K-17K
-    //最大占空比值PWM_DUTY_MAX 可以在fsl_pwm.h文件中修改 默认为50000
-    //对于一个PWM模块 包含的所有通道只能输出频率一样 占空比不一样的 PWM CH32V103R8T6只有四个PWM模块 每个模块有4个通道
     gpio_init(MOTOR1_A, GPO, 0, GPIO_PIN_CONFIG);
     pwm_init(MOTOR1_B,17000,0);
     gpio_init(MOTOR2_A, GPO, 0, GPIO_PIN_CONFIG);
@@ -80,9 +75,9 @@ void motor4_ctl(int32 speed4_power)
 }
 
 //速度解算
-void speed_conversion(double Vx, double Vy, int Vz) {
-    Left_front= (int)(+Vx + Vy - Vz * 0.18);
-    Right_front = (int)(-Vx + Vy + Vz * 0.18);
-    Right_rear = (int)(+Vx + Vy + Vz * 0.18);
-    Left_rear = (int)(-Vx + Vy - Vz * 0.18);
+void speed_conversion(float Vx, float Vy, float Vz) {
+    Left_front= (int16)(+Vx + Vy - Vz * 0.18);
+    Right_front = (int16)(-Vx + Vy + Vz * 0.18);
+    Right_rear = (int16)(+Vx + Vy + Vz * 0.18);
+    Left_rear = (int16)(-Vx + Vy - Vz * 0.18);
 }

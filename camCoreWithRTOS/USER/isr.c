@@ -326,6 +326,9 @@ void USART3_IRQHandler(void)
             num = 0;
             gyroData_analysis(Gyro_buff);
         }
+        else if (num > 5 ) {
+            num = 0;
+        }
     }
     rt_interrupt_leave();       //ÍË³öÖĞ¶Ï
 }

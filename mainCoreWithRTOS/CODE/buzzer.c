@@ -4,7 +4,6 @@
 
 rt_mailbox_t buzzer_mailbox;
 
-
 void buzzer_entry(void *parameter)
 {
     uint32 mb_data;
@@ -19,10 +18,6 @@ void buzzer_entry(void *parameter)
 
     }
 }
-
-
-
-
 
 void buzzer_init(void)
 {

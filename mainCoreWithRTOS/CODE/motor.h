@@ -21,6 +21,6 @@ void motor1_ctl(int32 speed1_power);
 void motor2_ctl(int32 speed2_power);
 void motor3_ctl(int32 speed3_power);
 void motor4_ctl(int32 speed4_power);
-void speed_conversion(double Vx, double Vy, int Vz);
+void speed_conversion(float Vx, float Vy, float Vz);
 
 #endif

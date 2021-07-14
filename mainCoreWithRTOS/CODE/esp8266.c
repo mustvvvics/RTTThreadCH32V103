@@ -1,4 +1,3 @@
-
 #include "headfile.h"
 
 rt_sem_t esp8266_sem;
@@ -23,10 +22,10 @@ void clearError(void){
     yaw_w_pid.err = 0;
     yaw_w_pid.err_last = 0;
     yaw_w_pid.actual_val = 0;
-    dy=0;dz=0;count_en=0;
     manual_y=0;manual_z=0;
     go_forward=0;go_backward=0;
     go_left=0;go_right=0;
+    pidModel = 0;
 }
 
 void Esp_Init(void)
@@ -64,11 +63,9 @@ int32 recevePidData(int16 receiveWay){
 void Tcp_Decode(void)
 {
     if(esp8266_buf[esp8266_cnt-1] != 0x0A)return;
-//    char txt[32];
     int32 dataChange;
-//
+
     if(strcmp((char *)esp8266_buf,"init\r\n") == 0) { //
-//        ips114_showstr(0,5,"TCP Init Ok");
         uart_putstr(UART_2,"#0008control\n");
     }
     /**************************************************************************/
@@ -91,7 +88,6 @@ void Tcp_Decode(void)
 //        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y);//致命因子
         uart_putstr(UART_2,"#0016received_speed!\n");
     }
-    //Turn_Kp:6026/n
     /*********************************************************************************************/
     //速度环pid整定   "Speed_Kp:%d\n"  float S_P=136;
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'S'){
@@ -178,7 +174,7 @@ void Tcp_Decode(void)
     ESP8266_Clear();
 }
 
-void manual_control(void)
+void manual_control(void)               //遥控行进
 {
     if(key_data==6){
         clearError();manual_y = 10;manual_z = 0;
@@ -196,8 +192,7 @@ void manual_control(void)
 
 const char* message0 = ",";
 const char* message1 = "\n";
-void sendMessage(void) {
-//发送两个数据曲线进行分析
+void sendMessage(void) {                //发送数据曲线进行分析
     char txtA[6];
     if (pidModel == 1) { //速度环整定
         sprintf(txtA,"%04d",Left_front);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
@@ -233,8 +228,6 @@ void esp8266Entry(void *parameter)
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
     esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
     ips114_showstr(0,7,esp8266_buf);
-//    oled_p6x8str(0, 5, esp8266_buf);
-
     ESP8266_Clear();
     while(1)
     {

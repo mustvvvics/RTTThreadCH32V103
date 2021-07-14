@@ -296,12 +296,33 @@ void ips114_showchar(uint16 x,uint16 y,const int8 dat)
 		{
 			if(temp&0x01)	
             {
-                ips114_writedata_16bit(IPS114_PENCOLOR);
+                ips114_writedata_16bit(IPS114_PENCOLOR); //定义写字笔的颜色
             }
-			else			ips114_writedata_16bit(IPS114_BGCOLOR);
+			else			ips114_writedata_16bit(IPS114_BGCOLOR); //定义背景颜色
 			temp>>=1;
 		}
 	}
+}
+
+void ips114_showcharBlack(uint16 x,uint16 y,const int8 dat) //上下切换显示使用
+{
+    uint8 i,j;
+    uint8 temp;
+
+    for(i=0; i<16; i++)
+    {
+        ips114_set_region(x,y+i,x+7,y+i);
+        temp = tft_ascii[dat-32][i];//减32因为是取模是从空格开始取得 空格在ascii中序号是32
+        for(j=0; j<8; j++)
+        {
+            if(temp&0x01)
+            {
+                ips114_writedata_16bit(WHITE); //定义写字笔的颜色
+            }
+            else            ips114_writedata_16bit(BLACK); //定义背景颜色
+            temp>>=1;
+        }
+    }
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -323,6 +344,18 @@ void ips114_showstr(uint16 x,uint16 y,const int8 dat[])
 		ips114_showchar(x+8*j,y*16,dat[j]);
 		j++;
 	}
+}
+
+void ips114_showstrBlack(uint16 x,uint16 y,const int8 dat[]) //上下切换显示使用
+{
+    uint16 j;
+
+    j = 0;
+    while(dat[j] != '\0')
+    {
+        ips114_showcharBlack(x+8*j,y*16,dat[j]);
+        j++;
+    }
 }
 
 //-------------------------------------------------------------------------------------------------------------------

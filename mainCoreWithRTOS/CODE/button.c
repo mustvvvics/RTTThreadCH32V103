@@ -22,26 +22,24 @@ uint8 key4_last_status;
 uint8 key5_last_status;
 
 //开关标志位
-uint8 key1_flag;
-uint8 key2_flag;
-uint8 key3_flag;
-uint8 key4_flag;
-uint8 key5_flag;
+uint8 key1_flag = 0;
+uint8 key2_flag = 0;
+uint8 key3_flag = 0;
+uint8 key4_flag = 0;
+uint8 key5_flag = 0;
 
-////开关信号量
-//rt_sem_t key1_sem;
-//rt_sem_t key2_sem;
-//rt_sem_t key3_sem;
-//rt_sem_t key4_sem;
-//rt_sem_t key5_sem;
-
-uint32 key_data;
+uint32 key_data = 0;
 
 rt_mailbox_t key_mailbox;
-
+//void clearKeyFlags(void){
+//    key1_flag = 0;
+//    key2_flag = 0;
+//    key3_flag = 0;
+//    key4_flag = 0;
+//    key5_flag = 0;
+//}
 void button_entry(void *parameter)
 {
-
     //保存按键状态
     key1_last_status = key1_status;
     key2_last_status = key2_status;
@@ -57,39 +55,31 @@ void button_entry(void *parameter)
     key5_status = gpio_get(KEY5);
 
     //检测到按键按下之后并放开 释放一次信号量
-    if(key1_status && !key1_last_status)    
-    {
-//        count = 1;
-//        rt_sem_release(key1_sem);
+    if(key1_status && !key1_last_status && key1_flag == 0){
+//        clearKeyFlags();
+//        key1_flag = 1;
         rt_mb_send(key_mailbox, 1);
     }
-    if(key2_status && !key2_last_status)    
-    {
-//        count = 2;
-//        rt_sem_release(key2_sem);
-
+    if(key2_status && !key2_last_status && key2_flag == 0){
+//        clearKeyFlags();
+//        key2_flag = 1;
         rt_mb_send(key_mailbox, 2);
     }
-    if(key3_status && !key3_last_status)    
-    {
-//        count = 3;
-//        rt_sem_release(key3_sem);
+    if(key3_status && !key3_last_status && key3_flag == 0){
+//        clearKeyFlags();
+//        key3_flag = 1;
         rt_mb_send(key_mailbox, 3);
     }
-    if(key4_status && !key4_last_status)
-    {
-//        count = 4;
-//        rt_sem_release(key4_sem);
+    if(key4_status && !key4_last_status && key4_flag == 0){
+//        clearKeyFlags();
+//        key4_flag = 1;
         rt_mb_send(key_mailbox, 4);
     }
-    if(key5_status && !key5_last_status)
-    {
-//        count = 5;
-//        rt_sem_release(key5_sem);
+    if(key5_status && !key5_last_status && key5_flag == 0){
+//        clearKeyFlags();
+//        key5_flag = 1;
         rt_mb_send(key_mailbox, 5);
     }
-    /*************************************************************************/
-
 }
 
 void button_init(void)
@@ -101,12 +91,6 @@ void button_init(void)
     gpio_init(KEY3, GPI, 0, GPIO_INT_CONFIG);
     gpio_init(KEY4, GPI, 0, GPIO_INT_CONFIG);
     gpio_init(KEY5, GPI, 0, GPIO_INT_CONFIG);
-    
-//    key1_sem = rt_sem_create("key1", 1, RT_IPC_FLAG_FIFO);  //创建按键的信号量，当按键按下就释放信号量，在需要使用按键的地方获取信号量即可
-//    key2_sem = rt_sem_create("key2", 2, RT_IPC_FLAG_FIFO);
-//    key3_sem = rt_sem_create("key3", 3, RT_IPC_FLAG_FIFO);
-//    key4_sem = rt_sem_create("key4", 4, RT_IPC_FLAG_FIFO);
-//    key5_sem = rt_sem_create("key5", 5, RT_IPC_FLAG_FIFO);
 
     key_mailbox = rt_mb_create("key", 5, RT_IPC_FLAG_FIFO);
 

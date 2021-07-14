@@ -1,10 +1,3 @@
-/*
- * filter.h
- *
- *  Created on: Jun 9, 2021
- *      Author: 29275
- */
-
 #ifndef CODE_FILTER_H_
 #define CODE_FILTER_H_
 

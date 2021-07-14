@@ -17,11 +17,9 @@ void get_slave_data(uint8 data)
     if(1 == uart_num)
     {
         //接收到的第一个字符不为0xD8，帧头错误
-        if(0xD8 != temp_buff[0])
-        {
+        if(0xD8 != temp_buff[0]){
             uart_num = 0;
             uart_flag = E_FRAME_HEADER_ERROR;
-//            rt_kprintf("HEADERR\n");
         }
     }
 
@@ -29,20 +27,15 @@ void get_slave_data(uint8 data)
     {
         uart_flag = E_OK;
         //接收到最后一个字节为0xEE
-        if(0xEE == temp_buff[LINE_LEN - 1])
-        {
+        if(0xEE == temp_buff[LINE_LEN - 1]){
             uart_flag = E_OK;
-//            rt_kprintf("ok\n");
         }
-        else    //接收到最后一个字节不是0xEE，帧尾错误
-        {
+        else{    //接收到最后一个字节不是0xEE，帧尾错误
             uart_flag = E_FRAME_RTAIL_ERROR;
-//            rt_kprintf("ERROR\n");
         }
         uart_num = 0;
     }
 }
-
 
 void data_analysis(uint8 *line)
 {
