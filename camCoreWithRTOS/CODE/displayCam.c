@@ -14,7 +14,7 @@ void show_speed(void)
     ips114_showstr(0, 2, txt);
     sprintf(txt,"LJL=%04d|LJR=%4d",laneJitterLeft, laneJitterRight);
     ips114_showstr(0, 3, txt);
-    sprintf(txt,"AR_R=%07d",areaDetectRoundaboutRight);
+    sprintf(txt,"fl_Rou=% 2d|exRouDe=%4d    ",flagEnterRoundabout, exitRoundaboutDelay);
     ips114_showstr(0, 4, txt);
     sprintf(txt,"gyroData=%05d",gyroData);
     ips114_showstr(0, 5, txt);

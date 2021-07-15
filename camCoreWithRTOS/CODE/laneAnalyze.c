@@ -57,6 +57,9 @@ void locateLaneByMeanSlide(Mat outMat) {
 }
 
 void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
+    if (iterRow == imgRow - 1) {
+        return;
+    }
     if (iterRow > slopeRowEnd) {
         flagDetectLeft[iterRow] = laneFound;
         flagDetectRight[iterRow] = laneFound;
@@ -74,7 +77,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
                 flagDetectLeft[iterRow] = laneFound;
                 break;
             } else {
-                laneLocationLeft[iterRow] = laneLocationLeft[iterRow+1] + (imgRow-iterRow);
+                laneLocationLeft[iterRow] = laneLocationLeft[iterRow+1] - (imgRow-iterRow);
                 flagDetectLeft[iterRow] = laneFound;
             }
         }
@@ -327,17 +330,23 @@ void detectSBend() {
     */
 }
 
+uint16 stopTimer = 5000;
 // flagEnterRoundabout: 0 -- no roundabout, -1 -- left, 1 -- right
 void detectRoundabout() {
     if (flagEnterRoundabout != 0) {
         if (exitRoundaboutDelay == 0) {
-            exitRoundaboutDelay = 600;
-        } else if (exitRoundaboutDelay == 100) {
-            flagEnterRoundabout = 99;
-            --exitRoundaboutDelay;
+            exitRoundaboutDelay = 1000;
+        } else if (exitRoundaboutDelay == 980) {
+            if (flagEnterRoundabout == 2) {
+                flagEnterRoundabout = 1;
+                --exitRoundaboutDelay;
+            } else {
+                flagEnterRoundabout = -1;
+                --exitRoundaboutDelay;
+            }
         } else if (exitRoundaboutDelay == 1) {
             flagEnterRoundabout = 0;
-            areaDetectRoundaboutLeft = areaDetectRoundaboutRight = 0;
+            exitRoundaboutDelay = 0;
         } else {
             --exitRoundaboutDelay;
         }
@@ -392,7 +401,7 @@ void detectRoundabout() {
             }
             if (areaDetectRoundaboutLeft > areaDetectRoundaboutThres) {
                 laneCenterPrevious = imgCol / 4;
-                flagEnterRoundabout = -1;
+                flagEnterRoundabout = -2;
             }
             //printf("area roundabout left: %d\n", areaDetectRoundaboutLeft);
             //printf("roundabout start row %d, end row %d\n", missingLaneLowerLeft, missingLaneUpperLeft);
@@ -437,7 +446,7 @@ void detectRoundabout() {
             }
             if (areaDetectRoundaboutRight > areaDetectRoundaboutThres) {
                 laneCenterPrevious = imgCol / 4 * 3;
-                flagEnterRoundabout = 1;
+                flagEnterRoundabout = 2;
             }
             //printf("area roundabout right: %d\n", areaDetectRoundaboutRight);
             //printf("roundabout start row %d, end row %d\n", missingLaneLowerRight, missingLaneUpperRight);
@@ -732,12 +741,6 @@ void passParameter() {
     if (flagEnterStartLine != 0) {
         flagCameraElement = 3;
     }
-    if (flagEnterRoundabout==99) {
-        flagCameraElement = 3;
-    }
-    if (flagEnterRoundabout!=0) {
-        flagCameraElement = 3;
-    }
 }
 
 uint8 detectCrossroadStartRow = 30;
@@ -794,7 +797,7 @@ void laneAnalyze(Mat outMat){
     // }
 
     for (iterRow = imgRow-1; iterRow != 255; --iterRow){
-        if (flagEnterRoundabout) {
+        if (flagEnterRoundabout == 1 || flagEnterRoundabout == -1) {
             locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
         } else {
             locateLaneByMeanSlide(outMat);
@@ -813,9 +816,7 @@ void laneAnalyze(Mat outMat){
         adaptCrossroad();
     }
 
-    if (flagEnterRoundabout) {
-        detectRoundabout();
-    }
+    detectRoundabout();
     detectSharpCurve();
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
         adaptSharpCurve();
@@ -823,7 +824,7 @@ void laneAnalyze(Mat outMat){
 
 
     // add a strightline to help compute lane slope
-    for (iterRow=imgRow-1; iterRow > slopeRowStart-1; --iterRow) {
+    for (iterRow=imgRow-1; iterRow > slopeRowStart-2; --iterRow) {
         laneCenter[iterRow] = imgCol / 2 - 1;
     }
 
