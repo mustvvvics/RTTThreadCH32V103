@@ -65,11 +65,11 @@ void Tcp_Decode(void)
     else if(esp8266_buf[4] == 'S' && esp8266_buf[0] == 'C')
     {
         expected_y = 100 * (esp8266_buf[10] - '0') + 10 * (esp8266_buf[11] - '0') + (esp8266_buf[12] - '0');
-//        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y);//致命因子
+//        sscanf(esp8266_buf,"Car_Speed:%d\n",&expected_y); //致命因子
         uart_putstr(UART_2,"#0016received_speed!\n");
     }
     /*********************************************************************************************/
-    //速度环pid整定   "Speed_Kp:%d\n"  float S_P=136;
+    //速度环整定   "Speed_Kp:%d\n"  float S_P=136;
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'S'){
         dataChange = recevePidData(100);
         uart_putstr(UART_2,"#0010Speed_Kp!\n");
@@ -98,7 +98,7 @@ void Tcp_Decode(void)
         motor4_pid.Kd = (float)dataChange;
     }
     /*********************************************************************************************/
-    //角速度环pid整定   "Angle_Kp:%d\n" float yaw_w_I=0.01; EG: 10  ---> 0.010
+    //角速度环整定   "Angle_Kp:%d\n" float yaw_w_I=0.01; EG: 10  ---> 0.010
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'A'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Angle_Kp!\n");
@@ -118,7 +118,7 @@ void Tcp_Decode(void)
         yaw_w_pid.Kd =(float)dataChange*0.001f;
     }
     /*********************************************************************************************/
-    //转向环pid整定    "Turnn_Kp:%d\n"   eg: 4000 ----> 4
+    //转向环整定    "Turnn_Kp:%d\n"   eg: 4000 ----> 4
     else if(esp8266_buf[7] == 'p' && esp8266_buf[0] == 'T'){
         dataChange = recevePidData(1000);
         uart_putstr(UART_2,"#0010Turnn_Kp!\n");
@@ -151,6 +151,9 @@ void Tcp_Decode(void)
 
     else if(strcmp((char *)esp8266_buf,"Left\r\n") == 0)
     {go_left=1;uart_putstr(UART_2,"#0015received_Left!\n");rt_mb_send(key_mailbox, 9);}
+
+    else if(strcmp((char *)esp8266_buf,"ThreeWay\r\n") == 0)
+    {ThreeWayIntersectionFlag = 1;uart_putstr(UART_2,"#ThreeWay!\n");}
 
     ESP8266_Clear();
 }
@@ -195,7 +198,7 @@ void sendMessage(void) {                //发送数据曲线进行分析
 
         uart_putstr(UART_2,message1);
     }
-    else if (pidModel == 1){ //转向环整定
+    else if (pidModel == 1){ //开环计算
         sprintf(txtA,"%04d",-encoder_data[3]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
         sprintf(txtA,"%04d",-encoder_data[2]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
         sprintf(txtA,"%04d",-encoder_data[0]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
@@ -209,8 +212,8 @@ void sendMessage(void) {                //发送数据曲线进行分析
 void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
-    esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
-    ips114_showstrGRAY(45,0,esp8266_buf);
+    esp8266_buf[esp8266_cnt-2] = '\0'; //消除显示乱码
+    ips114_showstrGRAY(45,0,esp8266_buf); //显示在标题栏目
     ESP8266_Clear();
     while(1)
     {

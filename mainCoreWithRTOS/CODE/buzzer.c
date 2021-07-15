@@ -9,7 +9,7 @@ void buzzer_entry(void *parameter)
     uint32 mb_data;
     while(1)
     {
-        //接收邮箱数据，如果没有数据则持续等待并释放CPU控制权
+        //接收邮箱数据,如果没有数据则持续等待并释放CPU
         rt_mb_recv(buzzer_mailbox, &mb_data, RT_WAITING_FOREVER);
 
         gpio_set(BUZZER_PIN, 1);    //打开蜂鸣器

@@ -4,6 +4,5 @@
 #include "headfile.h"
 
 void display_init(void);
-void clearError(void);
 
 #endif

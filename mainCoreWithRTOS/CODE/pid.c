@@ -79,7 +79,7 @@ float PID_Speed(float target_val,float actual_val,PID *pid)
                  + pid->Ki*pid->err
                  + pid->Kd*(pid->err - 2 * pid->err_next + pid->err_last);
 
-    //pid限幅
+    //限幅
     if(pid->actual_val > limit_pwm) pid->actual_val = limit_pwm;
     else if(pid->actual_val < -limit_pwm) pid->actual_val = -limit_pwm;
 
@@ -100,7 +100,7 @@ float PID_Angle(float target_val,float actual_val,PID *pid)
 //    if(pid->err > 50) pid->err = 50;
 //    else if(pid->err < -50) pid->err = -50;
 
-    //pid限幅
+    //限幅
     if(pid->actual_val > 1000) pid->actual_val = 1000;
     else if(pid->actual_val < -1000) pid->actual_val = -1000;
 

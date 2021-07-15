@@ -26,30 +26,29 @@ int main(void)
     display_init();
     encoder_init();
     motor_init();
-    pwm_init(PWM1_CH1_A8, 50, 670);//舵机初始化，默认在中位上       舵机 TIMER1  338 670 1000
+    pwm_init(PWM1_CH1_A8, 50, 670);//舵机初始化 //默认在中位上       舵机 TIMER1  338 670 1000
 
     esp8266Init();
     PID_Init();
     timer_pit_init();
+
+//    ADC_Function_Init(); //电池电压采样
+
     //串口3初始化
-    uart_init(UART_3, 921600, UART3_TX_B10, UART3_RX_B11);  //串口3初始化，波特率115200
+    uart_init(UART_3, 921600, UART3_TX_B10, UART3_RX_B11);  //串口3初始化 波特率115200
     //开串口3中断
     uart_rx_irq(UART_3, ENABLE);                            //默认抢占优先级1 次优先级0。
-    nvic_init((IRQn_Type)(53 + UART_3), 0, 0, ENABLE);      //将串口3的抢占优先级设置为最高，次优先级设置为最高。
+    nvic_init((IRQn_Type)(53 + UART_3), 0, 0, ENABLE);      //将串口3的抢占优先级设置为最高 次优先级设置为最高。
     //开外部中断
-    gpio_interrupt_init(B2, RISING, GPIO_INT_CONFIG);       //B2初始化为GPIO 上升沿触发
-    nvic_init(EXTI2_IRQn, 1, 1, ENABLE);                    //EXTI2优先级配置，抢占优先级1，次优先级1
+    gpio_interrupt_init(B2, RISING, GPIO_INT_CONFIG);       //B2 //初始化为GPIO //上升沿触发
+    nvic_init(EXTI2_IRQn, 1, 1, ENABLE);                    //EXTI2  //优先级配置  抢占优先级1 次优先级1
     while(1)
     {
-//        char txt[32];
-        rt_thread_mdelay(4);//new delay
-        sendMessage();//发送曲线
-//        sprintf(txt,"carF=%01d|ERR=%05d|GA=%05d",car_flag,position_front,g_fGyroAngleSpeed_z);
-//        ips114_showstr(0,1,txt);
-//        sprintf(txt,"key=%02d|Fg=%01d|+AC=%02d",key_data,elementFlag,accelerate);
-//        ips114_showstr(0,2,txt);
-//        else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {//遥控
-//            manual_control();
-//        }
+        ThreeWayAnalyze();  //三叉解析
+//        rt_thread_mdelay(4);//new delay
+//        sendMessage(); //发送曲线 三叉解析
+//        getAdc();
+
+
     }
 }

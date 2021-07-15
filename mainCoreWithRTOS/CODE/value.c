@@ -11,15 +11,15 @@ int16 manual_z=0;
 //int32 dx=0,dy=0,dz=0,dist;//路径累计
 //uint8 feedBadDog=1;
 
-//速度环PID参数 8000限幅
+//速度环PID //参数 8000限幅
 float S_P=136;
 float S_I=33;
 float S_D=45;
 
 //角速度环参数
-float yaw_w_P=1;
-float yaw_w_I=0.01;//0.06;//  0.02
-float yaw_w_D=0.15;//0.26;//0.15   0
+float yaw_w_P=1;//0.67;
+float yaw_w_I=0.06;//0.1;//0.06;//  0.02
+float yaw_w_D=0.26;//3.7;////0.26;//0.15   0
 
 //待整定 转向环参数
 float yaw_P=9;//2.9->50;
@@ -30,10 +30,10 @@ float yaw_D=0;
 uint8 car_flag=0;
 uint8 carFlagPre = 0;
 
-//电机PWM限幅
+//电机PWM //限幅
 uint16 limit_pwm=10000;
 
-//速度环PID参数
+//速度环PID //参数
 PID motor1_pid;
 PID motor2_pid;
 PID motor3_pid;
@@ -73,11 +73,11 @@ uint8 go_right=0;
 uint8 go_left=0;
 
 uint8 elementFlag = 0;          //0:无元素 1:三叉  2:左环岛 3:右环岛 4:车库 5:刹车
-uint8 accelerate = 10;          //加速因子  两位数 eg：23   ------>  2 . 3
-uint8 ThreeWayIntersection;     //三叉路口
+uint8 accelerate = 10;          //加速因子  两位数 eg:23   ------>  2 . 3
+uint8 ThreeWayIntersectionFlag;     //三叉路口
 uint8 garage;                   //车库
 
-uint8 pidModel;                 //pid 调试
+uint8 pidModel;                 //pid //调试
 rt_tick_t timet1 = 0;           //计算运行时间
 rt_tick_t timet2 = 0;
 rt_tick_t timeControl = 0;

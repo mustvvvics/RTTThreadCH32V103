@@ -176,12 +176,15 @@ void USART1_IRQHandler(void)
     if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
     {
 //        uart_getchar(DEBUG_UART, &dat);
-//        rt_mb_send(uart_mb, dat);           // 发送邮件
+//        rt_mb_send(uart_mb, dat);           //发送邮件
 
         data_temp = (uint8)USART_ReceiveData(USART1);
         esp8266_buf[esp8266_cnt++] = data_temp;
+        if (esp8266_cnt > 63) {
+            esp8266_cnt = 0;
+        }
         if (data_temp == 0x0A) { //接收到了换行符
-            rt_sem_release(esp8266_sem);//释放信号量
+            rt_sem_release(esp8266_sem); //释放信号量
         }
     }
 

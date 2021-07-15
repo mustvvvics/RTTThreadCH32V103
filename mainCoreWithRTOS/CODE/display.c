@@ -6,25 +6,6 @@
 
 int8 menuY = 0;      //菜单上下
 
-void clearError(void){//清空误差
-    expected_omega = 0;
-    position_front = 0;
-    g_fGyroAngleSpeed_z = 0;
-//    expected_y = 0;
-    speed_conversion(0,0,0);
-    yaw_pid.LocSum = 0;
-    yaw_pid.Ek = 0;
-    yaw_pid.Ek1 = 0;
-    yaw_w_pid.target_val = 0;
-    yaw_w_pid.err_next = 0;
-    yaw_w_pid.err = 0;
-    yaw_w_pid.err_last = 0;
-    yaw_w_pid.actual_val = 0;
-    manual_y=0;manual_z=0;
-    go_forward=0;go_backward=0;
-    go_left=0;go_right=0;
-    pidModel = 0;
-}
 uint8 moterPid;
 void transfetFunction(int8 targetRow,char *targetBuff){
 
@@ -76,8 +57,11 @@ void transfetFunction(int8 targetRow,char *targetBuff){
     else if ((16 - menuY) == targetRow) {
         sprintf(targetBuff,"moterPid=%03d",moterPid);
     }
+    else if ((17 - menuY) == targetRow) {
+        sprintf(targetBuff,"ThreeWay       ");
+    }
     else {
-        sprintf(targetBuff,"              ");
+        sprintf(targetBuff,"                  ");
     }
 }
 /*
@@ -114,9 +98,14 @@ void assignValue(void){
                 motor3_pid.Kd = motor3_pid.Kd + 1 * signData;
                 motor4_pid.Kd = motor4_pid.Kd + 1 * signData;
                 break;
+            case 10:yaw_w_pid.Kp = yaw_w_pid.Kp + 0.01 * signData;break;
+            case 11:yaw_w_pid.Ki = yaw_w_pid.Ki + 0.01 * signData;break;
+            case 12:yaw_w_pid.Kd = yaw_w_pid.Kd + 0.01 * signData;break;
             case 16:
-                moterPid = moterPid + 1 * signData;
-                break;
+                moterPid = moterPid + 1 * signData;break;
+            case 17:
+                if (key_data == 1) {pwm_duty(PWM1_CH1_A8, 990);}
+                else if (key_data == 4){pwm_duty(PWM1_CH1_A8, 338);};break;
             default:break;
         }
     }
@@ -125,13 +114,14 @@ void assignValue(void){
 /*
 *Disaplay Menu
 */
+uint8 maxMenuRow = 17;
 void disaplayMenu(void){
-    uint8 maxMenuRow = 16;
+
     char txt1[20]={0},txt2[20]={0},txt3[20]={0},txt4[20]={0},
                       txt5[20]={0},txt6[20]={0},txt7[20]={0};
     if (menuY < 0) {menuY = 0;} //限制选择范围
     else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
-    assignValue();//更改数值
+    assignValue(); //更改数值
 
     transfetFunction(1,txt1);
     transfetFunction(2,txt2);

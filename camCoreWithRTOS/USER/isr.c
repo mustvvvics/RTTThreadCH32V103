@@ -326,7 +326,7 @@ void USART3_IRQHandler(void)
             num = 0;
             gyroData_analysis(Gyro_buff);
         }
-        else if (num > 5 ) {
+        else if (num > 4 ) {
             num = 0;
         }
     }

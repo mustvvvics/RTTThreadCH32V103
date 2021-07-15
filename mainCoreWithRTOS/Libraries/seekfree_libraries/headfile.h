@@ -90,6 +90,6 @@
 #include "button.h"
 #include "motor.h"
 #include "esp8266.h"
-
+#include "adc.h"
 
 #endif

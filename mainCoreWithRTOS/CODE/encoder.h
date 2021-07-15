@@ -7,4 +7,6 @@ extern int16 encoder_data[4];
 
 void encoder_init(void);
 void encoder_get(void);
+void clearError(void);
+
 #endif

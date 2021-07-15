@@ -96,7 +96,7 @@ void EXTI2_IRQHandler(void)
             encoder_get();                                  //主核编码器
         }
         /*******************************************************//*******************************************************/
-        //for test
+        //测试ADRC
 //        if (car_flag == 1) {
 //            speed_conversion(0,expected_y * 10,0);
 //            motor1_ctl(Left_front);
@@ -104,39 +104,51 @@ void EXTI2_IRQHandler(void)
 //            motor3_ctl(Right_rear);
 //            motor4_ctl(Left_rear);
 //        }
-//        if (car_flag == 1) {
-//            speed_conversion(0,expected_y,0);
-//            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-//            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-//            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-//            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
-//        }
+
         /*******************************************************//*******************************************************/
         if (car_flag == 1) {
             carFlagPre = car_flag;
-            if (car_flag == 1 && pidModel == 0 ) { //转向环整定
+            if (car_flag == 1 && pidModel == 0 && threeWayIn == 0) { //正常行驶
                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);
                 speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
             }
-                else if (car_flag == 1 && pidModel == 1) {//速度环整定
-                speed_conversion(0,manual_y,0);
+            else if (car_flag == 1 && pidModel == 0 && threeWayIn == 1) { //变形金刚
+                if (threeWayOut == 0) {
+                    expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+                    speed_conversion(ThreeWayDirection * expected_y*(accelerate/10),0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+                }
+                else if (threeWayOut == 1) {//出三叉变形
+                    expected_omega = PID_Loc(threeWayOutAngle,0,&yaw_pid);
+                    speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+                    threeWayOut = 0;
+                    threeWayIn = 0;
+                    //考虑发送给从机的完成Flag
+                }
             }
-                else if (car_flag == 1 && pidModel == 2) {
-                speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));//角度环整定
+            else if (car_flag == 1 && pidModel == 2) {//速度环整定
+                speed_conversion(0,expected_y,0);
             }
-//            else if (elementFlag == 1) {                  //三叉路口
-//
-//            }
+            else if (car_flag == 1 && pidModel == 3) {//角度环整定
+                speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));
+            }
+            else if (car_flag == 1 && pidModel == 4) {//转向环整定
+                expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+                speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+            }
+
+            //期望速度对应一个给电机的输出,原先是通过让编码器值去逼近期望速度,此时的输出就是让让电机转编码器去逼近期望速度。
+            //此时更改成,输入是期望速度,通过函数以及Pid
+            //进而使得其输出对应的是该速度下应当有的PWM
             motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
             motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
             motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
             motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
-        else if (carFlagPre == 1 && car_flag == 0) { // 检测下降沿 放松控制
-            clearError();
-            motor1_ctl(0);motor2_ctl(0);motor3_ctl(0);motor4_ctl(0);
-            carFlagPre = 0;
-        }
+//        else if (carFlagPre == 1 && car_flag == 0) { //检测下降沿 放松控制
+//            clearError();
+//            motor1_ctl(0);motor2_ctl(0);motor3_ctl(0);motor4_ctl(0);
+//            carFlagPre = 0;
+//        }
         //遥控
         else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {
             speed_conversion(0,manual_y,manual_z);
@@ -146,23 +158,25 @@ void EXTI2_IRQHandler(void)
             motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
         else {
+            clearError();
             speed_conversion(0,0,0);
             motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
             motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
             motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
             motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
         }
-
     //        if(count_en == 1)
     //        {
     //            //里程计
-    //            dx += (-encoder_data[3] + encoder_data[0] + encoder_data[2] - encoder_data[1])/4;  //左边两个向内，右边两个向外 ->向左行进
-    //            dy += (encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;//四个轮子正值相加
+                    //左边两个向内,右边两个向外 ->向左行进
+    //            dx += (-encoder_data[3] + encoder_data[0] + encoder_data[2] - encoder_data[1])/4;
+                    //四个轮子正值相加
+    //            dy += (encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
     //            dz += (-encoder_data[3] - encoder_data[0] + encoder_data[2] + encoder_data[1])/4;
     //            //dist = sqrt(dx*dx+dy*dy);
     //            //total_z += (int16)g_fGyroAngleSpeed_z;
-    //            //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;//清空并关闭里程计
-    //        }
+    //            //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;
+    //        }//清空并关闭里程计
         EXTI_ClearITPendingBit(EXTI_Line2);
     }
     rt_interrupt_leave();    //退出中断
@@ -386,11 +400,11 @@ void TIM4_IRQHandler(void)
     rt_interrupt_leave();       //退出中断
 }
 
-//串口1 定义在了board.c中，用于接收串口内容并通过邮件发送给finsh线程
+//串口1 定义在了board.c //中用于接收串口内容并通过邮件发送给finsh
 
 /**************************************************************************************************************************/
 /*
- * 串口2接收中断 ,用于接收8266信号
+//串口2接收中断  用于接收8266信号
  */
 /**************************************************************************************************************************/
 void USART2_IRQHandler(void)
@@ -403,9 +417,11 @@ void USART2_IRQHandler(void)
         data_temp = (uint8)USART_ReceiveData(USART2);
 
         esp8266_buf[esp8266_cnt++] = data_temp;
-
+        if (esp8266_cnt > 63) { //防止溢出
+            esp8266_cnt = 0;
+        }
         if (data_temp == 0x0A) { //接收到了换行符
-            rt_sem_release(esp8266_sem);//释放信号量
+            rt_sem_release(esp8266_sem); //释放信号量
         }
     }
 
@@ -414,7 +430,7 @@ void USART2_IRQHandler(void)
 
 /**************************************************************************************************************************/
 /*
- *串口3 接收中断 接收图像和数据
+ //串口3 接收中断 接收图像和数据
  */
 /**************************************************************************************************************************/
 void USART3_IRQHandler(void)
@@ -426,7 +442,7 @@ void USART3_IRQHandler(void)
     {
         USART_ClearITPendingBit(USART3, USART_IT_RXNE);
         dat_USART3 = (uint8)USART_ReceiveData(USART3);                //获取串口数据
-        get_slave_data(dat_USART3);                                   //将每一个字节的串口数据存入temp_buff中。
+        get_slave_data(dat_USART3);                                   //将每一个字节的串口数据存入temp_buff
     }
 
     rt_interrupt_leave();       //退出中断
