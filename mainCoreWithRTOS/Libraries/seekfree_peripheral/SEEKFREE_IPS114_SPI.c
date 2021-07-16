@@ -36,7 +36,6 @@
 #include "zf_spi.h"
 #include "zf_gpio.h"
 #include "zf_systick.h"
-#include "SEEKFREE_PRINTF.h"
 #include "SEEKFREE_IPS114_SPI.h"
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -520,30 +519,30 @@ void ips114_showuint16(uint16 x,uint16 y,uint16 dat)
 //  Sample usage:               ips114_showuint32(0,0,x,3);//x可以为int32 uint16 int16 uint8 int8类型
 //  Sample usage:               负数会显示一个 ‘-’号   正数显示一个空格
 //-------------------------------------------------------------------------------------------------------------------
-void ips114_showint32(uint16 x,uint16 y,int32 dat,uint8 num)
-{
-    int8    buff[34];
-    uint8   length;
-
-    if(10<num)      num = 10;
-
-    num++;
-    if(0>dat)   length = zf_sprintf( &buff[0],"%d",dat);//负数
-    else
-    {
-        buff[0] = ' ';
-        length = zf_sprintf( &buff[1],"%d",dat);
-        length++;
-    }
-    while(length < num)
-    {
-        buff[length] = ' ';
-        length++;
-    }
-    buff[num] = '\0';
-
-    ips114_showstr(x, y, buff);	//显示数字
-}
+//void ips114_showint32(uint16 x,uint16 y,int32 dat,uint8 num)
+//{
+//    int8    buff[34];
+//    uint8   length;
+//
+//    if(10<num)      num = 10;
+//
+//    num++;
+//    if(0>dat)   length = zf_sprintf( &buff[0],"%d",dat);//负数
+//    else
+//    {
+//        buff[0] = ' ';
+//        length = zf_sprintf( &buff[1],"%d",dat);
+//        length++;
+//    }
+//    while(length < num)
+//    {
+//        buff[length] = ' ';
+//        length++;
+//    }
+//    buff[num] = '\0';
+//
+//    ips114_showstr(x, y, buff);	//显示数字
+//}
 
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -561,38 +560,38 @@ void ips114_showint32(uint16 x,uint16 y,int32 dat,uint8 num)
 //                              有关问题的详情，请自行百度学习   浮点数精度丢失问题。
 //                              负数会显示一个 ‘-’号   正数显示一个空格
 //-------------------------------------------------------------------------------------------------------------------
-void ips114_showfloat(uint16 x,uint16 y,double dat,uint8 num,uint8 pointnum)
-{
-    uint8   length;
-	int8    buff[34];
-	int8    start,end,point;
-
-	if(6<pointnum)  pointnum = 6;
-    if(10<num)      num = 10;
-
-    if(0>dat)   length = zf_sprintf( &buff[0],"%f",dat);//负数
-    else
-    {
-        length = zf_sprintf( &buff[1],"%f",dat);
-        length++;
-    }
-    point = length - 7;         //计算小数点位置
-    start = point - num - 1;    //计算起始位
-    end = point + pointnum + 1; //计算结束位
-    while(0>start)//整数位不够  末尾应该填充空格
-    {
-        buff[end] = ' ';
-        end++;
-        start++;
-    }
-
-    if(0>dat)   buff[start] = '-';
-    else        buff[start] = ' ';
-
-    buff[end] = '\0';
-
-    ips114_showstr(x, y, buff);	//显示数字
-}
+//void ips114_showfloat(uint16 x,uint16 y,double dat,uint8 num,uint8 pointnum)
+//{
+//    uint8   length;
+//	int8    buff[34];
+//	int8    start,end,point;
+//
+//	if(6<pointnum)  pointnum = 6;
+//    if(10<num)      num = 10;
+//
+//    if(0>dat)   length = zf_sprintf( &buff[0],"%f",dat);//负数
+//    else
+//    {
+//        length = zf_sprintf( &buff[1],"%f",dat);
+//        length++;
+//    }
+//    point = length - 7;         //计算小数点位置
+//    start = point - num - 1;    //计算起始位
+//    end = point + pointnum + 1; //计算结束位
+//    while(0>start)//整数位不够  末尾应该填充空格
+//    {
+//        buff[end] = ' ';
+//        end++;
+//        start++;
+//    }
+//
+//    if(0>dat)   buff[start] = '-';
+//    else        buff[start] = ' ';
+//
+//    buff[end] = '\0';
+//
+//    ips114_showstr(x, y, buff);	//显示数字
+//}
 
 
 //-------------------------------------------------------------------------------------------------------------------

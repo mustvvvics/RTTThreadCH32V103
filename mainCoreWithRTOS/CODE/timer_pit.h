@@ -4,5 +4,6 @@
 #include "headfile.h"
 
 void timer_pit_init(void);
+void timer_pitAdc_init(void);
 
 #endif
