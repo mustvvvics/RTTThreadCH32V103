@@ -9,13 +9,8 @@ int8 menuY = 0;      //菜单上下
 uint8 moterPid;
 void transfetFunction(int8 targetRow,char *targetBuff){
 
-    if ((1 - menuY) == targetRow){
-        sprintf(targetBuff,"carF=%01d|Fg=%02d",car_flag,elementFlag);
-    }
-    else if ((2 - menuY) == targetRow){
-        sprintf(targetBuff,"key=%02d|AC=%02d",key_data,accelerate);
-    }
-    else if ((3 - menuY) == targetRow) {                //BLACK
+
+    if ((3 - menuY) == targetRow) {                //BLACK
         sprintf(targetBuff,"CarSpeed=%03d",expected_y);
     }
     else if ((4 - menuY) == targetRow) {
@@ -122,9 +117,13 @@ void disaplayMenu(void){
     if (menuY < 0) {menuY = 0;} //限制选择范围
     else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
     assignValue(); //更改数值
+/***********************状态栏*******************************************/
+    sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
+    sprintf(txt2,"Vc=%03d|AC=%02d",Vc,accelerate);
 
-    transfetFunction(1,txt1);
-    transfetFunction(2,txt2);
+/***********************参数调整*****************************************/
+//    transfetFunction(1,txt1);
+//    transfetFunction(2,txt2);
     transfetFunction(3,txt3);
     transfetFunction(4,txt4);
     transfetFunction(5,txt5);

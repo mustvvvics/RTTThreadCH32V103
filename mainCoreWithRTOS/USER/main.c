@@ -31,8 +31,8 @@ int main(void)
     esp8266Init();
     PID_Init();
     timer_pit_init();
-    timer_pitAdc_init();
-    adc_init(ADC_IN9_B1); //电池电压采样
+
+    timer_pitAdc_init();//初始化ADC电压采集
 
     //串口3初始化
     uart_init(UART_3, 921600, UART3_TX_B10, UART3_RX_B11);  //串口3初始化 波特率115200
@@ -44,11 +44,10 @@ int main(void)
     nvic_init(EXTI2_IRQn, 1, 1, ENABLE);                    //EXTI2  //优先级配置  抢占优先级1 次优先级1
     while(1)
     {
+        rt_thread_mdelay(4);//new delay 必须保留
 //        ThreeWayAnalyze();  //三叉解析
-//        rt_thread_mdelay(4);//new delay
+
 //        sendMessage(); //发送曲线 三叉解析
-
-
-
+//        getAdc();
     }
 }

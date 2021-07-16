@@ -452,6 +452,10 @@ void DMA1_Channel4_IRQHandler(void)
 {
     rt_interrupt_enter();       //进入中断
 
+    if(SET == DMA_GetFlagStatus(DMA1_FLAG_TC4))
+    {
+        DMA_ClearFlag(DMA1_FLAG_TC4);
+    }
 
     rt_interrupt_leave();       //退出中断
 }

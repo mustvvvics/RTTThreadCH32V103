@@ -15,6 +15,12 @@ void timer1_pit_entry(void *parameter)
     uart_putbuff(UART_3, Gyro_buff, 5);             //通过串口3将数据发送出去。
 }
 
+void timer1_pitAdc_entry(void *parameter)
+{
+    getAdc();
+
+}
+
 
 void timer_pit_init(void)
 {
@@ -30,16 +36,14 @@ void timer_pit_init(void)
     }
 }
 
-void timer1_pitAdc_entry(void *parameter)
-{
-    getAdc();
-}
 void timer_pitAdc_init(void)
 {
     rt_timer_t timerAdc;
 
+    adc_init(ADC_IN9_B1); //初始化ADC引脚
+
     //创建一个定时器 周期运行
-    timerAdc = rt_timer_create("timerAdc", timer1_pitAdc_entry, RT_NULL, 200, RT_TIMER_FLAG_PERIODIC);
+    timerAdc = rt_timer_create("timerAdc", timer1_pitAdc_entry, RT_NULL, 2000, RT_TIMER_FLAG_PERIODIC);
 
     //启动定时器
     if(RT_NULL != timerAdc)
