@@ -53,7 +53,8 @@ int main(void)
         computeError();
 
         timet2 = rt_tick_get();
-        timeControl = timet2 - timet2;
+
+        timeControl = timet2 - timet1;
         if (CameraShow_flag == 1) {
             sendMessage();
             CameraShow_flag = 0;

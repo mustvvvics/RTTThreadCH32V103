@@ -5,8 +5,19 @@
 */
 
 int8 menuY = 0;      //²Ëµ¥ÉÏÏÂ
+void showEncoder(void){
+    char txta[32]={0},txtb[32]={0},txtc[32]={0},txtd[32]={0};
+    sprintf(txta,"enc 3=%d",encoder_data[3]);
+    sprintf(txtb,"enc 2=%d",encoder_data[2]);
+    sprintf(txtc,"enc 0=%d",encoder_data[0]);
+    sprintf(txtd,"enc 1=%d",encoder_data[1]);
+    ips114_showstr(0,1,txta);
+    ips114_showstr(0,2,txtb);
+    ips114_showstr(0,3,txtc);
+    ips114_showstr(0,4,txtd);
 
-uint8 moterPid;
+}
+//uint8 moterPid;
 void transfetFunction(int8 targetRow,char *targetBuff){
 
 
@@ -50,7 +61,7 @@ void transfetFunction(int8 targetRow,char *targetBuff){
         sprintf(targetBuff,"Turnn_D=%04d",(int16)(yaw_pid.Kd*100));
     }
     else if ((16 - menuY) == targetRow) {
-        sprintf(targetBuff,"moterPid=%03d",moterPid);
+//        sprintf(targetBuff,"moterPid=%03d",moterPid);
     }
     else if ((17 - menuY) == targetRow) {
         sprintf(targetBuff,"ThreeWay       ");
@@ -97,7 +108,7 @@ void assignValue(void){
             case 11:yaw_w_pid.Ki = yaw_w_pid.Ki + 0.01 * signData;break;
             case 12:yaw_w_pid.Kd = yaw_w_pid.Kd + 0.01 * signData;break;
             case 16:
-                moterPid = moterPid + 1 * signData;break;
+//                moterPid = moterPid + 1 * signData;break;
             case 17:
                 if (key_data == 1) {pwm_duty(PWM1_CH1_A8, 990);}
                 else if (key_data == 4){pwm_duty(PWM1_CH1_A8, 338);};break;
@@ -171,6 +182,7 @@ void display_entry(void *parameter)
     while(1)
     {
         disaplayMenu();
+//        showEncoder();
     }
 }
 

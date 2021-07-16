@@ -12,9 +12,9 @@ int16 manual_z=0;
 //uint8 feedBadDog=1;
 
 //速度环PID //参数 8000限幅
-float S_P=136;
-float S_I=33;
-float S_D=45;
+float S_P=1;//136;
+float S_I=0;//33;
+float S_D=0;//45;
 
 //角速度环参数
 float yaw_w_P=1;//0.67;

@@ -23,6 +23,7 @@ void clearError(void){  //Çå¿ÕÎó²î
     manual_y=0;manual_z=0;
     go_forward=0;go_backward=0;
     go_left=0;go_right=0;
+    elementFlag = 0;
 //    pidModel = 0;
 }
 

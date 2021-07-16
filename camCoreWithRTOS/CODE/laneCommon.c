@@ -139,3 +139,12 @@ uint8 confirmOutboundDelay = 0;
 
 uint8 accelerateRatio = 10;
 uint8 flagCameraElement = 0;
+
+uint8 detectCrossroadStartRow = 30;
+uint8 detectCrossroadEndRow = 20;
+uint8 detectCrossroadMissingNumThres = 6;
+uint8 bothMissingNum = 0;
+uint8 exitCrossroadDelay = 0;
+uint8 flagEnterCrossroad = 0;
+
+uint8 rouSta = 0;

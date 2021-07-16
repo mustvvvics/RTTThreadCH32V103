@@ -81,11 +81,13 @@ void speed_conversion(float Vx, float Vy, float Vz) {
     Right_rear = (int16)(+Vx + Vy + Vz * 0.18);
     Left_rear = (int16)(-Vx + Vy - Vz * 0.18);
 
-    leftFrontADRC = 31.804 * Left_front + 211.95;
-    rightFrontADRC = 26.742 * Right_front + 538.58;
-    rightRearADRC = 26.742 * Right_rear + 538.58 ;
-    leftRearADRC = 26.870 * Left_rear + 551.53;
-
-
+//    leftFrontADRC = 31.804 * Left_front + 211.95;
+//    rightFrontADRC = 26.742 * Right_front + 538.58;
+//    rightRearADRC = 26.742 * Right_rear + 538.58 ;
+//    leftRearADRC = 26.870 * Left_rear + 551.53;
+    leftFrontADRC = 29.769 * Left_front + 293.13;
+    rightFrontADRC = 27.239 * Right_front + 512.17;
+    rightRearADRC = 26.549 * Right_rear + 519.87 ;
+    leftRearADRC = 23.851 * Left_rear + 668.88;
 
 }

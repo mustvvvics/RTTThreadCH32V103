@@ -47,7 +47,7 @@ int main(void)
         rt_thread_mdelay(4);//new delay 必须保留
 //        ThreeWayAnalyze();  //三叉解析
 
-//        sendMessage(); //发送曲线 三叉解析
+        sendMessage(); //发送曲线 三叉解析
 //        getAdc();
     }
 }

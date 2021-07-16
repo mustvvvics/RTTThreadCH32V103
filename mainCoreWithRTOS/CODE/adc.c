@@ -28,9 +28,9 @@ void getAdc(void){
     Vc = (int16)(vbat_ad * 100);
     VcDifference = VcPreviously - Vc;
     VcPreviously = Vc;
-    if (VcPreviously > 0) {
+    if (VcDifference > 0) {
         if (Vc >= 710 && Vc <= 750) {
-            ips114_clear(BLACK);
+            ips114_clear(RED);
         }
     }
 
