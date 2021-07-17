@@ -26,7 +26,7 @@ int main(void)
     mt9v03x_init();
     rt_thread_mdelay(3000);                 //保证摄像头初始化完成
 
-    laneInit();
+//    laneInit();
     display_init();
     encoder_init();
     timer_pit_init();                       //软定时器初始化
@@ -34,13 +34,12 @@ int main(void)
     uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);     //通讯
 
     uart_rx_irq(UART_3, ENABLE);                            //默认抢占优先级1 次优先级0。
-    nvic_init((IRQn_Type)(53 + UART_3), 0, 0, ENABLE);      //将串口3的抢占优先级设置为最高，次优先级设置为最高。
-
+    nvic_init((IRQn_Type)(53 + UART_3), 1, 1, ENABLE);      //将串口3的抢占优先级设置为最高，次优先级设置为最高。
 
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 
-    esp8266Init();
+//    esp8266Init();
 
     while(1)
     {
@@ -48,9 +47,9 @@ int main(void)
         rt_sem_take(camera_sem, RT_WAITING_FOREVER);
         //开始处理摄像头图像
         timet1 = rt_tick_get();
-
-        laneAnalyze(mt9v03x_image);
-        computeError();
+        rt_thread_mdelay(10);
+//        laneAnalyze(mt9v03x_image);
+//        computeError();
 
         timet2 = rt_tick_get();
 

@@ -5,12 +5,12 @@
 */
 
 int8 menuY = 0;      //菜单上下
+char txta[32]={0},txtb[32]={0},txtc[32]={0},txtd[32]={0};
 void showEncoder(void){
-    char txta[32]={0},txtb[32]={0},txtc[32]={0},txtd[32]={0};
-    sprintf(txta,"enc 3=%d",encoder_data[3]);
-    sprintf(txtb,"enc 2=%d",encoder_data[2]);
-    sprintf(txtc,"enc 0=%d",encoder_data[0]);
-    sprintf(txtd,"enc 1=%d",encoder_data[1]);
+    rt_sprintf(txta,"enc 3=%d",encoder_data[3]);
+    rt_sprintf(txtb,"enc 2=%d",encoder_data[2]);
+    rt_sprintf(txtc,"enc 0=%d",encoder_data[0]);
+    rt_sprintf(txtd,"enc 1=%d",encoder_data[1]);
     ips114_showstr(0,1,txta);
     ips114_showstr(0,2,txtb);
     ips114_showstr(0,3,txtc);
@@ -22,52 +22,52 @@ void transfetFunction(int8 targetRow,char *targetBuff){
 
 
     if ((3 - menuY) == targetRow) {                //BLACK
-        sprintf(targetBuff,"CarSpeed=%03d",expected_y);
+        rt_sprintf(targetBuff,"CarSpeed=%04d",expected_y);
     }
     else if ((4 - menuY) == targetRow) {
-        sprintf(targetBuff,"manual_z=%03d",manual_z);
+        rt_sprintf(targetBuff,"manual_z=%04d",manual_z);
     }
     else if ((5 - menuY) == targetRow) {
-        sprintf(targetBuff,"manual_y=%03d",manual_y);
+        rt_sprintf(targetBuff,"manual_y=%04d",manual_y);
     }
     else if ((6 - menuY) == targetRow) {
-        sprintf(targetBuff,"pidModel=%01d  ",pidModel);
+        rt_sprintf(targetBuff,"pidModel=%01d   ",pidModel);
     }
     else if ((7 - menuY) == targetRow) {
-        sprintf(targetBuff,"Speed_P=%04d",(int16)S_P);
+        rt_sprintf(targetBuff,"Speed_P=%04d ",(int16)S_P);
     }
     else if ((8 - menuY) == targetRow) {
-        sprintf(targetBuff,"Speed_I=%04d",(int16)S_I);
+        rt_sprintf(targetBuff,"Speed_I=%04d ",(int16)S_I);
     }
     else if ((9 - menuY) == targetRow) {
-        sprintf(targetBuff,"Speed_D=%04d",(int16)S_D);
+        rt_sprintf(targetBuff,"Speed_D=%04d ",(int16)S_D);
     }
     else if ((10 - menuY) == targetRow) {
-        sprintf(targetBuff,"Angle_P=%04d",(int16)(yaw_w_pid.Kp*1000));
+        rt_sprintf(targetBuff,"Angle_P=%04d ",(int16)(yaw_w_pid.Kp*1000));
     }
     else if ((11 - menuY) == targetRow) {
-        sprintf(targetBuff,"Angle_I=%04d",(int16)(yaw_w_pid.Ki*1000));
+        rt_sprintf(targetBuff,"Angle_I=%04d ",(int16)(yaw_w_pid.Ki*1000));
     }
     else if ((12 - menuY) == targetRow) {
-        sprintf(targetBuff,"Angle_D=%04d",(int16)(yaw_w_pid.Kd*1000));
+        rt_sprintf(targetBuff,"Angle_D=%04d ",(int16)(yaw_w_pid.Kd*1000));
     }
     else if ((13 - menuY) == targetRow) {
-        sprintf(targetBuff,"Turnn_P=%04d",(int16)(yaw_pid.Kp*100));
+        rt_sprintf(targetBuff,"Turnn_P=%04d ",(int16)(yaw_pid.Kp*100));
     }
     else if ((14 - menuY) == targetRow) {
-        sprintf(targetBuff,"Turnn_I=%04d",(int16)(yaw_pid.Ki*100));
+        rt_sprintf(targetBuff,"Turnn_I=%04d ",(int16)(yaw_pid.Ki*100));
     }
     else if ((15 - menuY) == targetRow) {
-        sprintf(targetBuff,"Turnn_D=%04d",(int16)(yaw_pid.Kd*100));
+        rt_sprintf(targetBuff,"Turnn_D=%04d ",(int16)(yaw_pid.Kd*100));
     }
     else if ((16 - menuY) == targetRow) {
 //        sprintf(targetBuff,"moterPid=%03d",moterPid);
     }
     else if ((17 - menuY) == targetRow) {
-        sprintf(targetBuff,"ThreeWay       ");
+        rt_sprintf(targetBuff,"ThreeWay        ");
     }
     else {
-        sprintf(targetBuff,"                  ");
+        rt_sprintf(targetBuff,"                   ");
     }
 }
 /*
@@ -121,16 +121,17 @@ void assignValue(void){
 *Disaplay Menu
 */
 uint8 maxMenuRow = 17;
+char txt1[20]={0},txt2[20]={0},txt3[20]={0},txt4[20]={0},
+                  txt5[20]={0},txt6[20]={0},txt7[20]={0};
 void disaplayMenu(void){
 
-    char txt1[20]={0},txt2[20]={0},txt3[20]={0},txt4[20]={0},
-                      txt5[20]={0},txt6[20]={0},txt7[20]={0};
+
     if (menuY < 0) {menuY = 0;} //限制选择范围
     else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
     assignValue(); //更改数值
 /***********************状态栏*******************************************/
-    sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
-    sprintf(txt2,"Vc=%03d|AC=%02d",Vc,accelerate);
+    rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
+    rt_sprintf(txt2,"Vc=%03d|AC=%02d",Vc,accelerate);
 
 /***********************参数调整*****************************************/
 //    transfetFunction(1,txt1);
@@ -173,12 +174,12 @@ void disaplayMenu(void){
     }
 }
 
-
+char txtcqupt[32]={0};
 void display_entry(void *parameter)
 {
-    char txt[32]={0};
-    sprintf(txt,"CQUPT                              ");
-    ips114_showstrGRAY(0,0,txt);
+
+    rt_sprintf(txtcqupt,"CQUPT                              ");
+    ips114_showstrGRAY(0,0,txtcqupt);
     while(1)
     {
         disaplayMenu();

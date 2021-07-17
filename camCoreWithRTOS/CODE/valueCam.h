@@ -22,6 +22,5 @@ extern uint8 CameraShow_flag;
 extern rt_tick_t timet1;           //计算运行时间
 extern rt_tick_t timet2;
 extern rt_tick_t timeControl;
-extern uint8 parsingStatus;
 
 #endif /* CODE_VALUECAM_H_ */

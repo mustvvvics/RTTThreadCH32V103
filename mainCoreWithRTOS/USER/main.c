@@ -30,7 +30,7 @@ int main(void)
 
     esp8266Init();
     PID_Init();
-    timer_pit_init();
+//    timer_pit_init();
 
     timer_pitAdc_init();//初始化ADC电压采集
 

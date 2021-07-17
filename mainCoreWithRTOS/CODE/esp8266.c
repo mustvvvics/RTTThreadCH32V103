@@ -163,46 +163,46 @@ const char* message1 = "\n";
 void sendMessage(void) {                //发送数据曲线进行分析
     char txtA[6];
     if (pidModel == 2) { //速度环整定
-        sprintf(txtA,"%04d",(int16)(leftFrontADRC ) );
+        rt_sprintf(txtA,"%04d",(int16)(leftFrontADRC ) );
         uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",(int16)( leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid) ));
+        rt_sprintf(txtA,"%04d",(int16)( leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid) ));
         uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
 
-        sprintf(txtA,"%04d",(int16)( rightFrontADRC) );
+        rt_sprintf(txtA,"%04d",(int16)( rightFrontADRC) );
         uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",(int16)( rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid) ));
+        rt_sprintf(txtA,"%04d",(int16)( rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid) ));
         uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
 
-        sprintf(txtA,"%04d",(int16)( rightRearADRC) );
+        rt_sprintf(txtA,"%04d",(int16)( rightRearADRC) );
         uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",(int16)( rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid) ));
+        rt_sprintf(txtA,"%04d",(int16)( rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid) ));
         uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
 
 
-        sprintf(txtA,"%04d",(int16)( leftRearADRC) );
+        rt_sprintf(txtA,"%04d",(int16)( leftRearADRC) );
         uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",(int16)( leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid) ));
+        rt_sprintf(txtA,"%04d",(int16)( leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid) ));
         uart_putstr(UART_2,txtA);
 
         uart_putstr(UART_2,message1);
     }
     else if (pidModel == 3) { //角度环整定
-        sprintf(txtA,"%04d",manual_z);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",(int16)PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));uart_putstr(UART_2,txtA);
+        rt_sprintf(txtA,"%04d",manual_z);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+        rt_sprintf(txtA,"%04d",(int16)PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));uart_putstr(UART_2,txtA);
 
         uart_putstr(UART_2,message1);
     }
     else if (pidModel == 4){ //转向环整定
-        sprintf(txtA,"%04d",0);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",(int16)PID_Loc(0,-position_front,&yaw_pid));uart_putstr(UART_2,txtA);
+        rt_sprintf(txtA,"%04d",0);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+        rt_sprintf(txtA,"%04d",(int16)PID_Loc(0,-position_front,&yaw_pid));uart_putstr(UART_2,txtA);
 
         uart_putstr(UART_2,message1);
     }
     else if (pidModel == 1){ //开环计算
-        sprintf(txtA,"%04d",-encoder_data[3]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",-encoder_data[2]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",-encoder_data[0]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
-        sprintf(txtA,"%04d",-encoder_data[1]);uart_putstr(UART_2,txtA);
+        rt_sprintf(txtA,"%04d",-encoder_data[3]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        rt_sprintf(txtA,"%04d",-encoder_data[2]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        rt_sprintf(txtA,"%04d",-encoder_data[0]);uart_putstr(UART_2,txtA); uart_putstr(UART_2,message0);
+        rt_sprintf(txtA,"%04d",-encoder_data[1]);uart_putstr(UART_2,txtA);
         uart_putstr(UART_2,message1);
 
     }

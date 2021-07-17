@@ -26,7 +26,6 @@
 #define max(x,y) ((x) > (y) ? (x) : (y))
 #define min(x,y) ((x) < (y) ? (x) : (y))
 #define abs(x) ((x) > 0 ? (x) : -(x))
-
 #define rangeBiNear 10
 
 // laneAnalyze
@@ -186,12 +185,11 @@ extern uint8 confirmOutboundDelay;
 extern uint8 accelerateRatio;
 extern uint8 flagCameraElement;
 
-extern uint8 detectCrossroadEndRow;
 extern uint8 detectCrossroadStartRow;
+extern uint8 detectCrossroadEndRow;
 extern uint8 detectCrossroadMissingNumThres;
 extern uint8 bothMissingNum;
 extern uint8 exitCrossroadDelay;
 extern uint8 flagEnterCrossroad;
 
-extern uint8 rouSta;
 #endif

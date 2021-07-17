@@ -74,37 +74,37 @@ void sendMessage(void) {
     uart_putstr(UART_1,"#0995");                    //帧头 实际测试得出
 
     for (ii = 0; ii < imgRow; ++ii) {
-        sprintf(txtA,"%04d ",laneLocationLeft[ii]);//5
+        rt_sprintf(txtA,"%04d ",laneLocationLeft[ii]);//5
         uart_putstr(UART_1,txtA);
     }
     uart_putstr(UART_1,message0);//1
 
     for (ii = 0; ii < imgRow; ++ii) {
-        sprintf(txtA,"%04d ",laneLocationRight[ii]);//5
+        rt_sprintf(txtA,"%04d ",laneLocationRight[ii]);//5
         uart_putstr(UART_1,txtA);
     }
     uart_putstr(UART_1,message0);//1
 
     for (ii = 0; ii < imgRow; ++ii) {
-        sprintf(txtB,"%04d ",laneCenter[ii]);//5
+        rt_sprintf(txtB,"%04d ",laneCenter[ii]);//5
         uart_putstr(UART_1,txtB);
     }
     uart_putstr(UART_1,message0);//1
 
     for (ii = 0; ii < imgRow; ++ii) {
-        sprintf(txtC,"%01d ",flagDetectLeft[ii]);//3
+        rt_sprintf(txtC,"%01d ",flagDetectLeft[ii]);//3
         uart_putstr(UART_1,txtC);
     }
     uart_putstr(UART_1,message0);//1
 
     for (ii = 0; ii < imgRow; ++ii) {
-        sprintf(txtC,"%01d ",flagDetectRight[ii]);//3
+        rt_sprintf(txtC,"%01d ",flagDetectRight[ii]);//3
         uart_putstr(UART_1,txtC);
     }
     uart_putstr(UART_1,message0);//1
 //    rt_thread_mdelay(50);//new delay
 
-    sprintf(txtD,"%05d %03d %02d %02d %04d %04d %06d %06d",cameraError, sharpCurveRow,
+    rt_sprintf(txtD,"%05d %03d %02d %02d %04d %04d %06d %06d",cameraError, sharpCurveRow,
             flagEnterRoundabout, flagEnterThreeWay, laneJitterLeft, laneJitterRight,
             areaDetectRoundaboutLeft, areaDetectRoundaboutRight);   //相关变量
     uart_putstr(UART_1,txtD);   //1
@@ -114,7 +114,6 @@ void sendMessage(void) {
 void esp8266Entry(void *parameter)
 {
     rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
-
 //    esp8266_buf[esp8266_cnt-3] = '\0';//消除显示乱码
     esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
 //    esp8266_buf[esp8266_cnt-1] = '\0';//消除显示乱码

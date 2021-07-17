@@ -146,5 +146,3 @@ uint8 detectCrossroadMissingNumThres = 6;
 uint8 bothMissingNum = 0;
 uint8 exitCrossroadDelay = 0;
 uint8 flagEnterCrossroad = 0;
-
-uint8 rouSta = 0;

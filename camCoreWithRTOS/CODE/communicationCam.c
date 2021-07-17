@@ -33,7 +33,6 @@ void get_sensor_data(void)
 
 void process_data(void)                         //根据协议处理要向主机发送的数据
 {
-    parsingStatus = 11;
     slave_position = cameraError;//传递误差
 
     temp_buff[0] = 0xD8;                         //帧头
@@ -57,7 +56,6 @@ void process_data(void)                         //根据协议处理要向主机发送的数据
     temp_buff[13] = flagCameraElement;          //元素falg
 
     temp_buff[14] = 0xEE;                       //帧尾
-
 }
 
 

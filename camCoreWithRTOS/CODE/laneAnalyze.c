@@ -334,7 +334,7 @@ void detectSBend() {
 // flagEnterRoundabout: 0 -- no roundabout, -1 -- left, 1 -- right
 void detectRoundabout() {
     if (flagEnterRoundabout != 0) {
-        rouSta = 99;
+//        rouSta = 99;
         if (exitRoundaboutDelay == 0) {
             exitRoundaboutDelay = 600;
         } else if (exitRoundaboutDelay == 595) {
@@ -357,10 +357,10 @@ void detectRoundabout() {
             countJitterBreakRowLeft == rangeCountJitter + 1) {
         flagEnterRoundabout = 0;
         exitRoundaboutDelay = 0;
-        rouSta = 66;
+//        rouSta = 66;
         return;
     }
-    rouSta = 1;
+//    rouSta = 1;
     detectUpperMissingLeft = detectLowerMissingLeft = 0;
     missingLaneUpperLeft = missingLaneLowerLeft = 0;
 
@@ -373,7 +373,7 @@ void detectRoundabout() {
     // left lane
     if (flagDetectLeft[roundaboutDetectionStartRow]) {
         // upper
-        rouSta = 2;
+//        rouSta = 2;
         for (iterRow = roundaboutDetectionStartRow; iterRow > 2; iterRow--) {
             if (flagDetectLeft[iterRow-1] || flagDetectLeft[iterRow-2]) {
                 continue;
@@ -394,7 +394,7 @@ void detectRoundabout() {
         }
 
         if (detectUpperMissingLeft && detectLowerMissingLeft) {
-            rouSta = 3;
+//            rouSta = 3;
             laneLocationShiftedLower = (laneLocationLeft[missingLaneLowerLeft] -imgCol / 2) \
                                         * laneWidth[49] / laneWidth[missingLaneLowerLeft];
             laneLocationShiftedUpper = (laneLocationLeft[missingLaneUpperLeft] -imgCol / 2) \
@@ -688,14 +688,14 @@ void laneAnalyze(Mat outMat){
     missCounterLeft = 0;
     missCounterRight = 0;
 
-    //uart_putstr(UART_1,"1\n");
-    parsingStatus = 1;
+    uart_putstr(UART_1,"1\n");
+//    parsingStatus = 1;
 
     detectStartLine(outMat);
     detectOutOfBounds(outMat);
 
-    //uart_putstr(UART_1,"2\n");
-    parsingStatus = 2;
+    uart_putstr(UART_1,"2\n");
+//    parsingStatus = 2;
     // if (flagEnterRoundabout) {
     //  adaptRoundaboutLane(outMat);
     // }
@@ -711,13 +711,13 @@ void laneAnalyze(Mat outMat){
     }
     laneCenterPrevious = laneCenter[45];
 
-    //uart_putstr(UART_1,"3\n");
-    parsingStatus = 3;
+    uart_putstr(UART_1,"3\n");
+//    parsingStatus = 3;
 
     countJitter();
 
-    //uart_putstr(UART_1,"4\n");
-    parsingStatus = 4;
+    uart_putstr(UART_1,"4\n");
+//    parsingStatus = 4;
 
     // detectSBend();
     //detectThreeWayRoad(outMat);
@@ -725,34 +725,34 @@ void laneAnalyze(Mat outMat){
     if (flagEnterCrossroad) {
         adaptCrossroad();
     }
-    //uart_putstr(UART_1,"5\n");
-    parsingStatus = 5;
+    uart_putstr(UART_1,"5\n");
+//    parsingStatus = 5;
 
     if (!flagEnterCrossroad) {
         detectRoundabout();
     }
-    //uart_putstr(UART_1,"6\n");
-    parsingStatus = 6;
+    uart_putstr(UART_1,"6\n");
+//    parsingStatus = 6;
 
     detectSharpCurve();
-    //uart_putstr(UART_1,"7\n");
-    parsingStatus = 7;
+    uart_putstr(UART_1,"7\n");
+//    parsingStatus = 7;
 
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
         adaptSharpCurve();
     }
-    //uart_putstr(UART_1,"8\n");
-    parsingStatus = 8;
+    uart_putstr(UART_1,"8\n");
+//    parsingStatus = 8;
     // add a strightline to help compute lane slope
     for (iterRow=imgRow-1; iterRow > slopeRowStart-2; --iterRow) {
         laneCenter[iterRow] = imgCol / 2 - 1;
     }
-    //uart_putstr(UART_1,"9\n");
-    parsingStatus = 9;
+    uart_putstr(UART_1,"9\n");
+//    parsingStatus = 9;
 
     passParameter();
-    //uart_putstr(UART_1,"10\n");
-    parsingStatus = 10;
+    uart_putstr(UART_1,"10\n");
+//    parsingStatus = 10;
     // for (iterRow = imgRow - 1; iterRow < 255; --iterRow) {
     //  //printf("rowCenter %d: %d\n", iterRow, laneCenter[iterRow]);
     // }
