@@ -310,8 +310,8 @@ void USART2_IRQHandler(void)
 /*
 UART3 接收中断
 */
-//uint8 Gyro_USART3;
-//uint8 num = 0;
+uint8 Gyro_USART3;
+uint8 num = 0;
 void USART3_IRQHandler(void)
 {
     rt_interrupt_enter();       //进入中断
@@ -320,18 +320,18 @@ void USART3_IRQHandler(void)
     if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
     {
         USART_ClearITPendingBit(USART3, USART_IT_RXNE);     //清除中断标志位
-//        Gyro_USART3 = (uint8)USART_ReceiveData(USART3);     //获取串口数据
-//        Gyro_buff[num++] = Gyro_USART3;
-//        if (num == 0) {
-//            return;
-//        }
-//        if (Gyro_buff[num-1]==  0xEE){
-//            num = 0;
-//            gyroData_analysis(Gyro_buff);
-//        }
-//        else if (num > 4 ) {
-//            num = 0;
-//        }
+        Gyro_USART3 = (uint8)USART_ReceiveData(USART3);     //获取串口数据
+        Gyro_buff[num++] = Gyro_USART3;
+        if (num == 0) {       //防止越界访问
+            return;
+        }
+        if (Gyro_buff[num-1]==  0xEE){
+            num = 0;
+            gyroData_analysis(Gyro_buff);
+        }
+        else if (num > 4 ) {//防止数组越界
+            num = 0;
+        }
     }
     rt_interrupt_leave();       //退出中断
 }

@@ -97,12 +97,19 @@ void EXTI2_IRQHandler(void)
         }
         /*******************************************************//*******************************************************/
 //        ≤‚ ‘ADRC
+
         if (car_flag == 1) {
             speed_conversion(0,expected_y * 10,0);
             motor1_ctl(Left_front);
             motor2_ctl(Right_front);
             motor3_ctl(Right_rear);
             motor4_ctl(Left_rear);
+        }
+        else {
+            motor1_ctl(0);
+            motor2_ctl(0);
+            motor3_ctl(0);
+            motor4_ctl(0);
         }
 
         /*******************************************************//*******************************************************/
@@ -165,6 +172,7 @@ void EXTI2_IRQHandler(void)
 //            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
 //            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
 //        }
+
 //            if(count_en == 1)
 //            {
 //                //¿Ô≥Ãº∆

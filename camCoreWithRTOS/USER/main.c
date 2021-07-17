@@ -26,7 +26,7 @@ int main(void)
     mt9v03x_init();
     rt_thread_mdelay(3000);                 //保证摄像头初始化完成
 
-//    laneInit();
+    laneInit();
     display_init();
     encoder_init();
     timer_pit_init();                       //软定时器初始化
@@ -48,8 +48,8 @@ int main(void)
         //开始处理摄像头图像
         timet1 = rt_tick_get();
         rt_thread_mdelay(10);
-//        laneAnalyze(mt9v03x_image);
-//        computeError();
+        laneAnalyze(mt9v03x_image);
+        computeError();
 
         timet2 = rt_tick_get();
 

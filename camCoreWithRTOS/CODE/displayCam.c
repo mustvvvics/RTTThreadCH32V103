@@ -11,8 +11,8 @@ void show_speed(void)
 //    ips114_showstr(0, 1, txt);
 //    rt_sprintf(txt,"misLaLoLe=%2d,misLaUpRi=%2d",missingLaneLowerLeft,missingLaneUpperRight);
 //    ips114_showstr(0, 2, txt);
-//    rt_sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
-//    ips114_showstr(0, 3, txt);
+    rt_sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
+    ips114_showstr(0, 3, txt);
 //    rt_sprintf(txt,"bothMisNum=%2d, flEntRou=%2d",bothMissingNum, flagEnterRoundabout);
 //    ips114_showstr(0, 4, txt);
 ////    rt_sprintf(txt,"pMeanT=%03d,Dis=%03d",pixelMeanThres,(int16)(detectDistance*10));
@@ -23,8 +23,8 @@ void show_speed(void)
 //    ips114_showstr(0, 5, txt);
 
 
-//    rt_sprintf(txt,"gyroData=%05d",gyroData);
-//    ips114_showstr(0, 5, txt);
+    rt_sprintf(txt,"gyroflag=%05d",gyroRoundFinishFlag);
+    ips114_showstr(0, 5, txt);
 
 }
 

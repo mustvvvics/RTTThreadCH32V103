@@ -10,7 +10,7 @@
 extern uint8 temp_buff[LINE_LEN];
 extern int16 encoder_left_front,encoder_left_rear;
 extern uint8 Gyro_buff[5];
-extern int16 gyroData;
+extern uint8 gyroRoundFinishFlag;
 
 void encoder_init(void);
 void get_sensor_data(void);

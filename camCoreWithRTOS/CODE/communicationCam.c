@@ -3,7 +3,7 @@
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;     //前轮左右编码器数值
 uint8 Gyro_buff[GyroLINE_LEN];                  //接收陀螺仪数据buff
-int16 gyroData;                                 //接收陀螺仪数据
+uint8 gyroRoundFinishFlag = 0;                      //接收陀螺仪Flag
 int16 slave_position=0;                         //传递误差
 
 int16 ABS(int16 x){                             //绝对值
@@ -61,5 +61,5 @@ void process_data(void)                         //根据协议处理要向主机发送的数据
 
 void gyroData_analysis(uint8 *line)
 {
-    if(line[1] == 0xB0)    gyroData = ((int16)line[2] << 8) | line[3];
+    if(line[1] == 0xB0 && line[2]==line[3])    gyroRoundFinishFlag = line[2];
 }

@@ -34,13 +34,13 @@ void transfetFunction(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"pidModel=%01d   ",pidModel);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Speed_P=%04d ",(int16)S_P);
+        rt_sprintf(targetBuff,"Speed_P=%04d ",(int16)(S_P*10));
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Speed_I=%04d ",(int16)S_I);
+        rt_sprintf(targetBuff,"Speed_I=%04d ",(int16)(S_I*10));
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Speed_D=%04d ",(int16)S_D);
+        rt_sprintf(targetBuff,"Speed_D=%04d ",(int16)(S_D*10));
     }
     else if ((10 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"Angle_P=%04d ",(int16)(yaw_w_pid.Kp*1000));
@@ -61,7 +61,7 @@ void transfetFunction(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"Turnn_D=%04d ",(int16)(yaw_pid.Kd*100));
     }
     else if ((16 - menuY) == targetRow) {
-//        sprintf(targetBuff,"moterPid=%03d",moterPid);
+        rt_sprintf(targetBuff,"GroyFg=%05d",roundFinishFlag);
     }
     else if ((17 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"ThreeWay        ");
@@ -84,31 +84,31 @@ void assignValue(void){
             case 5:manual_y = manual_y + 10 * signData;break;
             case 6:pidModel = pidModel + 1 * signData;break;
             case 7:
-                S_P= S_P + 1 * signData;
-                motor1_pid.Kp = motor1_pid.Kp + 1 * signData;
-                motor2_pid.Kp = motor2_pid.Kp + 1 * signData;
-                motor3_pid.Kp = motor3_pid.Kp + 1 * signData;
-                motor4_pid.Kp = motor4_pid.Kp + 1 * signData;
+                S_P= S_P + + 0.1 * signData;
+                motor1_pid.Kp = motor1_pid.Kp + 0.1 * signData;
+                motor2_pid.Kp = motor2_pid.Kp + 0.1 * signData;
+                motor3_pid.Kp = motor3_pid.Kp + 0.1 * signData;
+                motor4_pid.Kp = motor4_pid.Kp + 0.1 * signData;
                 break;
             case 8:
-                S_I= S_I + 1 * signData;
-                motor1_pid.Ki = motor1_pid.Ki + 1 * signData;
-                motor2_pid.Ki = motor2_pid.Ki + 1 * signData;
-                motor3_pid.Ki = motor3_pid.Ki + 1 * signData;
-                motor4_pid.Ki = motor4_pid.Ki + 1 * signData;
+                S_I= S_I + + 0.1 * signData;
+                motor1_pid.Ki = motor1_pid.Ki + 0.1 * signData;
+                motor2_pid.Ki = motor2_pid.Ki + 0.1 * signData;
+                motor3_pid.Ki = motor3_pid.Ki + 0.1 * signData;
+                motor4_pid.Ki = motor4_pid.Ki + 0.1 * signData;
                 break;
             case 9:
-                S_D= S_D + 1 * signData;
-                motor1_pid.Kd = motor1_pid.Kd + 1 * signData;
-                motor2_pid.Kd = motor2_pid.Kd + 1 * signData;
-                motor3_pid.Kd = motor3_pid.Kd + 1 * signData;
-                motor4_pid.Kd = motor4_pid.Kd + 1 * signData;
+                S_D= S_D + + 0.1 * signData;
+                motor1_pid.Kd = motor1_pid.Kd + 0.1 * signData;
+                motor2_pid.Kd = motor2_pid.Kd + 0.1 * signData;
+                motor3_pid.Kd = motor3_pid.Kd + 0.1 * signData;
+                motor4_pid.Kd = motor4_pid.Kd + 0.1 * signData;
                 break;
             case 10:yaw_w_pid.Kp = yaw_w_pid.Kp + 0.01 * signData;break;
             case 11:yaw_w_pid.Ki = yaw_w_pid.Ki + 0.01 * signData;break;
             case 12:yaw_w_pid.Kd = yaw_w_pid.Kd + 0.01 * signData;break;
             case 16:
-//                moterPid = moterPid + 1 * signData;break;
+                roundFinishFlag = roundFinishFlag + 1 * signData;break;
             case 17:
                 if (key_data == 1) {pwm_duty(PWM1_CH1_A8, 990);}
                 else if (key_data == 4){pwm_duty(PWM1_CH1_A8, 338);};break;

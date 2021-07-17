@@ -8,8 +8,8 @@ void timer1_pit_entry(void *parameter)
     Gyro_buff[0] = 0xD8;                            //帧头
 
     Gyro_buff[1] = 0xB0;                            //功能字
-    Gyro_buff[2] = g_fGyroAngleSpeed_z>>8;          //数据高8位
-    Gyro_buff[3] = g_fGyroAngleSpeed_z&0xFF;        //数据低8位
+    Gyro_buff[2] = roundFinishFlag;                 //发送数据
+    Gyro_buff[3] = roundFinishFlag;                 //重复校验
 
     Gyro_buff[4] = 0xEE;                            //帧尾
     uart_putbuff(UART_3, Gyro_buff, 5);             //通过串口3将数据发送出去。
@@ -18,7 +18,6 @@ void timer1_pit_entry(void *parameter)
 void timer1_pitAdc_entry(void *parameter)
 {
     getAdc();
-
 }
 
 

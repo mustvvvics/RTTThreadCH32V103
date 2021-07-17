@@ -12,14 +12,14 @@ int16 manual_z=0;
 //uint8 feedBadDog=1;
 
 //速度环PID //参数 8000限幅
-float S_P=1;//136;
-float S_I=0;//33;
-float S_D=0;//45;
+float S_P=0.5;//136;
+float S_I=6.1;//33;
+float S_D=5.8;//45;
 
 //角速度环参数
 float yaw_w_P=1;//0.67;
-float yaw_w_I=0.06;//0.1;//0.06;//  0.02
-float yaw_w_D=0.26;//3.7;////0.26;//0.15   0
+float yaw_w_I=0;//0.1;//0.06;//  0.02
+float yaw_w_D=0;//3.7;////0.26;//0.15   0
 
 //待整定 转向环参数
 float yaw_P=9;//2.9->50;
@@ -76,6 +76,8 @@ uint8 elementFlag = 0;          //0:无元素 1:三叉  2:左环岛 3:右环岛 4:车库 5:刹
 uint8 accelerate = 10;          //加速因子  两位数 eg:23   ------>  2 . 3
 uint8 ThreeWayIntersectionFlag;     //三叉路口
 uint8 garage;                   //车库
+uint8 roundFinishFlag = 0;
+
 
 uint8 pidModel;                 //pid //调试
 rt_tick_t timet1 = 0;           //计算运行时间
