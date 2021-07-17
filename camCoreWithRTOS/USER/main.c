@@ -39,7 +39,7 @@ int main(void)
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 
-//    esp8266Init();
+    esp8266Init();
 
     while(1)
     {

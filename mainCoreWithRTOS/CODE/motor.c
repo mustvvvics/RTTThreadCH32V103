@@ -83,8 +83,8 @@ void speed_conversion(float Vx, float Vy, float Vz) {
 
     leftFrontADRC = 35.333 * Left_front + 50.834;
     rightFrontADRC = 36.246 * Right_front + 152.89;
-    rightRearADRC = 37.119 * Right_rear + 154.74 ;
-    leftRearADRC = 40.127 * Left_rear + 135.22;
+    rightRearADRC = 40.119 * Right_rear + 204.74 ;
+    leftRearADRC = 51.127 * Left_rear + 285.22;
 
 
 }
