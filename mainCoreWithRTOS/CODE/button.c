@@ -56,28 +56,18 @@ void button_entry(void *parameter)
 
     //检测到按键按下之后并放开 释放一次信号量
     if(key1_status && !key1_last_status && key1_flag == 0){
-//        clearKeyFlags();
-//        key1_flag = 1;
         rt_mb_send(key_mailbox, 1);
     }
     if(key2_status && !key2_last_status && key2_flag == 0){
-//        clearKeyFlags();
-//        key2_flag = 1;
         rt_mb_send(key_mailbox, 2);
     }
     if(key3_status && !key3_last_status && key3_flag == 0){
-//        clearKeyFlags();
-//        key3_flag = 1;
         rt_mb_send(key_mailbox, 3);
     }
     if(key4_status && !key4_last_status && key4_flag == 0){
-//        clearKeyFlags();
-//        key4_flag = 1;
         rt_mb_send(key_mailbox, 4);
     }
     if(key5_status && !key5_last_status && key5_flag == 0){
-//        clearKeyFlags();
-//        key5_flag = 1;
         rt_mb_send(key_mailbox, 5);
     }
 }

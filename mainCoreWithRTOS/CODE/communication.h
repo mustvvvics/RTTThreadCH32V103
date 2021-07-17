@@ -27,5 +27,6 @@ extern int8 ThreeWayDirection;
 void ThreeWayAnalyze(void);
 void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);
+void roundIslandAnalyze(void);
 
 #endif /* CODE_COMMUNICATION_H_ */

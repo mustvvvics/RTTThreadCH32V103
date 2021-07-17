@@ -65,6 +65,7 @@ extern uint8 accelerate;
 extern uint8 ThreeWayIntersectionFlag;
 extern uint8 garage;
 extern uint8 roundFinishFlag;
+extern uint8 roundIslandBegin;
 
 extern uint8 pidModel;
 extern rt_tick_t timet1;

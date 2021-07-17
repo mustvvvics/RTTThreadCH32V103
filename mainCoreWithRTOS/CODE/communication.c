@@ -58,11 +58,17 @@ void data_analysis(uint8 *line)
         case 3: //刹车
             car_flag = 0;
             break;
+        case 4:
+            roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
+            break;
         default:
             break;
     }
 
 }
+/*
+ * 三叉路口决策
+ */
 int8 ThreeWayDirection = 0;
 int16 threeWayOutAngle = 0;
 uint8 threeWayIn = 0;
@@ -71,7 +77,7 @@ uint8 threeWaySum = 0;
 void ThreeWayAnalyze(void){
     if (ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 0) {//第一次进入
         ThreeWayIntersectionFlag = 0;//清标志
-        ThreeWayDirection = -1; //才能按照摄像头朝向行驶
+        ThreeWayDirection = -1; //才能按照摄像头朝向行驶  中断中行驶决策
         threeWayIn = 1;
         pwm_duty(PWM1_CH1_A8, 990); //舵机左转
       }
@@ -98,8 +104,25 @@ void ThreeWayAnalyze(void){
         pwm_duty(PWM1_CH1_A8, 670);
     }
 }
+/*
+ * 环岛陀螺仪积分
+ */
+void roundIslandAnalyze(void){
+    if (roundIslandBegin == 1) {
+        total_z += (int16)g_fGyroAngleSpeed_z;
+    }
+}
 
-
-
-
+//            if(count_en == 1)
+//            {
+//                //里程计
+//                    左边两个向内,右边两个向外 ->向左行进
+//                dx += (-encoder_data[3] + encoder_data[0] + encoder_data[2] - encoder_data[1])/4;
+//                    四个轮子正值相加
+//                dy += (encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
+//                dz += (-encoder_data[3] - encoder_data[0] + encoder_data[2] + encoder_data[1])/4;
+//                //dist = sqrt(dx*dx+dy*dy);
+//                //total_z += (int16)g_fGyroAngleSpeed_z;
+//                //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;
+//            }//清空并关闭里程计
 
