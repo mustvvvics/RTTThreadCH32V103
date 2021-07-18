@@ -117,12 +117,12 @@ void EXTI2_IRQHandler(void)
             carFlagPre = car_flag;
             if (car_flag == 1 && pidModel == 0 && threeWayIn == 0 && threeWayOut ==0 ) { //正常行驶
                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-                speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+                speed_conversion(0,expected_y*accelerate/10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
             }
             else if (car_flag == 1 && pidModel == 0 && threeWayIn == 1 && threeWayOut == 0) { //变形金刚
                 if (threeWayOut == 0) {
                     expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-                    speed_conversion(ThreeWayDirection * expected_y*(accelerate/10),0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+                    speed_conversion(ThreeWayDirection * expected_y*accelerate/10,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
                 }
                 else if (threeWayOut == 1) {//出三叉变形
                     expected_omega = PID_Loc(threeWayOutAngle,0,&yaw_pid);

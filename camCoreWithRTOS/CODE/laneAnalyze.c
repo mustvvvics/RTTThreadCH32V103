@@ -104,7 +104,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         for (iterCol = laneCenterPrevious; iterCol < imgCol-3; iterCol+=2) { // modified <imgCol-2 to <imgCol-3
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
             //printf("%3d\t", pixelMean);
-            if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
                 laneLocationRight[iterRow] = iterCol;
                 flagDetectRight[iterRow] = laneFound;
                 break;
@@ -119,7 +119,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         for (iterCol = laneCenterPrevious; iterCol > imgCol*2/5; iterCol-=2) { // modified >1 to >2
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
             //printf("%3d\t", pixelMean);
-            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol < laneLocationRight[iterRow]) {
                 laneLocationLeft[iterRow] = iterCol;
                 flagDetectLeft[iterRow] = laneFound;
                 break;
@@ -370,8 +370,8 @@ void detectRoundabout() {
     // left lane
     if (flagDetectLeft[roundaboutDetectionStartRow]) {
         // upper
-        for (iterRow = roundaboutDetectionStartRow; iterRow > 3; iterRow--) {
-            if (flagDetectLeft[iterRow-1] || flagDetectLeft[iterRow-2] || flagDetectLeft[iterRow-3]) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow > 2; iterRow--) {
+            if (flagDetectLeft[iterRow-1] || flagDetectLeft[iterRow-2]) {
                 continue;
             }
             detectUpperMissingLeft = 1;
@@ -380,8 +380,8 @@ void detectRoundabout() {
         }
 
         // lower
-        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-4; iterRow++) {
-            if (flagDetectLeft[iterRow+1] || flagDetectLeft[iterRow+2] || flagDetectLeft[iterRow+3]) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-3; iterRow++) {
+            if (flagDetectLeft[iterRow+1] || flagDetectLeft[iterRow+2]) {
                 continue;
             }
             detectLowerMissingLeft = 1;
@@ -416,8 +416,8 @@ void detectRoundabout() {
     // right lane
     if (flagDetectRight[roundaboutDetectionStartRow]) {
         // upper
-        for (iterRow = roundaboutDetectionStartRow; iterRow > 3; iterRow--) {
-            if (flagDetectRight[iterRow-1] || flagDetectRight[iterRow-2] || flagDetectRight[iterRow-3]) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow > 2; iterRow--) {
+            if (flagDetectRight[iterRow-1] || flagDetectRight[iterRow-2]) {
                 continue;
             }
             detectUpperMissingRight = 1;
@@ -426,7 +426,7 @@ void detectRoundabout() {
         }
 
         // lower
-        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-4; iterRow++) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-3; iterRow++) {
             if (flagDetectRight[iterRow+1] || flagDetectRight[iterRow+2]) {
                 continue;
             }
@@ -471,70 +471,72 @@ void getLaneWidth() {
     //printf("\n");
 }
 
-// flagEnterThreeWay: 0 -- not detected 1 -- prepare to enter
-//               2 -- enterd       3 -- prepare to exit
 void detectThreeWayRoad(Mat outMat) {
-    for (iterRow=rowStartThreeWayDetect; \
-            iterRow > rowStopThreeWayDetect; --iterRow) {
-        for (iterCol=colStartThreeWayDetect; \
-                iterCol < colStopThreeWayDetect; ++iterCol) {
-            detectPointSum += outMat[iterRow][iterCol];
+    if (flagEnterThreeWay == 2) {
+        if (exitThreewayDelay == 0) {
+            exitThreewayDelay = 100;
+        } else if (exitThreewayDelay == 1) {
+            flagEnterThreeWay = 0;
+            exitThreewayDelay = 0;
+            accelerateRatio = 10;
+        } else {
+            --exitThreewayDelay;
+        }
+        return;
+    }
+
+    if (flagEnterThreeWay == 1) {
+        if (enterThreewayDelay == 0) {
+            accelerateRatio = 1;
+            enterThreewayDelay = 200;
+            detectThreewayFeatureMaxNum = 0;
+        } else if (enterThreewayDelay == 1){
+            enterThreewayDelay = 0;
+            flagEnterThreeWay = 2;
+            return;
+        } else {
+            detectThreewayFeatureMaxNum = max(detectThreewayFeatureNum, detectThreewayFeatureMaxNum);
+            if (detectThreewayFeatureMaxNum - detectThreewayFeatureNum > 2) {
+                flagEnterThreeWay = 2;
+            }
+            --enterThreewayDelay;
         }
     }
 
-    if (detectPointSum > threeWayDetectThreshold) {
-        for (iterRow=rowStartThreeWayDetect; \
-                iterRow > rowStopThreeWayDetect; --iterRow) {
-            pixelMeanPrevious = 2 * outMat[iterRow][imgCol/2];
-            //printf("%dl:threeWayPixelMeanPre%d\n", iterRow, pixelMeanPrevious);
-            for (iterCol = colStartThreeWayDetect; \
-                    iterCol > colStartThreeWayDetect - 70; iterCol-=2) {
-                pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-                //printf("l:pixelMean%d\n", pixelMean);
-                if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
-                    //printf("got left\n");
-                    flagDetectedThreeWayFeature = 1;
-                    break;
-                }
+    detectThreewayFeatureNum = 0;
+    for (iterRow = detectThreeWayRoadStartRow; iterRow > detectThreeWayRoadEndRow; --iterRow) {
+        // iterate every row
+        pixelMeanPrevious = 2 * outMat[iterRow][imgCol/2-1];
+        detectThreewayFeatureLeft = detectThreewayFeatureRight = 0;
+        // left side
+        for (iterCol = imgCol/2-2; iterCol > 2; iterCol-=2) {
+            // black to white
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
+            if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
+                detectThreewayFeatureLeft = 1;
+                break;
             }
-            if (!flagDetectedThreeWayFeature) {
-                return;
-            }
-            flagDetectedThreeWayFeature = 0;
-
-            //printf("%dr:threeWayPixelMeanPre%d\n", iterRow, pixelMeanPrevious);
-            for (iterCol = colStopThreeWayDetect; \
-                    iterCol < colStopThreeWayDetect + 70; iterCol+=2) {
-                pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-                //printf("r:pixelMean%d\n", pixelMean);
-                if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
-                    //printf("got right\n");
-                    flagDetectedThreeWayFeature = 1;
-                    break;
-                }
-            }
-            if (!flagDetectedThreeWayFeature) {
-                return;
-            }
-            flagDetectedThreeWayFeature = 0;
         }
 
-        // confirmed to be a three-way road
-        if (missCounterBoth > 25 && laneJitterLeft < 3 && laneJitterRight < 3) {
-            flagEnterThreeWay = 1;
+        // right side
+        for (iterCol = imgCol/2+1; iterCol < imgCol-3; iterCol+=2) {
+            // black to white
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
+            if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
+                detectThreewayFeatureRight = 1;
+                break;
+            }
         }
-//      switch (flagEnterThreeWay) {
-//          case 0: flagEnterThreeWay = 1; break;
-//          case 2: flagEnterThreeWay = 3; break;
-//      }
-//      return;
+
+        if (detectThreewayFeatureLeft && detectThreewayFeatureRight) {
+            ++detectThreewayFeatureNum;
+        }
     }
-//
-//  // not a three-way road
-//  switch (flagEnterThreeWay) {
-//      case 1: flagEnterThreeWay = 2; break;
-//      case 3: flagEnterThreeWay = 0; break;
-//  }
+
+    if (detectThreewayFeatureNum > 10 && (countJitterBreakRowLeft > 40 || countJitterBreakRowLeft == 0) \
+            && (countJitterBreakRowRight > 40 || countJitterBreakRowRight == 0)) {
+        flagEnterThreeWay = 1;
+    }
 }
 
 void adaptThreeWayLane() {
@@ -588,7 +590,7 @@ void detectOutOfBounds(Mat outMat) {
 
     if (flagEnterOutbound == 2) {
         if (exitOutboundDelay == 0 && exitOutboundDelay != 1) {
-            exitOutboundDelay = 200;
+            exitOutboundDelay = 50;
         } else if (exitOutboundDelay == 1) {
             exitOutboundDelay = 0;
             flagEnterOutbound = 0;
@@ -622,11 +624,17 @@ void detectOutOfBounds(Mat outMat) {
 }
 
 void foresight() {
-
+    if ((countJitterBreakRowLeft < rangeCountJitter-4 && countJitterBreakRowLeft != 0) && \
+            (countJitterBreakRowRight < rangeCountJitter-4 && countJitterBreakRowRight != 0)) {
+        accelerateRatio = 13;
+    } else {
+        accelerateRatio = 10;
+    }
 }
 
 // 0 -- none, 1 -- threeWay,
 // 2 -- startLine, 3 -- brake
+// 4 -- roundabout
 void passParameter() {
     flagCameraElement = 0;
     if (flagEnterOutbound != 0) {
@@ -635,20 +643,19 @@ void passParameter() {
     if (flagEnterStartLine != 0) {
         flagCameraElement = 3;
     }
-    if (flagEnterRoundabout==99) {
-        flagCameraElement = 3;
+    if (exitCrossroadDelay != 0) {
+        //flagCameraElement = 3;
     }
-    if (flagEnterRoundabout!=0) {
-        flagCameraElement = 3;
-    }
+//    if (flagEnterThreeWay == 2) {
+//        flagCameraElement = 1;
+//    }
 }
 
 void detectCrossroad() {
     if (flagEnterCrossroad == 1) {
         if (exitCrossroadDelay == 0) {
-            exitCrossroadDelay = 50;
+            exitCrossroadDelay = 150;
         } else if (exitCrossroadDelay == 1) {
-            bothMissingNum = 0;
             exitCrossroadDelay = 0;
             flagEnterCrossroad = 0;
         } else {
@@ -657,26 +664,30 @@ void detectCrossroad() {
         return;
     }
 
-    bothMissingNum = 0;
+    crossroadMissNumLeft = 0;
+    crossroadMissNumRight = 0;
     flagEnterCrossroad = 0;
     if (flagEnterRoundabout!=0) {
         return;
     }
 
     for (iterRow = detectCrossroadStartRow; iterRow > detectCrossroadEndRow; --iterRow) {
-        if (!flagDetectLeft[iterRow] && !flagDetectRight[iterRow]) {
-            ++bothMissingNum;
+        if (!flagDetectLeft[iterRow]) {
+            ++crossroadMissNumLeft;
+        }
+        if (!flagDetectRight[iterRow]) {
+            ++crossroadMissNumRight;
         }
     }
-    if (bothMissingNum > detectCrossroadMissingNumThres) {
+    if (crossroadMissNumLeft > detectCrossroadMissingNumThres && crossroadMissNumRight > detectCrossroadMissingNumThres) {
         flagEnterCrossroad = 1;
     }
 }
 
 void adaptCrossroad() {
     for (iterRow=slopeRowStart; iterRow > slopeRowEnd; --iterRow) {
-        laneLocationLeft[iterRow] = max(laneLocationLeft[iterRow], imgCol/2-laneWidth[iterRow]);
-        laneLocationRight[iterRow] = min(laneLocationRight[iterRow], imgCol/2+laneWidth[iterRow]);
+        laneLocationLeft[iterRow] = max(laneLocationLeft[iterRow], (imgCol/2)-(laneWidth[iterRow]/4)-4);
+        laneLocationRight[iterRow] = min(laneLocationRight[iterRow], (imgCol/2)+(laneWidth[iterRow]/4)-4);
     }
 }
 
@@ -706,7 +717,9 @@ void laneAnalyze(Mat outMat){
     countJitter();
 
     // detectSBend();
-    //detectThreeWayRoad(outMat);
+    if (!flagEnterRoundabout) {
+        detectThreeWayRoad(outMat);
+    }
     detectCrossroad();
     if (flagEnterCrossroad) {
         adaptCrossroad();
@@ -717,12 +730,12 @@ void laneAnalyze(Mat outMat){
     }
     detectSharpCurve();
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
-        adaptSharpCurve();
+//        adaptSharpCurve();
     }
 
     // add a strightline to help compute lane slope
     for (iterRow=imgRow-1; iterRow > slopeRowStart-2; --iterRow) {
-        laneCenter[iterRow] = imgCol / 2 - 1;
+        laneCenter[iterRow] = imgCol / 2 - 1 -4;
     }
 
     passParameter();
@@ -748,7 +761,7 @@ void laneAnalyze(Mat outMat){
     //printf("outboundAreaBenchmark: %d\n", outboundAreaBenchmark);
     //printf("\n");
 
-    // getLaneWidth();
+    getLaneWidth();
 }
 
 void regression() {
@@ -791,7 +804,7 @@ void computeError() {
     // if (flagEnterRoundabout != 0) {
     //     cameraError = cameraError * 100 / 260;
     // }
-    if (cameraError > 60) {
+    if (cameraError > 80) {
         cameraError = cameraErrorPrevious;
     } else {
         cameraErrorPrevious = cameraError;

@@ -107,6 +107,9 @@ void assignValue(void){
             case 10:yaw_w_pid.Kp = yaw_w_pid.Kp + 0.01 * signData;break;
             case 11:yaw_w_pid.Ki = yaw_w_pid.Ki + 0.01 * signData;break;
             case 12:yaw_w_pid.Kd = yaw_w_pid.Kd + 0.01 * signData;break;
+            case 13:yaw_pid.Kp = yaw_pid.Kp + 0.01 * signData;break;
+            case 14:yaw_pid.Ki = yaw_pid.Ki + 0.01 * signData;break;
+            case 15:yaw_pid.Kd = yaw_pid.Kd + 0.01 * signData;break;
             case 16:
                 roundFinishFlag = roundFinishFlag + 1 * signData;break;
             case 17:

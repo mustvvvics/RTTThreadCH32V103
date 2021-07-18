@@ -188,8 +188,18 @@ extern uint8 flagCameraElement;
 extern uint8 detectCrossroadStartRow;
 extern uint8 detectCrossroadEndRow;
 extern uint8 detectCrossroadMissingNumThres;
-extern uint8 bothMissingNum;
 extern uint8 exitCrossroadDelay;
 extern uint8 flagEnterCrossroad;
 
+extern uint8 crossroadMissNumLeft;
+extern uint8 crossroadMissNumRight;
+
+extern uint8 detectThreeWayRoadStartRow;
+extern uint8 detectThreeWayRoadEndRow;
+extern uint8 detectThreewayFeatureLeft;
+extern uint8 detectThreewayFeatureRight;
+extern uint8 exitThreewayDelay;
+extern uint8 enterThreewayDelay;
+extern uint8 detectThreewayFeatureNum;
+extern uint8 detectThreewayFeatureMaxNum;
 #endif

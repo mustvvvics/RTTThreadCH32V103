@@ -50,7 +50,8 @@ void data_analysis(uint8 *line)
 
             break;
         case 1://三叉
-            ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
+//            ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
+            car_flag = 0;
             break;
         case 2://车库
 

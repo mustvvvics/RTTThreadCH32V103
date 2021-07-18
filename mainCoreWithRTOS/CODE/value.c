@@ -22,9 +22,9 @@ float yaw_w_I=0.039;//0.1;//0.06;//  0.02
 float yaw_w_D=6.389;//3.7;////0.26;//0.15   0
 
 //待整定 转向环参数
-float yaw_P=9;//2.9->50;
+float yaw_P=7.6;//2.9->50;
 float yaw_I=0;
-float yaw_D=0;
+float yaw_D=0.9;
 
 //启停标志位
 uint8 car_flag=0;

@@ -32,11 +32,11 @@ ushort jitterBendLeft = 0;
 
 // predefined lane half width
 int32 laneWidth[imgRow] = {
-    20, 26, 32, 32, 32, 32, 36, 36, 38, 40,
-    42, 44, 46, 46, 48, 52, 52, 52, 52, 56,
-    56, 56, 60, 62, 62, 64, 64, 68, 68, 68,
-    72, 72, 74, 78, 78, 80, 82, 82, 84, 84,
-    86, 88, 90, 92, 92, 94, 96, 96, 100, 100
+    36, 28, 28, 30, 30, 32, 32, 34, 36, 36,
+    38, 40, 40, 42, 44, 46, 46, 48, 50, 50,
+    52, 54, 54, 56, 58, 60, 62, 64, 64, 68,
+    68, 68, 70, 72, 74, 76, 76, 80, 80, 80,
+    84, 86, 86, 88, 88, 90, 92, 94, 96, 98,
 };
 
 // sharp curve
@@ -140,9 +140,19 @@ uint8 confirmOutboundDelay = 0;
 uint8 accelerateRatio = 10;
 uint8 flagCameraElement = 0;
 
-uint8 detectCrossroadStartRow = 30;
-uint8 detectCrossroadEndRow = 20;
+uint8 detectCrossroadStartRow = 35;
+uint8 detectCrossroadEndRow = 25;
 uint8 detectCrossroadMissingNumThres = 6;
-uint8 bothMissingNum = 0;
 uint8 exitCrossroadDelay = 0;
 uint8 flagEnterCrossroad = 0;
+uint8 crossroadMissNumLeft = 0;
+uint8 crossroadMissNumRight = 0;
+
+uint8 detectThreeWayRoadStartRow = 35;
+uint8 detectThreeWayRoadEndRow = 5;
+uint8 detectThreewayFeatureLeft = 0;
+uint8 detectThreewayFeatureRight = 0;
+uint8 exitThreewayDelay = 0;
+uint8 enterThreewayDelay = 0;
+uint8 detectThreewayFeatureNum = 0;
+uint8 detectThreewayFeatureMaxNum = 0;

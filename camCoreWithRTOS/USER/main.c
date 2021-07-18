@@ -46,8 +46,8 @@ int main(void)
         //等待摄像头采集完毕
         rt_sem_take(camera_sem, RT_WAITING_FOREVER);
         //开始处理摄像头图像
-        timet1 = rt_tick_get();
         rt_thread_mdelay(10);
+        timet1 = rt_tick_get();
         laneAnalyze(mt9v03x_image);
         computeError();
 
