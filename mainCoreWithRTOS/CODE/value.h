@@ -72,4 +72,6 @@ extern rt_tick_t timet1;
 extern rt_tick_t timet2;
 extern rt_tick_t timeControl;
 
+extern int16 motor1_pwm,motor2_pwm,motor3_pwm,motor4_pwm;
+extern int16 real_x,real_y;
 #endif /* CODE_VALUE_H_ */

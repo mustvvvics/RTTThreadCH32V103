@@ -96,82 +96,68 @@ void EXTI2_IRQHandler(void)
             encoder_get();                                  //主核编码器
         }
         /*******************************************************//*******************************************************/
-//        测试ADRC
-
-//        if (car_flag == 1) {
-//            speed_conversion(0,expected_y * 10,0);
-//            motor1_ctl(Left_front);
-//            motor2_ctl(Right_front);
-//            motor3_ctl(Right_rear);
-//            motor4_ctl(Left_rear);
-//        }
-//        else {
-//            motor1_ctl(0);
-//            motor2_ctl(0);
-//            motor3_ctl(0);
-//            motor4_ctl(0);
-//        }
+        motor_conversion();
 
         /*******************************************************//*******************************************************/
-        if (car_flag == 1) {
-            carFlagPre = car_flag;
-            if (car_flag == 1 && pidModel == 0 && threeWayIn == 0 && threeWayOut ==0 ) { //正常行驶
-                expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-                speed_conversion(0,expected_y*accelerate/10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
-            }
-            else if (car_flag == 1 && pidModel == 0 && threeWayIn == 1 && threeWayOut == 0) { //变形金刚
-                if (threeWayOut == 0) {
-                    expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-                    speed_conversion(ThreeWayDirection * expected_y*accelerate/10,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
-                }
-                else if (threeWayOut == 1) {//出三叉变形
-                    expected_omega = PID_Loc(threeWayOutAngle,0,&yaw_pid);
-                    speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
-                    threeWayOut = 0;
-                    threeWayIn = 0;
-                    //考虑发送给从机的完成Flag
-                }
-            }
-            else if (car_flag == 1 && pidModel == 2) {//速度环整定
-                speed_conversion(0,expected_y,0);
-            }
-            else if (car_flag == 1 && pidModel == 3) {//角度环整定
-                speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));
-            }
-            else if (car_flag == 1 && pidModel == 4) {//转向环整定
-                expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-                speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
-            }
-
-            //期望速度对应一个给电机的输出,原先是通过让编码器值去逼近期望速度,此时的输出就是让让电机转编码器去逼近期望速度。
-            //此时更改成,输入是期望速度,通过函数以及Pid
-            //进而使得其输出对应的是该速度下应当有的PWM
-            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
-        }
-//        else if (carFlagPre == 1 && car_flag == 0) { //检测下降沿 放松控制
-//            clearError();
-//            motor1_ctl(0);motor2_ctl(0);motor3_ctl(0);motor4_ctl(0);
-//            carFlagPre = 0;
+//        if (car_flag == 1) {
+//            carFlagPre = car_flag;
+//            if (car_flag == 1 && pidModel == 0 && threeWayIn == 0 && threeWayOut ==0 ) { //正常行驶
+//                expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+//                speed_conversion(0,expected_y*accelerate/10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+//            }
+//            else if (car_flag == 1 && pidModel == 0 && threeWayIn == 1 && threeWayOut == 0) { //变形金刚
+//                if (threeWayOut == 0) {
+//                    expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+//                    speed_conversion(ThreeWayDirection * expected_y*accelerate/10,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+//                }
+//                else if (threeWayOut == 1) {//出三叉变形
+//                    expected_omega = PID_Loc(threeWayOutAngle,0,&yaw_pid);
+//                    speed_conversion(0,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+//                    threeWayOut = 0;
+//                    threeWayIn = 0;
+//                    //考虑发送给从机的完成Flag
+//                }
+//            }
+//            else if (car_flag == 1 && pidModel == 2) {//速度环整定
+//                speed_conversion(0,expected_y,0);
+//            }
+//            else if (car_flag == 1 && pidModel == 3) {//角度环整定
+//                speed_conversion(0,0,PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));
+//            }
+//            else if (car_flag == 1 && pidModel == 4) {//转向环整定
+//                expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+//                speed_conversion(0,expected_y*(accelerate/10),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid));
+//            }
+//
+//            //期望速度对应一个给电机的输出,原先是通过让编码器值去逼近期望速度,此时的输出就是让让电机转编码器去逼近期望速度。
+//            //此时更改成,输入是期望速度,通过函数以及Pid
+//            //进而使得其输出对应的是该速度下应当有的PWM
+//            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+//            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+//            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+//            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
 //        }
-        //遥控
-        else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {
-            speed_conversion(0,manual_y,manual_z);
-            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
-        }
-        else {
-            clearError();
-            speed_conversion(0,0,0);
-            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
-            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
-            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
-            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
-        }
+////        else if (carFlagPre == 1 && car_flag == 0) { //检测下降沿 放松控制
+////            clearError();
+////            motor1_ctl(0);motor2_ctl(0);motor3_ctl(0);motor4_ctl(0);
+////            carFlagPre = 0;
+////        }
+//        //遥控
+//        else if (key_data == 6 || key_data == 7 || key_data == 8 || key_data == 9) {
+//            speed_conversion(0,manual_y,manual_z);
+//            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+//            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+//            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+//            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+//        }
+//        else {
+//            clearError();
+//            speed_conversion(0,0,0);
+//            motor1_ctl(leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid));
+//            motor2_ctl(rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid));
+//            motor3_ctl(rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid));
+//            motor4_ctl(leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid));
+//        }
 
 
         EXTI_ClearITPendingBit(EXTI_Line2);

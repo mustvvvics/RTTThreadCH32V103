@@ -12,26 +12,26 @@ int16 manual_z=0;
 //uint8 feedBadDog=1;
 
 //速度环PID //参数 8000限幅
-float S_P=5;//4;//0.5;//136;
-float S_I=12.1;////4.9;//6.1;//33;
-float S_D=28.8;//12;//5.8;//45;
+float S_P=136;//5;//4;//0.5;//136;
+float S_I=33;//12.1;//4.9;//6.1;//33;
+float S_D=45;//28.8;//5.8;//45;
 
 //角速度环参数
-float yaw_w_P=0.83;//0.67;
-float yaw_w_I=0.039;//0.1;//0.06;//  0.02
-float yaw_w_D=6.389;//3.7;////0.26;//0.15   0
+float yaw_w_P=0.03;//0.83;//0.67;
+float yaw_w_I=0.002;//0.039;//0.1;//0.06;//  0.02
+float yaw_w_D=0.002;//6.389;//3.7;////0.26;//0.15   0
 
 //待整定 转向环参数
-float yaw_P=7.6;//2.9->50;
+float yaw_P=1;//2.9->50;
 float yaw_I=0;
-float yaw_D=0.9;
+float yaw_D=0;
 
 //启停标志位
 uint8 car_flag=0;
 uint8 carFlagPre = 0;
 
 //电机PWM //限幅
-uint16 limit_pwm=10000;
+uint16 limit_pwm=5000;
 
 //速度环PID //参数
 PID motor1_pid;
@@ -83,3 +83,7 @@ uint8 pidModel;                 //pid //调试
 rt_tick_t timet1 = 0;           //计算运行时间
 rt_tick_t timet2 = 0;
 rt_tick_t timeControl = 0;
+
+int16 motor1_pwm,motor2_pwm,motor3_pwm,motor4_pwm;
+int16 real_x,real_y;
+

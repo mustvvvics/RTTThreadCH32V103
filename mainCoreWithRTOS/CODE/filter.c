@@ -22,7 +22,7 @@ int16  ICM_newValues(int16 gyro_z)
 void AngleZ_Get(void)
 {
     //获取原始数据
-    get_icm20602_accdata_spi();
+    //get_icm20602_accdata_spi();
     get_icm20602_gyro_spi();
 
     //计算角速度
