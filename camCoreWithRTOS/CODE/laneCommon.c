@@ -149,10 +149,12 @@ uint8 crossroadMissNumLeft = 0;
 uint8 crossroadMissNumRight = 0;
 
 uint8 detectThreeWayRoadStartRow = 35;
-uint8 detectThreeWayRoadEndRow = 5;
+uint8 detectThreeWayRoadEndRow = 10;
 uint8 detectThreewayFeatureLeft = 0;
 uint8 detectThreewayFeatureRight = 0;
 uint8 exitThreewayDelay = 0;
 uint8 enterThreewayDelay = 0;
 uint8 detectThreewayFeatureNum = 0;
 uint8 detectThreewayFeatureMaxNum = 0;
+
+int8 glabalCenterShift = 7 ;

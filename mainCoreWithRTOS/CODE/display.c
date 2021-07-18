@@ -114,7 +114,7 @@ void assignValue(void){
                 roundFinishFlag = roundFinishFlag + 1 * signData;break;
             case 17:
                 if (key_data == 1) {pwm_duty(PWM1_CH1_A8, 990);}
-                else if (key_data == 4){pwm_duty(PWM1_CH1_A8, 338);};break;
+                else if (key_data == 4){pwm_duty(PWM1_CH1_A8, 670);};break;
             default:break;
         }
     }

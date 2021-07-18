@@ -202,4 +202,5 @@ extern uint8 exitThreewayDelay;
 extern uint8 enterThreewayDelay;
 extern uint8 detectThreewayFeatureNum;
 extern uint8 detectThreewayFeatureMaxNum;
+extern int8 glabalCenterShift;
 #endif
