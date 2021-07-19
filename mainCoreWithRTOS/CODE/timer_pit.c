@@ -1,7 +1,6 @@
 #include "headfile.h"
 
 
-
 void timer1_pitAdc_entry(void *parameter)
 {
     getAdc();

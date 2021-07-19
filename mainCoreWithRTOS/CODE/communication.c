@@ -106,6 +106,7 @@ void ThreeWayAnalyze(void){
 
 uint8 Gyro_buff[4];
 
+
 void send_to_cam(void)
 {
     //发送陀螺仪数据
@@ -118,18 +119,41 @@ void send_to_cam(void)
     uart_putbuff(UART_3, Gyro_buff, 4);             //通过串口3将数据发送出去。
 }
 
-//            if(count_en == 1)
-//            {
-//                //里程计
-//                    左边两个向内,右边两个向外 ->向左行进
-//                dx += (-encoder_data[3] + encoder_data[0] + encoder_data[2] - encoder_data[1])/4;
-//                    四个轮子正值相加
-//                dy += (encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
-//                dz += (-encoder_data[3] - encoder_data[0] + encoder_data[2] + encoder_data[1])/4;
-//                //dist = sqrt(dx*dx+dy*dy);
-//                //total_z += (int16)g_fGyroAngleSpeed_z;
-//                //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;
-//            }//清空并关闭里程计
+/*
+//在主核按键触后进行修改
+//约有20个变量
+ */
+uint8 parameterBuff[5];
+void sendParameterToCam(uint8 parameterBit,){
+    //向图像核心发送相关数据
+    if (parameterBit == 8) {
+        parameterBuff[0] = 0xDB;                            //帧头
+
+        parameterBuff[1] = 0x90;                            //功能字
+        parameterBuff[2] = 0x91;                            //功能字
+        parameterBuff[3] = roundFinishFlag;                 //发送数据
+
+        parameterBuff[4] = 0xEE;                            //帧尾
+
+    }
+    else if (parameterBit == 16) { //parameter>>8;parameter&0xFF
+        parameterBuff[0] = 0xDB;                            //帧头
+
+        parameterBuff[1] = 0xE1;                            //功能字
+//        parameterBuff[2] = parameter>>8;                            //功能字
+//        parameterBuff[3] = parameter&0xFF;                 //发送数据
+
+        parameterBuff[4] = 0xEE;                            //帧尾
+    }
+    else if (parameterBit == 32) { ////Parameter>>8;Parameter>>16;Parameter>>24;Parameter&0xFF;
+
+    }
+    else {
+        return;
+    }
+    uart_putbuff(UART_3, parameterBuff, 5);             //通过串口3将数据发送出去。
+}
+
 
 /*
  * 环岛陀螺仪积分

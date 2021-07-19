@@ -5,18 +5,19 @@
 */
 
 int8 menuY = 0;      //²Ëµ¥ÉÏÏÂ
-char txta[32]={0},txtb[32]={0},txtc[32]={0},txtd[32]={0};
-void showEncoder(void){
-    rt_sprintf(txta,"enc 3=%d",encoder_data[3]);
-    rt_sprintf(txtb,"enc 2=%d",encoder_data[2]);
-    rt_sprintf(txtc,"enc 0=%d",encoder_data[0]);
-    rt_sprintf(txtd,"enc 1=%d",encoder_data[1]);
-    ips114_showstr(0,1,txta);
-    ips114_showstr(0,2,txtb);
-    ips114_showstr(0,3,txtc);
-    ips114_showstr(0,4,txtd);
 
-}
+//char txta[32]={0},txtb[32]={0},txtc[32]={0},txtd[32]={0};
+//void showEncoder(void){
+//    rt_sprintf(txta,"enc 3=%d",encoder_data[3]);
+//    rt_sprintf(txtb,"enc 2=%d",encoder_data[2]);
+//    rt_sprintf(txtc,"enc 0=%d",encoder_data[0]);
+//    rt_sprintf(txtd,"enc 1=%d",encoder_data[1]);
+//    ips114_showstr(0,1,txta);
+//    ips114_showstr(0,2,txtb);
+//    ips114_showstr(0,3,txtc);
+//    ips114_showstr(0,4,txtd);
+//
+//}
 //uint8 moterPid;
 void transfetFunction(int8 targetRow,char *targetBuff){
 
@@ -70,6 +71,7 @@ void transfetFunction(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"                   ");
     }
 }
+
 /*
 *Assign value to data
 */
