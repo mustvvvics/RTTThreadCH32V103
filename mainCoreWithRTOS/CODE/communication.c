@@ -104,56 +104,22 @@ void ThreeWayAnalyze(void){
     }
 }
 
-uint8 Gyro_buff[4];
-
-
+uint8 Gyro_buff[8];
 void send_to_cam(void)
 {
     //发送陀螺仪数据
     Gyro_buff[0] = 0xD8;                            //帧头
 
     Gyro_buff[1] = 0xB0;                            //功能字
-    Gyro_buff[2] = roundFinishFlag;                 //发送数据
+    Gyro_buff[2] = 0xB1;                            //功能字
+    Gyro_buff[3] = 0xB2;                            //功能字
+    Gyro_buff[4] = 0xB3;                            //功能字
+    Gyro_buff[5] = roundFinishFlag;                 //发送数据
+    Gyro_buff[6] = 0xB3;                            //功能字
 
-    Gyro_buff[3] = 0xEE;                            //帧尾
-    uart_putbuff(UART_3, Gyro_buff, 4);             //通过串口3将数据发送出去。
+    Gyro_buff[7] = 0xEE;                            //帧尾
+    uart_putbuff(UART_3, Gyro_buff, 8);             //通过串口3将数据发送出去。
 }
-
-/*
-//在主核按键触后进行修改
-//约有20个变量
- */
-uint8 parameterBuff[5];
-void sendParameterToCam(uint8 parameterBit,){
-    //向图像核心发送相关数据
-    if (parameterBit == 8) {
-        parameterBuff[0] = 0xDB;                            //帧头
-
-        parameterBuff[1] = 0x90;                            //功能字
-        parameterBuff[2] = 0x91;                            //功能字
-        parameterBuff[3] = roundFinishFlag;                 //发送数据
-
-        parameterBuff[4] = 0xEE;                            //帧尾
-
-    }
-    else if (parameterBit == 16) { //parameter>>8;parameter&0xFF
-        parameterBuff[0] = 0xDB;                            //帧头
-
-        parameterBuff[1] = 0xE1;                            //功能字
-//        parameterBuff[2] = parameter>>8;                            //功能字
-//        parameterBuff[3] = parameter&0xFF;                 //发送数据
-
-        parameterBuff[4] = 0xEE;                            //帧尾
-    }
-    else if (parameterBit == 32) { ////Parameter>>8;Parameter>>16;Parameter>>24;Parameter&0xFF;
-
-    }
-    else {
-        return;
-    }
-    uart_putbuff(UART_3, parameterBuff, 5);             //通过串口3将数据发送出去。
-}
-
 
 /*
  * 环岛陀螺仪积分
@@ -182,3 +148,77 @@ void roundIslandAnalyze(void){
         return;
     }
 }
+
+/*
+ * 在主核按键触后进行修改
+ * 约有20个变量
+ * parameterBit:数据位数           0:int8  ; 8: uint8  ; 16: int16 ;  32 int32
+ * featuresWord:功能字               0xE1 0xE2 ...
+ * 数据位数,功能字,  其后是传输的数据格式
+ */
+uint8 parameterBuff[8];
+void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData_0,uint8 parameterData8,int16 parameterData16,int32 parameterData32){
+    //向图像核心发送相关数据
+    if (parameterBit == 0) {
+        parameterBuff[0] = 0xDE;                            //帧头
+
+        parameterBuff[1] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[2] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[3] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[4] = 0xA8;                            //功能字占位省开数组
+        parameterBuff[5] = (uint8)featuresWord;             //功能字
+
+        parameterBuff[6] = parameterData8;                  //数据
+
+        parameterBuff[7] = 0xEE;                            //帧尾
+        uart_putbuff(UART_3, parameterBuff, 8);             //通过串口3将数据发送出去。
+    }
+    else if (parameterBit == 8) {
+        parameterBuff[0] = 0xDE;                            //帧头
+
+        parameterBuff[1] = 0xA8;                            //功能字占位省开数组
+        parameterBuff[2] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[3] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[4] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[5] = featuresWord;                    //功能字
+
+        parameterBuff[6] = parameterData_0;                 //数据
+
+        parameterBuff[7] = 0xEE;                            //帧尾
+        uart_putbuff(UART_3, parameterBuff, 8);             //通过串口3将数据发送出去。
+    }
+    else if (parameterBit == 16) { //parameter>>8;parameter&0xFF
+        parameterBuff[0] = 0xDE;                            //帧头
+
+        parameterBuff[1] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[2] = 0xA1;                            //功能字占位省开数组
+        parameterBuff[3] = 0xA6;                            //功能字占位省开数组
+        parameterBuff[4] = featuresWord;                    //功能字
+
+        parameterBuff[5] = (parameterData16>>8)&0xFF;       //数据高八位
+        parameterBuff[6] = parameterData16&0xFF;            //数据第八位
+
+        parameterBuff[7] = 0xEE;                            //帧尾
+        uart_putbuff(UART_3, parameterBuff, 8);             //通过串口3将数据发送出去。
+    }
+    else if (parameterBit == 32) { ////Parameter>>8;Parameter>>16;Parameter>>24;Parameter&0xFF;
+        parameterBuff[0] = 0xDE;                            //帧头
+
+        parameterBuff[1] = 0xA3;                            //功能字占位省开数组
+        parameterBuff[2] = featuresWord;                    //功能字
+
+        parameterBuff[3] = (parameterData32>>8)&0xFF;       //数据
+        parameterBuff[4] = (parameterData32>>16)&0xFF;      //其反解析：u32 = (u8[0]<<24)|(u8[1]<<16)|(u8[2]<<8)| u8[3];
+        parameterBuff[5] = (parameterData32>>24)&0xFF;
+        parameterBuff[6] = parameterData32&0xFF;
+
+        parameterBuff[7] = 0xEE;                            //帧尾
+        uart_putbuff(UART_3, parameterBuff, 8);             //通过串口3将数据发送出去。
+    }
+    else {
+        return;
+    }
+
+}
+
+

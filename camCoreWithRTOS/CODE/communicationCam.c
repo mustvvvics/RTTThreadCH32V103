@@ -2,8 +2,9 @@
 
 uint8 temp_buff[LINE_LEN];                      //从机向主机发送数据BUFF
 int16 encoder_left_front,encoder_left_rear;     //前轮左右编码器数值
-uint8 Gyro_buff[GyroLINE_LEN];                  //接收陀螺仪数据buff
-uint8 gyroRoundFinishFlag = 0;                      //接收陀螺仪Flag
+uint8 receiveMainBuff[receiveBuffLength];      //接收主机数据buff
+
+uint8 gyroRoundFinishFlag = 0;                 //接收陀螺仪Flag
 int16 slave_position=0;                         //传递误差
 
 int16 ABS(int16 x){                             //绝对值
@@ -59,7 +60,72 @@ void process_data(void)                         //根据协议处理要向主机发送的数据
 }
 
 
-void gyroData_analysis(uint8 *line)
+void gyroDataAnalysis(uint8 *line)
 {
-    if(line[0] == 0xD8 && line[1] == 0xB0)    gyroRoundFinishFlag = line[2];
+    if (line[0] != 0xD8) {return;}
+    else if(line[0] == 0xD8 && line[1] == 0xB0 && line[4] == 0xB3){ //条件筛选
+        gyroRoundFinishFlag = line[5];
+    }
+    else {return;}
 }
+
+/*
+ * 分析修改数据
+ */
+void analysisFixParameter(uint8 *line){
+    if (line[0] != 0xDE) { return ;} //不为修改参数的帧头直接返回
+    else if (line[0] == 0xDE) {//帧尾帧头校验成功
+        if (line[1] == 0xA0 && line[4] == 0xA8) { //int8
+            switch (line[5]) {
+                case 0xE1:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (line[1] == 0xA8 && line[4] == 0xA0) { //uint8
+            switch (line[5]) {
+                case 0xE2:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (line[2] == 0xA1 && line[3] == 0xA6) { //int16
+            switch (line[4]) {
+                case 0xE3:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (line[1] == 0xA3) {                    //int32
+            switch (line[2]) {
+                case 0xE4:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    else {return;}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -63,6 +63,12 @@ int main(void)
 //        rt_sprintf(txtTest,"%04d",roundIslandBegin);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
 //        rt_sprintf(txtTest,"%04d",total_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,"\n");
 
+/*******************************************************************************/
+//        sendParameterToCam(0,0xE1,-12,0,0,0,0);//发送  int8：-12
+//        sendParameterToCam(8,0xE2,0,13,0,0,0);//发送 uint8：13
+//        sendParameterToCam(16,0xE3,-12,0,0,0,0);//发送 int16：-14
+//        sendParameterToCam(32,0xE4,0,13,0,0,0);//发送 int32：-15
+/*******************************************************************************/
 
 //        sendMessage(); //发送曲线 三叉解析
 //        getAdc();
