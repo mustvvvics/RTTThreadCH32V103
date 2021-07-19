@@ -22,16 +22,16 @@ float yaw_w_I=0.002;//0.039;//0.1;//0.06;//  0.02
 float yaw_w_D=0.002;//6.389;//3.7;////0.26;//0.15   0
 
 //待整定 转向环参数
-float yaw_P=9;//2.9->50;
+float yaw_P=7;//2.9->50;
 float yaw_I=0;
-float yaw_D=0.03;
+float yaw_D=0.005;
 
 //启停标志位
 uint8 car_flag=0;
 uint8 carFlagPre = 0;
 
 //电机PWM //限幅
-uint16 limit_pwm=5000;
+uint16 limit_pwm=8000;
 
 //速度环PID //参数
 PID motor1_pid;

@@ -130,6 +130,7 @@ void motor_conversion(void)
     }
     else
     {
+        clearError();
         speed_conversion(0,0,0);
     }
 

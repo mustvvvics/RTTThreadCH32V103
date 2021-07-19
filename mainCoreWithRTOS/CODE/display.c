@@ -1,179 +1,191 @@
 #include "headfile.h"
 
-/*
-*Pass variable data
-*/
 
+int8 menuX = 0;      //菜单左右
 int8 menuY = 0;      //菜单上下
-
-//char txta[32]={0},txtb[32]={0},txtc[32]={0},txtd[32]={0};
-//void showEncoder(void){
-//    rt_sprintf(txta,"enc 3=%d",encoder_data[3]);
-//    rt_sprintf(txtb,"enc 2=%d",encoder_data[2]);
-//    rt_sprintf(txtc,"enc 0=%d",encoder_data[0]);
-//    rt_sprintf(txtd,"enc 1=%d",encoder_data[1]);
-//    ips114_showstr(0,1,txta);
-//    ips114_showstr(0,2,txtb);
-//    ips114_showstr(0,3,txtc);
-//    ips114_showstr(0,4,txtd);
-//
-//}
-//uint8 moterPid;
-void transfetFunction(int8 targetRow,char *targetBuff){
-
-
+uint8 parameterAdjustButton = 0;//左右参数调整响应
+uint8 confirmButton = 0;//确认按键
+uint32 servoDuty = 0;
+/*
+*Pass variable data on the first page
+*/
+void transfetFunctionFirst(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"CarSpeed=%04d",expected_y);
+        rt_sprintf(targetBuff,"CarSpeed=%04d ",expected_y);
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"manual_z=%04d",manual_z);
+        rt_sprintf(targetBuff,"Cargo&Winner  ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"manual_y=%04d",manual_y);
+        rt_sprintf(targetBuff,"Turnn_P=%04d  ",(int16)(yaw_pid.Kp*100));
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"pidModel=%01d   ",pidModel);
+        rt_sprintf(targetBuff,"Turnn_I=%04d  ",(int16)(yaw_pid.Ki*100));
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Speed_P=%04d ",(int16)(S_P*10));
+        rt_sprintf(targetBuff,"Turnn_D=%04d  ",(int16)(yaw_pid.Kd*100));
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Speed_I=%04d ",(int16)(S_I*10));
+        rt_sprintf(targetBuff,"ServoMotor     ");
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Speed_D=%04d ",(int16)(S_D*10));
+        rt_sprintf(targetBuff,"Servo=%04d        ",servoDuty);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Angle_P=%04d ",(int16)(yaw_w_pid.Kp*1000));
+        rt_sprintf(targetBuff,"                   ");
     }
-    else if ((11 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Angle_I=%04d ",(int16)(yaw_w_pid.Ki*1000));
-    }
-    else if ((12 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Angle_D=%04d ",(int16)(yaw_w_pid.Kd*1000));
-    }
-    else if ((13 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_P=%04d ",(int16)(yaw_pid.Kp*100));
-    }
-    else if ((14 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_I=%04d ",(int16)(yaw_pid.Ki*100));
-    }
-    else if ((15 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_D=%04d ",(int16)(yaw_pid.Kd*100));
-    }
-    else if ((16 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"GroyFg=%05d",roundIslandBegin);
-    }
-    else if ((17 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ThreeWay        ");
-    }
+
     else {
         rt_sprintf(targetBuff,"                   ");
     }
 }
-
 /*
 *Assign value to data
 */
-void assignValue(void){
+
+void assignValueFirst(void){
     int8 signData;
-    if (key_data == 4) {signData = 1; }//increase
-    if (key_data == 1) {signData = -1;} //decrease
-    if (key_data == 4 || key_data == 1) {
+    if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
+    if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
+
+    if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {car_flag = 1;}
+    else if(confirmButton == 0 && (menuY + 3) == 4 && car_flag == 1){car_flag = 0;}
+
+    if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
-            case 3:expected_y = expected_y + 10 * signData;;break;
-            case 4:manual_z = manual_z + 10 * signData;break;
-            case 5:manual_y = manual_y + 10 * signData;break;
-            case 6:pidModel = pidModel + 1 * signData;break;
-            case 7:
-                S_P= S_P + + 0.1 * signData;
-                motor1_pid.Kp = motor1_pid.Kp + 0.1 * signData;
-                motor2_pid.Kp = motor2_pid.Kp + 0.1 * signData;
-                motor3_pid.Kp = motor3_pid.Kp + 0.1 * signData;
-                motor4_pid.Kp = motor4_pid.Kp + 0.1 * signData;
-                break;
+            case 3:expected_y = expected_y + 10 * signData;break;
+            case 5:yaw_pid.Kp = yaw_pid.Kp + 0.1 * signData;break;
+            case 6:yaw_pid.Ki = yaw_pid.Ki + 0.01 * signData;break;
+            case 7:yaw_pid.Kd = yaw_pid.Kd + 0.01 * signData;break;
             case 8:
-                S_I= S_I + + 0.1 * signData;
-                motor1_pid.Ki = motor1_pid.Ki + 0.1 * signData;
-                motor2_pid.Ki = motor2_pid.Ki + 0.1 * signData;
-                motor3_pid.Ki = motor3_pid.Ki + 0.1 * signData;
-                motor4_pid.Ki = motor4_pid.Ki + 0.1 * signData;
-                break;
+                if (parameterAdjustButton == 1) {servoDuty = 990;pwm_duty(PWM1_CH1_A8, servoDuty);}
+                else if (parameterAdjustButton == 4){servoDuty = 670;pwm_duty(PWM1_CH1_A8, servoDuty);};break;
             case 9:
-                S_D= S_D + + 0.1 * signData;
-                motor1_pid.Kd = motor1_pid.Kd + 0.1 * signData;
-                motor2_pid.Kd = motor2_pid.Kd + 0.1 * signData;
-                motor3_pid.Kd = motor3_pid.Kd + 0.1 * signData;
-                motor4_pid.Kd = motor4_pid.Kd + 0.1 * signData;
-                break;
-            case 10:yaw_w_pid.Kp = yaw_w_pid.Kp + 0.01 * signData;break;
-            case 11:yaw_w_pid.Ki = yaw_w_pid.Ki + 0.01 * signData;break;
-            case 12:yaw_w_pid.Kd = yaw_w_pid.Kd + 0.01 * signData;break;
-            case 13:yaw_pid.Kp = yaw_pid.Kp + 0.1 * signData;break;
-            case 14:yaw_pid.Ki = yaw_pid.Ki + 0.01 * signData;break;
-            case 15:yaw_pid.Kd = yaw_pid.Kd + 0.01 * signData;break;
-            case 16:
-                roundIslandBegin = roundIslandBegin + 1 * signData;break;
-            case 17:
-                if (key_data == 1) {pwm_duty(PWM1_CH1_A8, 990);}
-                else if (key_data == 4){pwm_duty(PWM1_CH1_A8, 670);};break;
+                servoDuty = servoDuty + 1 * signData;
+                pwm_duty(PWM1_CH1_A8, servoDuty);break;
             default:break;
         }
     }
+    else {return;}
+}
+
+/*
+*Pass variable data on the second page
+*/
+void transfetFunctionSecond(int8 targetRow,char *targetBuff){
+    if ((3 - menuY) == targetRow) {                //BLACK
+        rt_sprintf(targetBuff,"Image Flipping ");//图像核翻页
+    }
+    else if ((4 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
+    else if ((5 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
+    else if ((6 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
+    else if ((7 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
+    else if ((8 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
+    else if ((9 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
+    else if ((10 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
+
+    else {
+        rt_sprintf(targetBuff,"                   ");
+    }
+}
+/*
+*Assign value to data on the second page
+*/
+void assignValueSecond(void){
+    int8 signData;
+    if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
+    if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
+
+    if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
+        switch (menuY + 3) {
+            case 3:  break;
+            case 4:  signData = signData + 1;break;
+            case 5:  break;
+            case 6:  break;
+            case 7:  break;
+            default:break;
+        }
+    }
+    else {return;}
 }
 
 /*
 *Disaplay Menu
 */
-uint8 maxMenuRow = 17;
+
+
+uint8 maxMenuRow = 9;//下滑选择限制
+uint8 maxMenuPage = 1;//左右选择限制
 char txt1[20]={0},txt2[20]={0},txt3[20]={0},txt4[20]={0},
                   txt5[20]={0},txt6[20]={0},txt7[20]={0};
 void disaplayMenu(void){
 
-
-    if (menuY < 0) {menuY = 0;} //限制选择范围
-    else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
-    assignValue(); //更改数值
 /***********************状态栏*******************************************/
     rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
     rt_sprintf(txt2,"Vc=%03d|AC=%02d",Vc,accelerate);
+/************************************************************************/
 
+    if (menuY < 0) {menuY = 0;} //限制选择范围
+    else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
+    if (menuX < 0) {menuX = 0;} //限制选择范围
+    else if (menuX > maxMenuPage) {menuY = maxMenuPage;} //
 /***********************参数调整*****************************************/
-//    transfetFunction(1,txt1);
-//    transfetFunction(2,txt2);
-    transfetFunction(3,txt3);
-    transfetFunction(4,txt4);
-    transfetFunction(5,txt5);
-    transfetFunction(6,txt6);
-    transfetFunction(7,txt7);
+    if (menuX == 0) {
+        assignValueFirst(); //更改数值
+        transfetFunctionFirst(3,txt3); transfetFunctionFirst(4,txt4);//传递显示
+        transfetFunctionFirst(5,txt5);transfetFunctionFirst(6,txt6);transfetFunctionFirst(7,txt7);
+    }
+    else if (menuX == 1) {
+        assignValueSecond(); //更改数值
+        transfetFunctionSecond(3,txt3); transfetFunctionSecond(4,txt4);//传递显示
+        transfetFunctionSecond(5,txt5);transfetFunctionSecond(6,txt6);transfetFunctionSecond(7,txt7);
+    }
+    else if (menuX == 2) {
+
+    }
+
+/***********************显示每一行***************************************/
 
     ips114_showstr(0,1,txt1);
     ips114_showstr(0,2,txt2);
-    ips114_showstrBlack(0,3,txt3);
+    if (confirmButton == 1) {ips114_showstrCheck(0,3,txt3);}else {ips114_showstrBlack(0,3,txt3);}//确定按键改变不同的颜色状态
     ips114_showstr(0,4,txt4);
     ips114_showstr(0,5,txt5);
     ips114_showstr(0,6,txt6);
     ips114_showstr(0,7,txt7);
-
+/***********************等待按键信号*************************************/
     rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
 //    ips114_clear(WHITE);    //清屏成白色
     switch (key_data) {
-//        case 1://left
-//            break;
-//        case 4://right
-//            break;
-        case 3://up
-            menuY = menuY - 1;
-            break;
-        case 5://down
-            menuY = menuY + 1;
-            break;
-        case 2://on
-            if (car_flag == 0) {car_flag = 1;} else {car_flag = 0;}break;
-        case 6:clearError();manual_y = 10;manual_z = 0;break;
-        case 7:clearError();manual_y=-10;manual_z = 0;break;
-        case 8:clearError();manual_z=-40;manual_y = 0;break;
-        case 9:clearError();manual_z=40;manual_y = 0;break;
+        case 1:
+            if(confirmButton == 0) {menuX = menuX - 1;} //无确认按键按下 则可翻页选择
+            else if(confirmButton == 1){parameterAdjustButton = 1;}else{return;}break;//left 确认按键按下 进行参数调整
+        case 4:
+            if(confirmButton == 0) {menuX = menuX + 1;}
+            else if(confirmButton == 1){parameterAdjustButton = 4;}else {return;}break;//right
+
+        case 3:
+            if(confirmButton == 0) {menuY = menuY - 1;} //up    保持在按下确定键后不响应上下
+            else if(confirmButton == 1){parameterAdjustButton = 0;}else {return;}break;
+        case 5:
+            if(confirmButton == 0) {menuY = menuY + 1;} //down
+            else if(confirmButton == 1){parameterAdjustButton = 0;}else {return;}break;
+        case 2://确定键
+            if (confirmButton == 0) {confirmButton = 1;} else {confirmButton = 0;parameterAdjustButton = 0;}break;
         default:
             break;
     }
@@ -188,7 +200,6 @@ void display_entry(void *parameter)
     while(1)
     {
         disaplayMenu();
-//        showEncoder();
     }
 }
 

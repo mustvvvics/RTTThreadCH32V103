@@ -181,9 +181,11 @@ extern uint8 detectThreeWayRoadStartRow;
 extern uint8 detectThreeWayRoadEndRow;
 extern uint8 detectThreewayFeatureLeft;
 extern uint8 detectThreewayFeatureRight;
-extern uint8 exitThreewayDelay;
+extern uint16 exitThreewayDelay;
 extern uint8 enterThreewayDelay;
 extern uint8 detectThreewayFeatureNum;
 extern uint8 detectThreewayFeatureMaxNum;
+extern uint8 detectThreewayFeatureNumThres;
 extern int8 globalCenterBias;
+extern uint8 laneLocationThreewayRoad;
 #endif

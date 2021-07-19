@@ -18,7 +18,7 @@ float detectDistance = 2.0;
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
-int32 areaDetectRoundaboutThres = 500;
+int32 areaDetectRoundaboutThres = 400;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
@@ -133,7 +133,7 @@ uint8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
 int32 outboundAreaSum = 0;
-int32 outboundAreaThres = 13000;
+int32 outboundAreaThres = 9000;
 uint8 flagEnterOutbound = 0;
 uint8 exitOutboundDelay = 0;
 uint8 confirmOutboundDelay = 0;
@@ -154,9 +154,11 @@ uint8 detectThreeWayRoadStartRow = 35;
 uint8 detectThreeWayRoadEndRow = 10;
 uint8 detectThreewayFeatureLeft = 0;
 uint8 detectThreewayFeatureRight = 0;
-uint8 exitThreewayDelay = 0;
+uint16 exitThreewayDelay = 0;
 uint8 enterThreewayDelay = 0;
 uint8 detectThreewayFeatureNum = 0;
 uint8 detectThreewayFeatureMaxNum = 0;
+uint8 detectThreewayFeatureNumThres = 8;
+uint8 laneLocationThreewayRoad = 0;
 
 int8 globalCenterBias = -1;

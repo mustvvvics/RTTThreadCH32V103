@@ -11,5 +11,6 @@ void ESP8266_Clear(void);
 void Tcp_Decode(void);
 void sendMessage(void);
 void esp8266Init(void);
+void sendMessageData(void);
 
 #endif /* CODE_ESP8266CAM_H_ */

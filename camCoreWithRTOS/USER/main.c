@@ -55,10 +55,10 @@ int main(void)
 
         timeControl = timet2 - timet1;
         if (CameraShow_flag == 1) {
-            sendMessage();
+            sendMessage();//发送赛道信息
             CameraShow_flag = 0;
         }
-        sendMessage();
+//        sendMessageData();//发送相关参数
 
     }
 }
