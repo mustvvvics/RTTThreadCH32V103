@@ -29,5 +29,5 @@ void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);
 void roundIslandAnalyze(void);
 void send_to_cam(void);
-
+void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData_0,uint8 parameterData8,int16 parameterData16,int32 parameterData32);
 #endif /* CODE_COMMUNICATION_H_ */

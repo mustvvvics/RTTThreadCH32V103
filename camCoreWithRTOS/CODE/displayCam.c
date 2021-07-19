@@ -7,29 +7,38 @@ void show_speed(void)
 //    ips114_showstr(0, 0, txt);//slopeRowStart
 //    rt_sprintf(txt,"Start=%03d|End=%03d|t=%03d",slopeRowStart,slopeRowEnd,(int16)timeControl);
 //    ips114_showstr(0, 0, txt);
-    rt_sprintf(txt,"time=% 3d", timeControl);
-    ips114_showstr(0, 0, txt);
-//    rt_sprintf(txt,"coJiBRL=%2d, coJiBRR=%2d",countJitterBreakRowLeft,countJitterBreakRowRight);
-    rt_sprintf(txt,"laLoShLo=%4d|laLoShUp=%4d", laneLocationShiftedLower, laneLocationShiftedUpper);
-    ips114_showstr(0, 1, txt);
-    rt_sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
-    ips114_showstr(0, 3, txt);
-    rt_sprintf(txt, "flagSta=%1d|flagOut=%1d", flagEnterStartLine, flagEnterOutbound);
-    ips114_showstr(0, 4, txt);
-    rt_sprintf(txt, "threFeaNu=%2d|entCross=%d", detectThreewayFeatureNum, flagEnterCrossroad);
-    ips114_showstr(0, 5, txt);
-    rt_sprintf(txt, "entRou=%2d|entThree=%1d", flagEnterRoundabout, flagEnterThreeWay);
-    ips114_showstr(0, 6, txt);
-//    rt_sprintf(txt,"bothMisNum=%2d, flEntRou=%2d",bothMissingNum, flagEnterRoundabout);
+/************************************************************************************/
+//    rt_sprintf(txt,"time=% 3d", timeControl);
+//    ips114_showstr(0, 0, txt);
+////    rt_sprintf(txt,"coJiBRL=%2d, coJiBRR=%2d",countJitterBreakRowLeft,countJitterBreakRowRight);
+//    rt_sprintf(txt,"laLoShLo=%4d|laLoShUp=%4d", laneLocationShiftedLower, laneLocationShiftedUpper);
+//    ips114_showstr(0, 1, txt);
+//    rt_sprintf(txt,"Err=%05d|Fg=%01d|AC=%02d",cameraError,flagCameraElement,accelerateRatio);
+//    ips114_showstr(0, 3, txt);
+//    rt_sprintf(txt, "flagSta=%1d|flagOut=%1d", flagEnterStartLine, flagEnterOutbound);
 //    ips114_showstr(0, 4, txt);
-////    rt_sprintf(txt,"pMeanT=%03d,Dis=%03d",pixelMeanThres,(int16)(detectDistance*10));
-////    ips114_showstr(0, 2, txt);
-////    rt_sprintf(txt,"LJL=%04d|LJR=%4d",laneJitterLeft, laneJitterRight);
-////    ips114_showstr(0, 3, txt);
-    rt_sprintf(txt,"areaRoL=%4d|exRouDe=%4d    ",areaDetectRoundaboutLeft, exitRoundaboutDelay);
+//    rt_sprintf(txt, "threFeaNu=%2d|entCross=%d", detectThreewayFeatureNum, flagEnterCrossroad);
+//    ips114_showstr(0, 5, txt);
+//    rt_sprintf(txt, "entRou=%2d|entThree=%1d", flagEnterRoundabout, flagEnterThreeWay);
+//    ips114_showstr(0, 6, txt);
+////    rt_sprintf(txt,"bothMisNum=%2d, flEntRou=%2d",bothMissingNum, flagEnterRoundabout);
+////    ips114_showstr(0, 4, txt);
+//////    rt_sprintf(txt,"pMeanT=%03d,Dis=%03d",pixelMeanThres,(int16)(detectDistance*10));
+//////    ips114_showstr(0, 2, txt);
+//////    rt_sprintf(txt,"LJL=%04d|LJR=%4d",laneJitterLeft, laneJitterRight);
+//////    ips114_showstr(0, 3, txt);
+//    rt_sprintf(txt,"areaRoL=%4d|exRouDe=%4d    ",areaDetectRoundaboutLeft, exitRoundaboutDelay);
+//    ips114_showstr(0, 2, txt);
+/************************************************************************************/
+    rt_sprintf(txt, "t1=%05d",parameterTest);
     ips114_showstr(0, 2, txt);
+    rt_sprintf(txt, "t2=%05d",parameterTest8);
+    ips114_showstr(0, 3, txt);
+    rt_sprintf(txt, "t3=%05d",parameterTest16);
+    ips114_showstr(0, 4, txt);
+    rt_sprintf(txt, "t4=%05d",parameterTest32);
+    ips114_showstr(0, 5, txt);
 
-//
 //    rt_sprintf(txt,"gyroflag=%05d",gyroRoundFinishFlag);
 //    ips114_showstr(0, 2, txt);
 

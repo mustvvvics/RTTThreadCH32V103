@@ -31,13 +31,7 @@ uint8 key5_flag = 0;
 uint32 key_data = 0;
 
 rt_mailbox_t key_mailbox;
-//void clearKeyFlags(void){
-//    key1_flag = 0;
-//    key2_flag = 0;
-//    key3_flag = 0;
-//    key4_flag = 0;
-//    key5_flag = 0;
-//}
+
 void button_entry(void *parameter)
 {
     //±£´æ°´¼ü×´Ì¬

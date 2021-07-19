@@ -149,6 +149,7 @@ void roundIslandAnalyze(void){
     }
 }
 
+int8 absInt8(int8 x){return x>0?x:-x;}
 /*
  * 在主核按键触后进行修改
  * 约有20个变量
@@ -156,19 +157,23 @@ void roundIslandAnalyze(void){
  * featuresWord:功能字               0xE1 0xE2 ...
  * 数据位数,功能字,  其后是传输的数据格式
  */
+
 uint8 parameterBuff[8];
+uint8 negativeNumber = 0;
 void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData_0,uint8 parameterData8,int16 parameterData16,int32 parameterData32){
     //向图像核心发送相关数据
     if (parameterBit == 0) {
+        if (parameterData_0 < 0) {negativeNumber = 1;}
+        else {negativeNumber = 0;}
         parameterBuff[0] = 0xDE;                            //帧头
 
         parameterBuff[1] = 0xA0;                            //功能字占位省开数组
         parameterBuff[2] = 0xA0;                            //功能字占位省开数组
-        parameterBuff[3] = 0xA0;                            //功能字占位省开数组
-        parameterBuff[4] = 0xA8;                            //功能字占位省开数组
-        parameterBuff[5] = (uint8)featuresWord;             //功能字
+        parameterBuff[3] = 0xA8;                            //功能字占位省开数组
+        parameterBuff[4] = featuresWord;                    //功能字
+        parameterBuff[5] = negativeNumber;                  //int8 正负传递
 
-        parameterBuff[6] = parameterData8;                  //数据
+        parameterBuff[6] = (uint8)absInt8(parameterData_0); //数据
 
         parameterBuff[7] = 0xEE;                            //帧尾
         uart_putbuff(UART_3, parameterBuff, 8);             //通过串口3将数据发送出去。
@@ -182,7 +187,7 @@ void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData
         parameterBuff[4] = 0xA0;                            //功能字占位省开数组
         parameterBuff[5] = featuresWord;                    //功能字
 
-        parameterBuff[6] = parameterData_0;                 //数据
+        parameterBuff[6] = parameterData8;                 //数据
 
         parameterBuff[7] = 0xEE;                            //帧尾
         uart_putbuff(UART_3, parameterBuff, 8);             //通过串口3将数据发送出去。
@@ -207,9 +212,9 @@ void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData
         parameterBuff[1] = 0xA3;                            //功能字占位省开数组
         parameterBuff[2] = featuresWord;                    //功能字
 
-        parameterBuff[3] = (parameterData32>>8)&0xFF;       //数据
+        parameterBuff[3] = (parameterData32>>24)&0xFF;       //数据
         parameterBuff[4] = (parameterData32>>16)&0xFF;      //其反解析：u32 = (u8[0]<<24)|(u8[1]<<16)|(u8[2]<<8)| u8[3];
-        parameterBuff[5] = (parameterData32>>24)&0xFF;
+        parameterBuff[5] = (parameterData32>>8)&0xFF;
         parameterBuff[6] = parameterData32&0xFF;
 
         parameterBuff[7] = 0xEE;                            //帧尾

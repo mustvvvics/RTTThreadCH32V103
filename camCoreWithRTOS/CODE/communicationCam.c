@@ -72,41 +72,40 @@ void gyroDataAnalysis(uint8 *line)
 /*
  * 分析修改数据
  */
+int8 parameterTest;
+uint8 parameterTest8;
+int16 parameterTest16;
+int32 parameterTest32;
+
+int8 negativeNumber = 0;
 void analysisFixParameter(uint8 *line){
     if (line[0] != 0xDE) { return ;} //不为修改参数的帧头直接返回
     else if (line[0] == 0xDE) {//帧尾帧头校验成功
-        if (line[1] == 0xA0 && line[4] == 0xA8) { //int8
-            switch (line[5]) {
-                case 0xE1:
-
-                    break;
+        if (line[1] == 0xA0 && line[3] == 0xA8) { //int8
+            if (line[5] == 1 ) {negativeNumber = -1;}else if (line[5] == 0) {negativeNumber = 1;}
+            switch (line[4]) { //功能字选择
+                case 0xE1: parameterTest = negativeNumber * line[6];break;
                 default:
                     break;
             }
         }
         else if (line[1] == 0xA8 && line[4] == 0xA0) { //uint8
             switch (line[5]) {
-                case 0xE2:
-
-                    break;
+                case 0xE2:parameterTest8 = line[6];break;
                 default:
                     break;
             }
         }
         else if (line[2] == 0xA1 && line[3] == 0xA6) { //int16
             switch (line[4]) {
-                case 0xE3:
-
-                    break;
+                case 0xE3:parameterTest16 = ((int16)line[5] << 8) | line[6];break;
                 default:
                     break;
             }
         }
         else if (line[1] == 0xA3) {                    //int32
             switch (line[2]) {
-                case 0xE4:
-
-                    break;
+                case 0xE4:parameterTest32 = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 default:
                     break;
             }
