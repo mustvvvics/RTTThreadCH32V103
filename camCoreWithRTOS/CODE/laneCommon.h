@@ -181,6 +181,7 @@ extern int32 outboundAreaThres;
 extern uint8 flagEnterOutbound;
 extern uint8 exitOutboundDelay;
 extern uint8 confirmOutboundDelay;
+extern uint8 exitRoundaboutStraightLaneNum;
 
 extern uint8 accelerateRatio;
 extern uint8 flagCameraElement;
@@ -202,5 +203,6 @@ extern uint8 exitThreewayDelay;
 extern uint8 enterThreewayDelay;
 extern uint8 detectThreewayFeatureNum;
 extern uint8 detectThreewayFeatureMaxNum;
-extern int8 glabalCenterShift;
+extern int8 globalCenterBias;
+extern uint8 enterRoundaboutDelay;
 #endif

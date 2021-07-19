@@ -66,11 +66,12 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         return;
     }
 
-    if (iterRow < slopeRowEnd) {
+    if (iterRow < slopeRowEnd - 1) {
         flagDetectLeft[iterRow] = laneFound;
         flagDetectRight[iterRow] = laneFound;
         laneLocationLeft[iterRow] = 0;
         laneLocationRight[iterRow] = imgCol-1;
+        return;
     }
     pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
     if (flagEnterRoundabout == -2) { // left roundabout mdoe
@@ -97,15 +98,13 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
                 laneLocationRight[iterRow] = iterCol;
                 flagDetectRight[iterRow] = laneFound;
                 break;
-            }
-            else {
-                laneLocationRight[iterRow] = laneLocationLeft[iterRow] + laneWidth[iterRow];
+            } else {
+                laneLocationRight[iterRow] = laneLocationLeft[iterRow] + laneWidth[iterRow] * 1.3;
                 flagDetectRight[iterRow] = laneFound;
             }
         }
-    } else { // right roundabout mode
+    } else if (flagEnterRoundabout == 2) { // right roundabout mode
         // right lane
-        ////("\nright start %d\n", iterRow);
         for (iterCol = laneCenterPrevious; iterCol < imgCol-3; iterCol+=2) { // modified <imgCol-2 to <imgCol-3
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
             //("%3d\t", pixelMean);
@@ -113,8 +112,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
                 laneLocationRight[iterRow] = iterCol;
                 flagDetectRight[iterRow] = laneFound;
                 break;
-            }
-            else {
+            } else {
                 laneLocationRight[iterRow] = laneLocationRight[iterRow+1] + (imgRow-iterRow);
                 flagDetectRight[iterRow] = laneFound;
             }
@@ -129,8 +127,33 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
                 flagDetectLeft[iterRow] = laneFound;
                 break;
             } else {
-                laneLocationLeft[iterRow] = laneLocationRight[iterRow] - laneWidth[iterRow];
+                laneLocationLeft[iterRow] = laneLocationRight[iterRow] - laneWidth[iterRow] * 1.3;
                 flagDetectLeft[iterRow] = laneFound;
+            }
+        }
+    } else {
+        // left lane
+        for (iterCol = imgCol/2-1; iterCol > imgCol/2-1 - laneWidth[iterRow]/2 * 1.2; iterCol-=2) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterCol][iterCol-1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                laneLocationLeft[iterRow] = iterCol;
+                flagDetectLeft[iterRow] = laneFound;
+            } else {
+                laneLocationLeft[iterRow] = laneLocationRight[iterRow] - laneWidth[iterRow] * 1.3;
+                flagDetectLeft[iterRow] = laneFound;
+            }
+        }
+
+        // right lane
+        for (iterCol = imgCol/2-1; iterCol < imgCol/2-1 + laneWidth[iterRow]/2 * 1.2; iterCol+=2) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                laneLocationRight[iterRow] = iterCol;
+                flagDetectRight[iterRow] = laneFound;
+                break;
+            } else {
+                laneLocationRight[iterRow] = laneLocationRight[iterRow] + laneWidth[iterRow] * 1.3;
+                flagDetectRight[iterRow] = laneFound;
             }
         }
     }
@@ -186,27 +209,24 @@ void computeLaneCenter() {
     }
 
     // restrict lane center location
+    //laneCenter[iterRow] = laneCenter[iterRow] - globalCenterBias;
     laneCenter[iterRow] = min(laneCenter[iterRow], imgCol-1);
     laneCenter[iterRow] = max(laneCenter[iterRow], 0);
 
     laneCenterPrevious = laneCenter[iterRow];
 }
 
-void keystoneCorrection() {
-    for (iterRow = 0; iterRow < imgRow - 2; ++iterRow) {
-        laneLocationLeft[iterRow] = ((laneLocationLeft[iterRow] - imgCol / 2) * laneWidth[49] / laneWidth[iterRow]) + imgCol / 2;
-        laneLocationRight[iterRow] = ((laneLocationRight[iterRow] - imgCol / 2) * laneWidth[49] / laneWidth[iterRow]) + imgCol / 2;
-        laneCenter[iterRow] = ((laneCenter[iterRow] - imgCol / 2) * laneWidth[49] / laneWidth[iterRow]) + imgCol / 2;
-    }
-}
-
-void keystoneForCountJitter() {
-
-}
+// void keystoneCorrection() {
+//  for (iterRow = 0; iterRow < imgRow - 2; ++iterRow) {
+//      laneLocationLeft[iterRow] = ((laneLocationLeft[iterRow] - imgCol / 2) * laneWidth[49] / laneWidth[iterRow]) + imgCol / 2;
+//      laneLocationRight[iterRow] = ((laneLocationRight[iterRow] - imgCol / 2) * laneWidth[49] / laneWidth[iterRow]) + imgCol / 2;
+//      laneCenter[iterRow] = ((laneCenter[iterRow] - imgCol / 2) * laneWidth[49] / laneWidth[iterRow]) + imgCol / 2;
+//  }
+// }
 
 void countJitter() {
     laneJitterLeft = laneJitterRight = 9999;
-    countJitterBreakRowLeft = countJitterBreakRowRight = 0;
+    countJitterBreakRowLeft = countJitterBreakRowRight = 50;
 
     if (flagDetectLeft[imgRow-2] && flagDetectLeft[imgRow-3]) {
         for (iterRow = imgRow-3; iterRow > rangeCountJitter; --iterRow) {
@@ -292,7 +312,7 @@ void detectSharpCurve() {
 
 void recomputeLaneCenter(uint8 laneStartRecompute, uint8 laneStopRecompute) {
     for (iterRow=laneStartRecompute; iterRow > laneStopRecompute; --iterRow) {
-        laneCenter[iterRow] = (laneLocationLeft[iterRow] + laneLocationRight[iterRow]) / 2;
+        laneCenter[iterRow] = (laneLocationLeft[iterRow] + laneLocationRight[iterRow]) / 2; // - globalCenterBias;
     }
 }
 
@@ -323,38 +343,69 @@ void adaptSharpCurve() {
 }
 
 void detectSBend() {
-    /* not activated
-    // detect little s-bend
-    if (iterRow > rangeLittleSBand) {
-        if (laneCenter[iterRow] > laneCenter[iterRow + 2]){
-            ++jitterBendRight;
-        }
-        if (laneCenter[iterRow] < laneCenter[iterRow + 2]){
-            ++jitterBendLeft;
-        }
-    }
-    */
+    // ^_^
+    // :)
 }
 
 // flagEnterRoundabout: 0 -- no roundabout, -1 -- left, 1 -- right
-void detectRoundabout() {
-    if (flagEnterRoundabout != 0) {
-        if (exitRoundaboutDelay == 0) {
-            exitRoundaboutDelay = 600;
-        } else if (exitRoundaboutDelay == 595) {
-            --exitRoundaboutDelay;
-            if (flagEnterRoundabout == 1) {
-                flagEnterRoundabout = 2;
-            } else {
-                flagEnterRoundabout = -2;
-            }
-        } else if (exitRoundaboutDelay == 1) {
-            exitRoundaboutDelay = 0;
+void detectRoundabout(Mat outMat) {
+    // if (flagEnterRoundabout != 0) {
+    //  if (exitRoundaboutDelay == 0) {
+    //      exitRoundaboutDelay = 600;
+    //  } else if (exitRoundaboutDelay == 595) {
+    //      --exitRoundaboutDelay;
+    //      if (flagEnterRoundabout == 1) {
+    //          flagEnterRoundabout = 2;
+    //      } else {
+    //          flagEnterRoundabout = -2;
+    //      }
+    //  } else if (exitRoundaboutDelay == 1) {
+    //      exitRoundaboutDelay = 0;
+    //      flagEnterRoundabout = 0;
+    //  } else {
+    //      --exitRoundaboutDelay;
+    //  }
+    //  return;
+    // }
+
+
+    if (exitRoundaboutDelay) {
+        --exitRoundaboutDelay;
+        return;
+    }
+
+    if (enterRoundaboutDelay) {
+        --enterRoundaboutDelay;
+        return;
+    }
+
+    if (abs(flagEnterRoundabout) == 2) {
+        if (gyroRoundFinishFlag == 1) {
             flagEnterRoundabout = 0;
-        } else {
-            --exitRoundaboutDelay;
+            exitRoundaboutDelay = 100;
+            gyroRoundFinishFlag = 0;
         }
         return;
+    }
+
+    if (flagEnterRoundabout != 0) {
+        if (flagEnterRoundabout == 1 || flagEnterRoundabout == -1) {
+            switch (flagEnterRoundabout) {
+                case 1:
+                    if (countJitterBreakRowRight < 30) {
+                        flagEnterRoundabout = 2;
+                        enterRoundaboutDelay = 100;
+                    }
+                    break;
+                case -1:
+                    if (countJitterBreakRowLeft < 30) {
+                        flagEnterRoundabout = -2;
+                        enterRoundaboutDelay = 100;
+                    }
+                    break;
+            }
+            return;
+        }
     }
 
     if (countJitterBreakRowRight == rangeCountJitter+1 && \
@@ -399,7 +450,7 @@ void detectRoundabout() {
                                         * laneWidth[49] / laneWidth[missingLaneLowerLeft];
             laneLocationShiftedUpper = (laneLocationLeft[missingLaneUpperLeft] -imgCol / 2) \
                                         * laneWidth[49] / laneWidth[missingLaneUpperLeft];
-            if (abs(laneLocationShiftedLower - laneLocationShiftedUpper) > 10) {
+            if (abs(laneLocationShiftedLower - laneLocationShiftedUpper) > 50) {
                 return;
             }
             roundaboutSlopeRowLocation = min(laneLocationShiftedLower, laneLocationShiftedUpper);
@@ -523,6 +574,10 @@ void detectThreeWayRoad(Mat outMat) {
             }
         }
 
+        if (!detectThreewayFeatureLeft) {
+            continue;
+        }
+
         // right side
         for (iterCol = imgCol/2+1; iterCol < imgCol-3; iterCol+=2) {
             // black to white
@@ -533,7 +588,7 @@ void detectThreeWayRoad(Mat outMat) {
             }
         }
 
-        if (detectThreewayFeatureLeft && detectThreewayFeatureRight) {
+        if (detectThreewayFeatureRight) {
             ++detectThreewayFeatureNum;
         }
     }
@@ -628,9 +683,9 @@ void detectOutOfBounds(Mat outMat) {
 }
 
 void foresight() {
-    if (countJitterBreakRowLeft < rangeCountJitter+4 && \
-            countJitterBreakRowRight < rangeCountJitter+4) {
-        accelerateRatio = 13;
+    if (countJitterBreakRowLeft < rangeCountJitter + 6 && \
+            countJitterBreakRowRight < rangeCountJitter + 6) {
+        accelerateRatio = 15;
     } else {
         accelerateRatio = 10;
     }
@@ -641,24 +696,25 @@ void foresight() {
 // 4 -- roundabout
 void passParameter() {
     flagCameraElement = 0;
-    if (flagEnterOutbound != 0) {
-        flagCameraElement = 3;
-    }
     if (flagEnterStartLine != 0) {
         flagCameraElement = 3;
     }
-    if (exitCrossroadDelay != 0) {
-        //flagCameraElement = 3;
+    if (abs(flagEnterRoundabout) == 2) {
+        flagCameraElement = 4;
     }
     if (flagEnterThreeWay == 2) {
         flagCameraElement = 1;
     }
+    if (flagEnterOutbound == 2) {
+        flagCameraElement = 3;
+    }
+
 }
 
 void detectCrossroad() {
     if (flagEnterCrossroad == 1) {
         if (exitCrossroadDelay == 0) {
-            exitCrossroadDelay = 50;
+            exitCrossroadDelay = 20;
         } else if (exitCrossroadDelay == 1) {
             exitCrossroadDelay = 0;
             flagEnterCrossroad = 0;
@@ -671,9 +727,6 @@ void detectCrossroad() {
     crossroadMissNumLeft = 0;
     crossroadMissNumRight = 0;
     flagEnterCrossroad = 0;
-    if (flagEnterRoundabout!=0) {
-        return;
-    }
 
     for (iterRow = detectCrossroadStartRow; iterRow > detectCrossroadEndRow; --iterRow) {
         if (!flagDetectLeft[iterRow]) {
@@ -693,6 +746,14 @@ void adaptCrossroad() {
         laneLocationLeft[iterRow] = max(laneLocationLeft[iterRow], imgCol/2-laneWidth[iterRow]/4);
         laneLocationRight[iterRow] = min(laneLocationRight[iterRow], imgCol/2+laneWidth[iterRow]/4);
     }
+    recomputeLaneCenter(slopeRowStart, slopeRowEnd);
+}
+
+void markSlopeStartCenter() {
+    // add a strightline to help compute lane slope
+    for (iterRow=imgRow-1; iterRow > slopeRowStart-2; --iterRow) {
+        laneCenter[iterRow] = imgCol / 2 - globalCenterBias;
+    }
 }
 
 void laneAnalyze(Mat outMat){
@@ -703,9 +764,14 @@ void laneAnalyze(Mat outMat){
     detectStartLine(outMat);
     detectOutOfBounds(outMat);
 
-    // if (flagEnterRoundabout) {
-    //  adaptRoundaboutLane(outMat);
-    // }
+    // threeway mode does not need full camera error
+    if (flagEnterThreeWay) {
+        // ..........................
+
+        markSlopeStartCenter();
+        passParameter();
+        return;
+    }
 
     for (iterRow = imgRow-1; iterRow != 255; --iterRow){
         if (abs(flagEnterRoundabout) == 2) {
@@ -719,40 +785,30 @@ void laneAnalyze(Mat outMat){
     laneCenterPrevious = laneCenter[45];
 
     countJitter();
+    //foresight();
 
     // detectSBend();
     if (!flagEnterRoundabout) {
-        detectThreeWayRoad(outMat);
+//        detectThreeWayRoad(outMat);
     }
-    detectCrossroad();
-    if (flagEnterCrossroad) {
+
+    if (!flagEnterRoundabout && !flagEnterThreeWay) {
+        detectCrossroad();
+    }
+    if (flagEnterCrossroad && !flagEnterRoundabout && !flagEnterThreeWay) {
         adaptCrossroad();
     }
 
     if (!flagEnterCrossroad) {
-        detectRoundabout();
+        detectRoundabout(outMat);
     }
     detectSharpCurve();
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
         adaptSharpCurve();
     }
 
-    // add a strightline to help compute lane slope
-    for (iterRow=imgRow-1; iterRow > slopeRowStart-2; --iterRow) {
-        laneCenter[iterRow] = imgCol / 2 - glabalCenterShift;
-    }
-
+    markSlopeStartCenter();
     passParameter();
-
-    // for (iterRow = imgRow - 1; iterRow < 255; --iterRow) {
-    //  //("rowCenter %d: %d\n", iterRow, laneCenter[iterRow]);
-    // }
-    // for (iterRow = imgRow - 1; iterRow < 255; --iterRow) {
-    //  //("laneLocLeft %d: %d\n", iterRow, laneLocationLeft[iterRow]);
-    // }
-    // for (iterRow = imgRow - 1; iterRow < 255; --iterRow) {
-    //  //("laneLocRight %d: %d\n", iterRow, laneLocationRight[iterRow]);
-    // }
 
     //("flagEnterRoundabout: %d\n", flagEnterRoundabout);
     //("flagEnterThreeWay: %d\n", flagEnterThreeWay);
@@ -765,7 +821,7 @@ void laneAnalyze(Mat outMat){
     //("outboundAreaBenchmark: %d\n", outboundAreaBenchmark);
     //("\n");
 
-    getLaneWidth();
+    // getLaneWidth();
 }
 
 void regression() {

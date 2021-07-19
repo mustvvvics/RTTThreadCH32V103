@@ -61,7 +61,7 @@ void transfetFunction(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"Turnn_D=%04d ",(int16)(yaw_pid.Kd*100));
     }
     else if ((16 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"GroyFg=%05d",roundFinishFlag);
+        rt_sprintf(targetBuff,"GroyFg=%05d",roundIslandBegin);
     }
     else if ((17 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"ThreeWay        ");
@@ -107,11 +107,11 @@ void assignValue(void){
             case 10:yaw_w_pid.Kp = yaw_w_pid.Kp + 0.01 * signData;break;
             case 11:yaw_w_pid.Ki = yaw_w_pid.Ki + 0.01 * signData;break;
             case 12:yaw_w_pid.Kd = yaw_w_pid.Kd + 0.01 * signData;break;
-            case 13:yaw_pid.Kp = yaw_pid.Kp + 0.01 * signData;break;
+            case 13:yaw_pid.Kp = yaw_pid.Kp + 0.1 * signData;break;
             case 14:yaw_pid.Ki = yaw_pid.Ki + 0.01 * signData;break;
             case 15:yaw_pid.Kd = yaw_pid.Kd + 0.01 * signData;break;
             case 16:
-                roundFinishFlag = roundFinishFlag + 1 * signData;break;
+                roundIslandBegin = roundIslandBegin + 1 * signData;break;
             case 17:
                 if (key_data == 1) {pwm_duty(PWM1_CH1_A8, 990);}
                 else if (key_data == 4){pwm_duty(PWM1_CH1_A8, 670);};break;
@@ -190,19 +190,20 @@ void display_entry(void *parameter)
     }
 }
 
+rt_thread_t tidDisplay;
 void display_init(void)
 {
-    rt_thread_t tid1;
+//    rt_thread_t tidDisplay;
 
     //初始化屏幕
     ips114_init();
     
     //创建显示线程 优先级设置为5
-    tid1 = rt_thread_create("display", display_entry, RT_NULL, 1024, 5, 50);
+    tidDisplay = rt_thread_create("display", display_entry, RT_NULL, 1024, 5, 50);
     
     //启动显示线程
-    if(RT_NULL != tid1)
+    if(RT_NULL != tidDisplay)
     {
-        rt_thread_startup(tid1);
+        rt_thread_startup(tidDisplay);
     }
 }

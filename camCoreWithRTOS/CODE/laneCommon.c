@@ -136,6 +136,7 @@ int32 outboundAreaThres = 13000;
 uint8 flagEnterOutbound = 0;
 uint8 exitOutboundDelay = 0;
 uint8 confirmOutboundDelay = 0;
+uint8 exitRoundaboutStraightLaneNum = 0;
 
 uint8 accelerateRatio = 10;
 uint8 flagCameraElement = 0;
@@ -157,4 +158,6 @@ uint8 enterThreewayDelay = 0;
 uint8 detectThreewayFeatureNum = 0;
 uint8 detectThreewayFeatureMaxNum = 0;
 
-int8 glabalCenterShift = 7 ;
+int8 globalCenterBias = 5;
+
+uint8 enterRoundaboutDelay;

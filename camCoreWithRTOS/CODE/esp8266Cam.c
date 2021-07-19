@@ -66,50 +66,50 @@ void Tcp_Decode(void)
     ESP8266_Clear();
 }
 
-const char* message0 = ",";
-const char* message1 = "\n";
-void sendMessage(void) {
-    uint16 ii;
-    char txtA[6],txtB[6],txtC[3],txtD[40];
-    uart_putstr(UART_1,"#0995");                    //帧头 实际测试得出
-
-    for (ii = 0; ii < imgRow; ++ii) {
-        rt_sprintf(txtA,"%04d ",laneLocationLeft[ii]);//5
-        uart_putstr(UART_1,txtA);
-    }
-    uart_putstr(UART_1,message0);//1
-
-    for (ii = 0; ii < imgRow; ++ii) {
-        rt_sprintf(txtA,"%04d ",laneLocationRight[ii]);//5
-        uart_putstr(UART_1,txtA);
-    }
-    uart_putstr(UART_1,message0);//1
-
-    for (ii = 0; ii < imgRow; ++ii) {
-        rt_sprintf(txtB,"%04d ",laneCenter[ii]);//5
-        uart_putstr(UART_1,txtB);
-    }
-    uart_putstr(UART_1,message0);//1
-
-    for (ii = 0; ii < imgRow; ++ii) {
-        rt_sprintf(txtC,"%01d ",flagDetectLeft[ii]);//3
-        uart_putstr(UART_1,txtC);
-    }
-    uart_putstr(UART_1,message0);//1
-
-    for (ii = 0; ii < imgRow; ++ii) {
-        rt_sprintf(txtC,"%01d ",flagDetectRight[ii]);//3
-        uart_putstr(UART_1,txtC);
-    }
-    uart_putstr(UART_1,message0);//1
-//    rt_thread_mdelay(50);//new delay
-
-    rt_sprintf(txtD,"%05d %03d %02d %02d %04d %04d %06d %06d",cameraError, sharpCurveRow,
-            flagEnterRoundabout, flagEnterThreeWay, laneJitterLeft, laneJitterRight,
-            areaDetectRoundaboutLeft, areaDetectRoundaboutRight);   //相关变量
-    uart_putstr(UART_1,txtD);   //1
-    uart_putstr(UART_1,message1);//1
-}
+//const char* message0 = ",";
+//const char* message1 = "\n";
+//void sendMessage(void) {
+//    uint16 ii;
+//    char txtA[6],txtB[6],txtC[3],txtD[40];
+//    uart_putstr(UART_1,"#0995");                    //帧头 实际测试得出
+//
+//    for (ii = 0; ii < imgRow; ++ii) {
+//        rt_sprintf(txtA,"%04d ",laneLocationLeft[ii]);//5
+//        uart_putstr(UART_1,txtA);
+//    }
+//    uart_putstr(UART_1,message0);//1
+//
+//    for (ii = 0; ii < imgRow; ++ii) {
+//        rt_sprintf(txtA,"%04d ",laneLocationRight[ii]);//5
+//        uart_putstr(UART_1,txtA);
+//    }
+//    uart_putstr(UART_1,message0);//1
+//
+//    for (ii = 0; ii < imgRow; ++ii) {
+//        rt_sprintf(txtB,"%04d ",laneCenter[ii]);//5
+//        uart_putstr(UART_1,txtB);
+//    }
+//    uart_putstr(UART_1,message0);//1
+//
+//    for (ii = 0; ii < imgRow; ++ii) {
+//        rt_sprintf(txtC,"%01d ",flagDetectLeft[ii]);//3
+//        uart_putstr(UART_1,txtC);
+//    }
+//    uart_putstr(UART_1,message0);//1
+//
+//    for (ii = 0; ii < imgRow; ++ii) {
+//        rt_sprintf(txtC,"%01d ",flagDetectRight[ii]);//3
+//        uart_putstr(UART_1,txtC);
+//    }
+//    uart_putstr(UART_1,message0);//1
+////    rt_thread_mdelay(50);//new delay
+//
+//    rt_sprintf(txtD,"%05d %03d %02d %02d %04d %04d %06d %06d",cameraError, sharpCurveRow,
+//            flagEnterRoundabout, flagEnterThreeWay, laneJitterLeft, laneJitterRight,
+//            areaDetectRoundaboutLeft, areaDetectRoundaboutRight);   //相关变量
+//    uart_putstr(UART_1,txtD);   //1
+//    uart_putstr(UART_1,message1);//1
+//}
 
 void esp8266Entry(void *parameter)
 {
@@ -146,3 +146,77 @@ void esp8266Init(void)
     }
 }
 
+const char* message0 = ",";
+const char* message1 = "\n";
+
+void sendMessage(void) {                //发送数据曲线进行分析
+    char txtA[32];
+    rt_sprintf(txtA,"exitDe:%03d",(int16)(exitRoundaboutDelay) );
+    uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+    rt_sprintf(txtA,"enteDe:%04d",(int16)(enterRoundaboutDelay) );
+    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+    rt_sprintf(txtA,"flagEnt:%01d",(int16)(flagEnterRoundabout) );
+    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+    rt_sprintf(txtA,"gyro:%0d",(int16)(gyroRoundFinishFlag) );
+    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+    uart_putstr(UART_1,message1);
+
+
+
+//    if (pidModel == 2) { //速度环整定
+////        rt_sprintf(txtA,"%04d",(int16)(leftFrontADRC ) );
+//        rt_sprintf(txtA,"%04d",(int16)(Left_front) );
+//        uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+////        rt_sprintf(txtA,"%04d",(int16)( leftFrontADRC + PID_Speed(Left_front,-encoder_data[3],&motor1_pid) ));
+//        rt_sprintf(txtA,"%04d",(int16)(-encoder_data[3]) );
+//        uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+//
+////        rt_sprintf(txtA,"%04d",(int16)( rightFrontADRC) );
+//        rt_sprintf(txtA,"%04d",(int16)(Right_front) );
+//        uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+////        rt_sprintf(txtA,"%04d",(int16)( rightFrontADRC + PID_Speed(Right_front,-encoder_data[2],&motor2_pid) ));
+//        rt_sprintf(txtA,"%04d",(int16)(-encoder_data[2]) );
+//        uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+//
+////        rt_sprintf(txtA,"%04d",(int16)( rightRearADRC) );
+//        rt_sprintf(txtA,"%04d",(int16)(Right_rear) );
+//        uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+////        rt_sprintf(txtA,"%04d",(int16)( rightRearADRC + PID_Speed(Right_rear,-encoder_data[0],&motor3_pid) ));
+//        rt_sprintf(txtA,"%04d",(int16)(-encoder_data[0]) );
+//        uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+//
+//
+////        rt_sprintf(txtA,"%04d",(int16)( leftRearADRC) );
+//        rt_sprintf(txtA,"%04d",(int16)(Left_rear) );
+//        uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+//        rt_sprintf(txtA,"%04d",(int16)(-encoder_data[1]) );
+////        rt_sprintf(txtA,"%04d",(int16)( leftRearADRC + PID_Speed(Left_rear,-encoder_data[1],&motor4_pid) ));
+//        uart_putstr(UART_1,txtA);
+//
+//        uart_putstr(UART_1,message1);
+//    }
+//    else if (pidModel == 3) { //角度环整定
+//        rt_sprintf(txtA,"%04d",manual_z);uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+////        rt_sprintf(txtA,"%04d",(int16)PID_Angle(manual_z,g_fGyroAngleSpeed_z,&yaw_w_pid));
+//        rt_sprintf(txtA,"%04d",(int16)g_fGyroAngleSpeed_z);
+//
+//        uart_putstr(UART_1,txtA);
+//
+//        uart_putstr(UART_1,message1);
+//    }
+//    else if (pidModel == 4){ //转向环整定
+//        rt_sprintf(txtA,"%04d",0);uart_putstr(UART_2,txtA);uart_putstr(UART_2,message0);
+//        rt_sprintf(txtA,"%04d",(int16)PID_Loc(0,-position_front,&yaw_pid));uart_putstr(UART_2,txtA);
+//
+//        uart_putstr(UART_2,message1);
+//    }
+//    else if (pidModel == 1){ //开环计算
+//        rt_sprintf(txtA,"%04d",-encoder_data[3]);uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+//        rt_sprintf(txtA,"%04d",-encoder_data[2]);uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+//        rt_sprintf(txtA,"%04d",-encoder_data[0]);uart_putstr(UART_1,txtA); uart_putstr(UART_1,message0);
+//        rt_sprintf(txtA,"%04d",-encoder_data[1]);uart_putstr(UART_1,txtA);
+//        uart_putstr(UART_1,message1);
+//
+//    }
+
+}

@@ -28,5 +28,6 @@ void ThreeWayAnalyze(void);
 void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);
 void roundIslandAnalyze(void);
+void send_to_cam(void);
 
 #endif /* CODE_COMMUNICATION_H_ */

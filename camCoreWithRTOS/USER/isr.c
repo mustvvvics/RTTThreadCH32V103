@@ -329,7 +329,7 @@ void USART3_IRQHandler(void)
             num = 0;
             gyroData_analysis(Gyro_buff);
         }
-        else if (num > 4 ) {//防止数组越界
+        else if (num > 3 ) {//防止数组越界
             num = 0;
         }
     }

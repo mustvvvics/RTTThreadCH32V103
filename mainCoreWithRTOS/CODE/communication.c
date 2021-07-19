@@ -47,7 +47,7 @@ void data_analysis(uint8 *line)
 
     switch (elementFlag) {
         case 0://无元素
-
+            roundIslandBegin = 0;
             break;
         case 1://三叉
 //            ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
@@ -61,8 +61,6 @@ void data_analysis(uint8 *line)
             break;
         case 4:
             roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
-            break;
-        default:
             break;
     }
 
@@ -105,13 +103,19 @@ void ThreeWayAnalyze(void){
         pwm_duty(PWM1_CH1_A8, 670);
     }
 }
-/*
- * 环岛陀螺仪积分
- */
-void roundIslandAnalyze(void){
-    if (roundIslandBegin == 1) {
-        total_z += (int16)g_fGyroAngleSpeed_z;
-    }
+
+uint8 Gyro_buff[4];
+
+void send_to_cam(void)
+{
+    //发送陀螺仪数据
+    Gyro_buff[0] = 0xD8;                            //帧头
+
+    Gyro_buff[1] = 0xB0;                            //功能字
+    Gyro_buff[2] = roundFinishFlag;                 //发送数据
+
+    Gyro_buff[3] = 0xEE;                            //帧尾
+    uart_putbuff(UART_3, Gyro_buff, 4);             //通过串口3将数据发送出去。
 }
 
 //            if(count_en == 1)
@@ -127,3 +131,30 @@ void roundIslandAnalyze(void){
 //                //dx=0;dy=0;dz=0;dist=0;total_z=0;count_en=0;
 //            }//清空并关闭里程计
 
+/*
+ * 环岛陀螺仪积分
+ */
+uint8 roundIslandBeginPre = 0;
+void roundIslandAnalyze(void){
+
+    if (roundIslandBeginPre == 0 && roundIslandBegin == 1) {
+        total_z = g_fGyroAngleSpeed_z;
+        roundIslandBeginPre = 1;
+    }
+    else if (roundIslandBeginPre == 1 && roundIslandBegin == 0) {
+        roundIslandBeginPre = 0;
+    }
+    else if (roundIslandBeginPre == 1 && roundIslandBegin == 1){
+        total_z += g_fGyroAngleSpeed_z;
+        if (total_z > 84000 || total_z < -84000) {
+            roundIslandBegin = 0;
+            roundFinishFlag = 1;
+            total_z = 0;
+            send_to_cam();
+        }
+
+    }
+    else {
+        return;
+    }
+}

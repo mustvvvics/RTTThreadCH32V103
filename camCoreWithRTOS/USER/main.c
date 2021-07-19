@@ -58,7 +58,7 @@ int main(void)
             sendMessage();
             CameraShow_flag = 0;
         }
-
+        sendMessage();
 
     }
 }
