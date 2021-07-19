@@ -32,9 +32,6 @@
 extern int32 laneLocationLeft[imgRow];
 extern int32 laneLocationRight[imgRow];
 
-// lane center
-#define laneCenterStartBias 4
-
 extern int32 laneCenter[imgRow];
 extern int32 laneCenterPrevious;
 
@@ -56,6 +53,7 @@ extern int32 areaDetectRoundaboutLeft;
 extern int32 areaDetectRoundaboutRight;
 extern int32 areaDetectRoundaboutThres;
 extern uint16 exitRoundaboutDelay;
+extern uint8 enterRoundaboutDelay;
 
 #define rangeCountJitter    20
 
@@ -68,34 +66,19 @@ extern int16 jitterGlobal;
 
 #define laneFilterStart 5
 
-/* not activated
-ushort jitterBendRight = 0;
-ushort jitterBendLeft = 0;
-*/
-
 // predefined lane half width
 extern int32 laneWidth[imgRow];
 
 // sharp curve
 extern uint8 sharpCurveRow;
-#define rangeSharpCurveRow      35
+extern uint8 rangeSharpCurveRow;
 
 // working temp
 extern uint8 iterRow, iterCol;
 extern uint8 iterRowSub, iterColSub;
 
-// parameter
-
-/* not activated
-#define rangeLittleSBand    40
-*/
-
 extern int32 slope;
 extern uint8 slopeRowStart, slopeRowEnd;
-extern uint8 specialCaseStart;
-
-#define rangeComputeSlopeFar    30
-#define rangeComputeSlopeNear   49
 
 extern int32 cameraError;
 extern int32 cameraErrorPrevious;
@@ -139,7 +122,6 @@ extern uint8 missCounterRight;
 extern uint8 missCounterBoth;
 
 extern int32 sharpCurveStatus;
-
 extern int16 sharpCurveJitterThres;
 
 extern uint8 detectUpperMissingLeft;
@@ -204,5 +186,4 @@ extern uint8 enterThreewayDelay;
 extern uint8 detectThreewayFeatureNum;
 extern uint8 detectThreewayFeatureMaxNum;
 extern int8 globalCenterBias;
-extern uint8 enterRoundaboutDelay;
 #endif

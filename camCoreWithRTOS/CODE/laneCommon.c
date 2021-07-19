@@ -24,6 +24,7 @@ float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
 uint8 roundaboutDetectionStartRow = 20;
 uint16 exitRoundaboutDelay = 0;
+uint8 enterRoundaboutDelay = 0;
 
 /* not activated
 ushort jitterBendRight = 0;
@@ -41,6 +42,7 @@ int32 laneWidth[imgRow] = {
 
 // sharp curve
 uint8 sharpCurveRow = 0;
+uint8 rangeSharpCurveRow = 35;
 
 // working temp
 uint8 iterRow, iterCol = 0;
@@ -55,7 +57,6 @@ uint8 location = 0;
 
 int32 slope = 0;
 uint8 slopeRowStart=48, slopeRowEnd=35;
-uint8 specialCaseStart = 0;
 
 int32 cameraError = 0;
 int32 cameraErrorPrevious = 0;
@@ -158,6 +159,4 @@ uint8 enterThreewayDelay = 0;
 uint8 detectThreewayFeatureNum = 0;
 uint8 detectThreewayFeatureMaxNum = 0;
 
-int8 globalCenterBias = 5;
-
-uint8 enterRoundaboutDelay;
+int8 globalCenterBias = -1;

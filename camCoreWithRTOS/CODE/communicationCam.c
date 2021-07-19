@@ -61,5 +61,5 @@ void process_data(void)                         //根据协议处理要向主机发送的数据
 
 void gyroData_analysis(uint8 *line)
 {
-    if(line[1] == 0xB0 && line[2])    gyroRoundFinishFlag = line[2];
+    if(line[0] == 0xD8 && line[1] == 0xB0)    gyroRoundFinishFlag = line[2];
 }
