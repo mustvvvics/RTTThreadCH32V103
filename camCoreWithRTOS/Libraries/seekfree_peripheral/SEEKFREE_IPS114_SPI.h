@@ -107,6 +107,7 @@ void ips114_clear(uint16 color);
 void ips114_drawpoint(uint16 x,uint16 y,uint16 color);
 void ips114_showchar(uint16 x,uint16 y,const int8 dat);
 void ips114_showstr(uint16 x,uint16 y,const int8 dat[]);
+void ips114_showstrGray(uint16 x,uint16 y,const int8 dat[]); //ÏÔÊ¾Í¼ÏñºË±êÌâ
 void ips114_showint8(uint16 x,uint16 y,int8 dat);
 void ips114_showuint8(uint16 x,uint16 y,uint8 dat);
 void ips114_showint16(uint16 x,uint16 y,int16 dat);

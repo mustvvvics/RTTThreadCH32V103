@@ -303,6 +303,26 @@ void ips114_showchar(uint16 x,uint16 y,const int8 dat)
 		}
 	}
 }
+void ips114_showGray(uint16 x,uint16 y,const int8 dat)
+{
+    uint8 i,j;
+    uint8 temp;
+
+    for(i=0; i<16; i++)
+    {
+        ips114_set_region(x,y+i,x+7,y+i);
+        temp = tft_ascii[dat-32][i];//减32因为是取模是从空格开始取得 空格在ascii中序号是32
+        for(j=0; j<8; j++)
+        {
+            if(temp&0x01)
+            {
+                ips114_writedata_16bit(WHITE);
+            }
+            else            ips114_writedata_16bit(BLACK);
+            temp>>=1;
+        }
+    }
+}
 
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      液晶显示字符串
@@ -323,6 +343,17 @@ void ips114_showstr(uint16 x,uint16 y,const int8 dat[])
 		ips114_showchar(x+8*j,y*16,dat[j]);
 		j++;
 	}
+}
+void ips114_showstrGray(uint16 x,uint16 y,const int8 dat[])
+{
+    uint16 j;
+
+    j = 0;
+    while(dat[j] != '\0')
+    {
+        ips114_showGray(x+8*j,y*16,dat[j]);
+        j++;
+    }
 }
 
 //-------------------------------------------------------------------------------------------------------------------

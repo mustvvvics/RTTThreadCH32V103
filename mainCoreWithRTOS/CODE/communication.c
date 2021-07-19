@@ -150,26 +150,28 @@ void roundIslandAnalyze(void){
 }
 
 int8 absInt8(int8 x){return x>0?x:-x;}
-/*
- * 在主核按键触后进行修改
- * 约有20个变量
- * parameterBit:数据位数           0:int8  ; 8: uint8  ; 16: int16 ;  32 int32
- * featuresWord:功能字               0xE1 0xE2 ...
- * 数据位数,功能字,  其后是传输的数据格式
- */
 
 uint8 parameterBuff[8];
 uint8 negativeNumber = 0;
 void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData_0,uint8 parameterData8,int16 parameterData16,int32 parameterData32){
-    //向图像核心发送相关数据
+    /* do:向图像核心发送相关数据
+     * in:主核按键触后进行修改  在 display.c 中使用  约有20个变量
+     * parameterBit:数据位数           0:int8  ; 8: uint8  ; 16: int16 ;  32 int32
+     * featuresWord:功能字               0xE1 0xE2 ...
+     *         sendParameterToCam(数据位数,功能字,int8,uint8,int16,int32);
+     *         sendParameterToCam(0,0xE1,-12,0,0,0);//发送  int8：-12
+     *         sendParameterToCam(8,0xE2,0,13,0,0);//发送 uint8：13
+     *         sendParameterToCam(16,0xE3,0,0,-14,0);//发送 int16：-14
+     *         sendParameterToCam(32,0xE4,0,0,0,-15);//发送 int32：-15
+     */
     if (parameterBit == 0) {
         if (parameterData_0 < 0) {negativeNumber = 1;}
         else {negativeNumber = 0;}
         parameterBuff[0] = 0xDE;                            //帧头
 
-        parameterBuff[1] = 0xA0;                            //功能字占位省开数组
-        parameterBuff[2] = 0xA0;                            //功能字占位省开数组
-        parameterBuff[3] = 0xA8;                            //功能字占位省开数组
+        parameterBuff[1] = 0xA0;                            //功能字占位
+        parameterBuff[2] = 0xA0;                            //功能字占位
+        parameterBuff[3] = 0xA8;                            //功能字占位
         parameterBuff[4] = featuresWord;                    //功能字
         parameterBuff[5] = negativeNumber;                  //int8 正负传递
 
@@ -181,10 +183,10 @@ void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData
     else if (parameterBit == 8) {
         parameterBuff[0] = 0xDE;                            //帧头
 
-        parameterBuff[1] = 0xA8;                            //功能字占位省开数组
-        parameterBuff[2] = 0xA0;                            //功能字占位省开数组
-        parameterBuff[3] = 0xA0;                            //功能字占位省开数组
-        parameterBuff[4] = 0xA0;                            //功能字占位省开数组
+        parameterBuff[1] = 0xA8;                            //功能字占位
+        parameterBuff[2] = 0xA0;                            //功能字占位
+        parameterBuff[3] = 0xA0;                            //功能字占位
+        parameterBuff[4] = 0xA0;                            //功能字占位
         parameterBuff[5] = featuresWord;                    //功能字
 
         parameterBuff[6] = parameterData8;                 //数据
@@ -195,9 +197,9 @@ void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData
     else if (parameterBit == 16) { //parameter>>8;parameter&0xFF
         parameterBuff[0] = 0xDE;                            //帧头
 
-        parameterBuff[1] = 0xA0;                            //功能字占位省开数组
-        parameterBuff[2] = 0xA1;                            //功能字占位省开数组
-        parameterBuff[3] = 0xA6;                            //功能字占位省开数组
+        parameterBuff[1] = 0xA0;                            //功能字占位
+        parameterBuff[2] = 0xA1;                            //功能字占位
+        parameterBuff[3] = 0xA6;                            //功能字占位
         parameterBuff[4] = featuresWord;                    //功能字
 
         parameterBuff[5] = (parameterData16>>8)&0xFF;       //数据高八位
@@ -209,7 +211,7 @@ void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData
     else if (parameterBit == 32) { ////Parameter>>8;Parameter>>16;Parameter>>24;Parameter&0xFF;
         parameterBuff[0] = 0xDE;                            //帧头
 
-        parameterBuff[1] = 0xA3;                            //功能字占位省开数组
+        parameterBuff[1] = 0xA3;                            //功能字占位
         parameterBuff[2] = featuresWord;                    //功能字
 
         parameterBuff[3] = (parameterData32>>24)&0xFF;       //数据

@@ -6,6 +6,9 @@ int8 menuY = 0;      //菜单上下
 uint8 parameterAdjustButton = 0;//左右参数调整响应
 uint8 confirmButton = 0;//确认按键
 uint32 servoDuty = 0;
+
+uint8 turnpage = 0;
+int16 parameterTest16 = 0;
 /*
 *Pass variable data on the first page
 */
@@ -69,6 +72,7 @@ void assignValueFirst(void){
     else {return;}
 }
 
+
 /*
 *Pass variable data on the second page
 */
@@ -77,7 +81,7 @@ void transfetFunctionSecond(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"Image Flipping ");//图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"Test16=%03d     ",parameterTest16);
     }
     else if ((5 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"                   ");
@@ -105,6 +109,7 @@ void transfetFunctionSecond(int8 targetRow,char *targetBuff){
 /*
 *Assign value to data on the second page
 */
+
 void assignValueSecond(void){
     int8 signData;
     if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
@@ -112,12 +117,23 @@ void assignValueSecond(void){
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
-            case 3:  break;
-            case 4:  signData = signData + 1;break;
+            case 3://图像核翻页
+                turnpage = turnpage + 1 * (uint8)signData;
+                if(turnpage < 0){turnpage = 0;}else if(turnpage > 1){turnpage = 1;}
+                sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
+            case 4:
+                parameterTest16 = parameterTest16 + 10 * signData;
+                sendParameterToCam(16,0xE2,0,0,parameterTest16,0);break;
             case 5:  break;
             case 6:  break;
             case 7:  break;
             default:break;
+            /*
+             * Eg;sendParameterToCam(0,0xE1,xxx,0,0,0);break;
+             *    sendParameterToCam(8,0xE1,0,xxx,0,0);break;
+             *    sendParameterToCam(16,0xE1,0,0,xxx,0);break;
+             *    sendParameterToCam(32,0xE1,0,0,0,xxx);break;
+             */
         }
     }
     else {return;}
@@ -142,7 +158,7 @@ void disaplayMenu(void){
     if (menuY < 0) {menuY = 0;} //限制选择范围
     else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
     if (menuX < 0) {menuX = 0;} //限制选择范围
-    else if (menuX > maxMenuPage) {menuY = maxMenuPage;} //
+    else if (menuX > maxMenuPage) {menuX = maxMenuPage;} //
 /***********************参数调整*****************************************/
     if (menuX == 0) {
         assignValueFirst(); //更改数值
