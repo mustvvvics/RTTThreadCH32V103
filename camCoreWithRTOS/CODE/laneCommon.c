@@ -56,7 +56,8 @@ uint8 location = 0;
 */
 
 int32 slope = 0;
-uint8 slopeRowStart=48, slopeRowEnd=35;
+//uint8 slopeRowStart=48, slopeRowEnd=35;
+uint8 slopeRowStart=38, slopeRowEnd=30;
 
 int32 cameraError = 0;
 int32 cameraErrorPrevious = 0;

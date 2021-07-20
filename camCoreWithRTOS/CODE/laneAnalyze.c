@@ -359,7 +359,7 @@ void detectRoundabout(Mat outMat) {
         if (flagEnterRoundabout == 1 || flagEnterRoundabout == -1) {
             switch (flagEnterRoundabout) {
                 case 1:
-                    if (countJitterBreakRowRight < 25) {
+                    if (countJitterBreakRowRight < 36) {
                         flagEnterRoundabout = 2;
                         enterRoundaboutDelay = 100;
                         gyroRoundFinishFlag = 0;
@@ -367,7 +367,7 @@ void detectRoundabout(Mat outMat) {
                     }
                     break;
                 case -1:
-                    if (countJitterBreakRowLeft < 30) {
+                    if (countJitterBreakRowLeft < 36) {
                         flagEnterRoundabout = -2;
                         exitRoundaboutDelay = 0;
                         enterRoundaboutDelay = 100;
@@ -557,8 +557,10 @@ void detectThreeWayRoad(Mat outMat) {
     }
 
     if (detectThreewayFeatureNum > detectThreewayFeatureNumThres) {
-        flagEnterThreeWay = 1;
+//        flagEnterThreeWay = 1;
         accelerateRatio = 5;
+    } else {
+        accelerateRatio = 10;
     }
 }
 
@@ -807,7 +809,7 @@ void laneAnalyze(Mat outMat){
     laneCenterPrevious = laneCenter[45];
 
     countJitter();
-    foresight();
+//    foresight();
 
     // detectSBend();
     if (!flagEnterRoundabout) {

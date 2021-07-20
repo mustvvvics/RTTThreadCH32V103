@@ -69,7 +69,6 @@
 #include "SEEKFREE_IPS114_SPI.h"
 #include "SEEKFREE_PRINTF.h"
 
-
 //用户头文件
 #include "communication.h"
 #include "pid.h"
@@ -82,5 +81,6 @@
 #include "motor.h"
 #include "esp8266.h"
 #include "adc.h"
+#include "mainFlash.h"
 
 #endif

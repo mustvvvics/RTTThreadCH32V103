@@ -49,7 +49,7 @@ void assignValueFirst(void){
     if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
     if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
 
-    if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {car_flag = 1;}
+    if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {car_flag = 1;}//sendParameterToCam(8,0xE2,0,car_go,0,0);break;
     else if(confirmButton == 0 && (menuY + 3) == 4 && car_flag == 1){car_flag = 0;}
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
@@ -129,10 +129,10 @@ void assignValueSecond(void){
             case 7:  break;
             default:break;
             /*
-             * Eg;sendParameterToCam(0,0xE1,xxx,0,0,0);break;
-             *    sendParameterToCam(8,0xE1,0,xxx,0,0);break;
-             *    sendParameterToCam(16,0xE1,0,0,xxx,0);break;
-             *    sendParameterToCam(32,0xE1,0,0,0,xxx);break;
+             * Eg;sendParameterToCam(0,0xE1,parameter,0,0,0);break;
+             *    sendParameterToCam(8,0xE1,0,parameter,0,0);break;
+             *    sendParameterToCam(16,0xE1,0,0,parameter,0);break;
+             *    sendParameterToCam(32,0xE1,0,0,0,parameter);break;
              */
         }
     }
