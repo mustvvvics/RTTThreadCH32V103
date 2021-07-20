@@ -60,7 +60,7 @@ void PID_Init(void)
     motor4_pid.Kd = S_D;
 
     yaw_w_pid.Kp = yaw_w_P;
-    yaw_w_pid.Ki = yaw_w_I;
+    //yaw_w_pid.Ki = yaw_w_I;
     yaw_w_pid.Kd = yaw_w_D;
 
     yaw_pid.Kp=yaw_P;
@@ -122,8 +122,8 @@ float PID_Loc(float SetValue, float ActualValue, PID_LocTypeDef *PID)
 //  PID->LocSum=(PID->LocSum<-1000)?-1000:
 //              ((PID->LocSum>1000)?1000:PID->LocSum);
 
-    PIDLoc = PID->Kp * PID->Ek + (PID->Ki * PID->LocSum) + PID->Kd * (PID->Ek1 - PID->Ek);
-
+    PIDLoc = PID->Kp * PID->Ek  + PID->Kd * (PID->Ek1 - PID->Ek);
+    //+ (PID->Ki * PID->LocSum)
     PID->Ek1 = PID->Ek; return PIDLoc;
 }
 

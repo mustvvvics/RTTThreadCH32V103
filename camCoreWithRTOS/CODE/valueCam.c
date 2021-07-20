@@ -17,3 +17,4 @@ rt_tick_t timet2 = 0;
 rt_tick_t timeControl = 0;
 
 uint8 turnPage = 0;
+uint8 clearCamFlags = 0;

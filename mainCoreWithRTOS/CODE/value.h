@@ -5,7 +5,7 @@
 
 extern int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 extern int16 position_front;
-
+extern int16 position_front_last,position_front_delta;//上一次偏差，偏差的变化率
 extern uint8 car_flag;
 extern uint8 carFlagPre;
 
@@ -41,12 +41,6 @@ extern int16 Left_front;
 extern int16 Right_front;
 extern int16 Right_rear;
 
-extern float leftRearADRC;
-extern float leftFrontADRC;
-extern float rightFrontADRC;
-extern float rightRearADRC;
-
-
 extern int32 total_z;
 
 extern uint8 esp8266_buf[64];
@@ -73,5 +67,6 @@ extern rt_tick_t timet2;
 extern rt_tick_t timeControl;
 
 extern int16 motor1_pwm,motor2_pwm,motor3_pwm,motor4_pwm;
-extern int16 real_x,real_y;
+extern int fuzzy_txt[10];
+
 #endif /* CODE_VALUE_H_ */

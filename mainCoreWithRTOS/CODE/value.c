@@ -2,7 +2,7 @@
 
 int16 g_fGravityAngle_z,g_fGyroAngleSpeed_z;
 int16 position_front; //偏差
-
+int16 position_front_last,position_front_delta;//上一次偏差，偏差的变化率
 //期望直线速度和角速度
 int16 expected_omega=0;
 int32 expected_y=0;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
@@ -18,7 +18,7 @@ float S_D=45;//28.8;//5.8;//45;
 
 //角速度环参数
 float yaw_w_P=0.03;//0.83;//0.67;
-float yaw_w_I=0.002;//0.039;//0.1;//0.06;//  0.02
+float yaw_w_I=0;//0.002;//0.039;//0.1;//0.06;//  0.02
 float yaw_w_D=0.002;//6.389;//3.7;////0.26;//0.15   0
 
 //待整定 转向环参数
@@ -31,7 +31,7 @@ uint8 car_flag=0;
 uint8 carFlagPre = 0;
 
 //电机PWM //限幅
-uint16 limit_pwm=8000;
+uint16 limit_pwm=5000;
 
 //速度环PID //参数
 PID motor1_pid;
@@ -43,17 +43,11 @@ PID motor4_pid;
 PID yaw_w_pid;
 PID_LocTypeDef yaw_pid;
 
-
 //四个轮子的目标速度值
 int16 Left_rear;
 int16 Left_front;
 int16 Right_front;
 int16 Right_rear;
-
-float leftRearADRC;
-float leftFrontADRC;
-float rightFrontADRC;
-float rightRearADRC;
 
 //陀螺仪角速率积分
 int32 total_z=0;
@@ -85,5 +79,4 @@ rt_tick_t timet2 = 0;
 rt_tick_t timeControl = 0;
 
 int16 motor1_pwm,motor2_pwm,motor3_pwm,motor4_pwm;
-int16 real_x,real_y;
-
+int fuzzy_txt[10];

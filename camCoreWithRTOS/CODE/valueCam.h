@@ -23,6 +23,6 @@ extern rt_tick_t timet1;           //计算运行时间
 extern rt_tick_t timet2;
 extern rt_tick_t timeControl;
 extern uint8 turnPage;
-
+extern uint8 clearCamFlags;
 
 #endif /* CODE_VALUECAM_H_ */

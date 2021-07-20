@@ -58,6 +58,7 @@ int main(void)
             sendMessage();//发送赛道信息
             CameraShow_flag = 0;
         }
+
 //        sendMessageData();//发送相关参数
 
     }

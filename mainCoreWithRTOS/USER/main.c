@@ -31,7 +31,7 @@ int main(void)
 
     esp8266Init();
     PID_Init();
-//    timer_pit_init();
+//  timer_pit_init();
 
     timer_pitAdc_init();//初始化ADC电压采集
 
@@ -45,6 +45,19 @@ int main(void)
     nvic_init(EXTI2_IRQn, 1, 1, ENABLE);                    //EXTI2  //优先级配置  抢占优先级1 次优先级1
     while(1)
     {
+        rt_thread_mdelay(20);//new delay 必须保留
+//      ThreeWayAnalyze();  //三叉解析
+//        rt_sprintf(txtTest,"%04d",g_fGyroAngleSpeed_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
+//        rt_sprintf(txtTest,"%04d",roundIslandBegin);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
+//        rt_sprintf(txtTest,"%04d",total_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,"\n");
+    }
+}
+
+/*******************************************************************************/
+
+
+//        sendMessage(); //发送曲线 三叉解析
+//        getAdc();
 //        if (car_flag == 1) {
 //            rt_thread_delete(tidDisplay);
 ////            rt_timer_stop(timerAdc);
@@ -54,19 +67,6 @@ int main(void)
 //            rt_thread_startup(tidDisplay);
 ////            rt_timer_start(timerAdc);
 //        }
-        rt_thread_mdelay(4);//new delay 必须保留
-//        ThreeWayAnalyze();  //三叉解析
-
-
 //
-//        rt_sprintf(txtTest,"%04d",g_fGyroAngleSpeed_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
-//        rt_sprintf(txtTest,"%04d",roundIslandBegin);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
-//        rt_sprintf(txtTest,"%04d",total_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,"\n");
-
-/*******************************************************************************/
 
 
-//        sendMessage(); //发送曲线 三叉解析
-//        getAdc();
-    }
-}

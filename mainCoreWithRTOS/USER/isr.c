@@ -95,6 +95,9 @@ void EXTI2_IRQHandler(void)
             uart_flag = E_START;
             encoder_get();                                  //主核编码器
         }
+        //计算偏差变化
+        position_front_delta = position_front - position_front_last;
+        position_front_last = -position_front;
         /*******************************************************//*******************************************************/
         motor_conversion();
         roundIslandAnalyze();//环岛通讯flag

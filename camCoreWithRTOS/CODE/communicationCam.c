@@ -93,6 +93,12 @@ void analysisFixParameter(uint8 *line){
             switch (line[5]) {
 //Eg:                case 0xE2:parameterTest8 = line[6];break;
                 case 0xE1:turnPage = line[6];break;
+                case 0xE2:
+                    clearCamFlags = line[6];
+                    if (clearCamFlags == 1) {
+                        flagEnterRoundabout=0;flagEnterThreeWay=0;gyroRoundFinishFlag = 0;
+                        clearCamFlags = 0;}
+                    break;
                 default:
                     break;
             }
@@ -100,7 +106,7 @@ void analysisFixParameter(uint8 *line){
         else if (line[2] == 0xA1 && line[3] == 0xA6) { //int16
             switch (line[4]) {
 //Eg:                case 0xE3:parameterTest16 = ((int16)line[5] << 8) | line[6];break;
-                case 0xE2: parameterTest16 = ((int16)line[5] << 8) | line[6];break;
+                case 0xE3: parameterTest16 = ((int16)line[5] << 8) | line[6];break;
                 default:
                     break;
             }

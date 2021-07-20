@@ -5,8 +5,6 @@ void timer1_pitAdc_entry(void *parameter)
 {
     getAdc();
 }
-
-
 rt_timer_t timerAdc;
 void timer_pitAdc_init(void)
 {

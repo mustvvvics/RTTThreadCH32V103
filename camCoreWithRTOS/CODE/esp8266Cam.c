@@ -151,15 +151,17 @@ void esp8266Init(void)
 
 void sendMessageData(void) {                //发送数据曲线进行分析
     char txtA[32];
-    rt_sprintf(txtA,"ThreeFeaN:%d",detectThreewayFeatureNum );
-    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+//    rt_sprintf(txtA,"ThreeFeaN:%d",detectThreewayFeatureNum );
+//    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+//
+//    rt_sprintf(txtA,"flagEnt:%d",flagEnterRoundabout );
+//    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
+//
+//    rt_sprintf(txtA,"flagEntTH:%d",flagEnterThreeWay );
+//    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
 
-    rt_sprintf(txtA,"flagEnt:%d",flagEnterRoundabout );
-    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
-
-    rt_sprintf(txtA,"flagEntTH:%d",flagEnterThreeWay );
-    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
-
+    rt_sprintf(txtA,"out:%d",outboundAreaSum );
+    uart_putstr(UART_1,txtA);
     uart_putstr(UART_1,message1);
 
 

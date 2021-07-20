@@ -8,6 +8,7 @@ uint8 confirmButton = 0;//确认按键
 uint32 servoDuty = 0;
 
 uint8 turnpage = 0;
+uint8 clearCamFlags = 0;
 int16 parameterTest16 = 0;
 /*
 *Pass variable data on the first page
@@ -23,23 +24,20 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"Turnn_P=%04d  ",(int16)(yaw_pid.Kp*100));
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_I=%04d  ",(int16)(yaw_pid.Ki*100));
-    }
-    else if ((7 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"Turnn_D=%04d  ",(int16)(yaw_pid.Kd*100));
     }
+    else if ((7 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"ServoMotor       ");
+    }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor     ");
+        rt_sprintf(targetBuff,"Servo=%04d         ",servoDuty);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Servo=%04d        ",servoDuty);
-    }
-    else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"IslandBegin=%01d    ",roundIslandBegin);
     }
 
     else {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"                     ");
     }
 }
 /*
@@ -56,16 +54,16 @@ void assignValueFirst(void){
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
-            case 3:expected_y = expected_y + 10 * signData;break;
-            case 5:yaw_pid.Kp = yaw_pid.Kp + 0.1 * signData;break;
-            case 6:yaw_pid.Ki = yaw_pid.Ki + 0.01 * signData;break;
-            case 7:yaw_pid.Kd = yaw_pid.Kd + 0.01 * signData;break;
-            case 8:
+            case 3:expected_y = expected_y + 5 * signData;break;
+            case 5:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
+            case 6:yaw_pid.Kd = yaw_pid.Kd + 0.1 * signData;break;
+            case 7:
                 if (parameterAdjustButton == 1) {servoDuty = 990;pwm_duty(PWM1_CH1_A8, servoDuty);}
                 else if (parameterAdjustButton == 4){servoDuty = 670;pwm_duty(PWM1_CH1_A8, servoDuty);};break;
-            case 9:
+            case 8:
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
+            case 9:roundIslandBegin = roundIslandBegin + 1 * signData;break;
             default:break;
         }
     }
@@ -78,13 +76,13 @@ void assignValueFirst(void){
 */
 void transfetFunctionSecond(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"Image Flipping ");//图像核翻页
+        rt_sprintf(targetBuff,"Image Flipping   ");//图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Test16=%03d     ",parameterTest16);
+        rt_sprintf(targetBuff,"clearCamFlags    ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"Test16=%03d       ",parameterTest16);
     }
     else if ((6 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"                   ");
@@ -122,9 +120,11 @@ void assignValueSecond(void){
                 if(turnpage < 0){turnpage = 0;}else if(turnpage > 1){turnpage = 1;}
                 sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
             case 4:
+                clearCamFlags = 1;
+                sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);break;
+            case 5:
                 parameterTest16 = parameterTest16 + 10 * signData;
-                sendParameterToCam(16,0xE2,0,0,parameterTest16,0);break;
-            case 5:  break;
+                sendParameterToCam(16,0xE3,0,0,parameterTest16,0);break;
             case 6:  break;
             case 7:  break;
             default:break;

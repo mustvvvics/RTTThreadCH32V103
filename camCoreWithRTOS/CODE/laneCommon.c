@@ -133,7 +133,7 @@ uint8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
 int32 outboundAreaSum = 0;
-int32 outboundAreaThres = 9000;
+int32 outboundAreaThres = 13000;
 uint8 flagEnterOutbound = 0;
 uint8 exitOutboundDelay = 0;
 uint8 confirmOutboundDelay = 0;
@@ -151,7 +151,7 @@ uint8 crossroadMissNumLeft = 0;
 uint8 crossroadMissNumRight = 0;
 
 uint8 detectThreeWayRoadStartRow = 35;
-uint8 detectThreeWayRoadEndRow = 10;
+uint8 detectThreeWayRoadEndRow = 5;
 uint8 detectThreewayFeatureLeft = 0;
 uint8 detectThreewayFeatureRight = 0;
 uint16 exitThreewayDelay = 0;
@@ -161,4 +161,4 @@ uint8 detectThreewayFeatureMaxNum = 0;
 uint8 detectThreewayFeatureNumThres = 8;
 uint8 laneLocationThreewayRoad = 0;
 
-int8 globalCenterBias = -1;
+int8 globalCenterBias = -7;

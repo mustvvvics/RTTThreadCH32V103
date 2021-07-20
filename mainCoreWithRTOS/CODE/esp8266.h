@@ -17,6 +17,6 @@ void Tcp_Decode(void);
 void sendMessage(void);
 void esp8266Init(void);
 void Esp_IP_Get(uint8 data_temp);
-
+void sendFuzzyData(void);
 
 #endif /* CODE_ESP8266_H_ */

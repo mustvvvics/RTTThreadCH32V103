@@ -58,6 +58,7 @@ void data_analysis(uint8 *line)
             break;
         case 3: //刹车
             car_flag = 0;
+            sendFuzzyData();
             break;
         case 4:
             roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
