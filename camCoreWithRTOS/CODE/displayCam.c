@@ -26,7 +26,7 @@ void show_speed(void)
         ips114_showstrGray(0, 0, txt);
         rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
         ips114_showstr(0, 1, txt);
-        rt_sprintf(txt,"Test16  =%05d|RoudFiFg=%05d",parameterTest16,gyroRoundFinishFlag);
+        rt_sprintf(txt,"3xFeaRow=%05d|RoudFiFg=%05d",threewayFeatureRow,gyroRoundFinishFlag);
         ips114_showstr(0, 2, txt);
         rt_sprintf(txt,"flagStaL=%05d|flagOutB=%05d", flagEnterStartLine,flagEnterOutbound);
         ips114_showstr(0, 3, txt);
@@ -35,7 +35,9 @@ void show_speed(void)
         rt_sprintf(txt,"FgentRou=%05d|entThree=%05d", flagEnterRoundabout, flagEnterThreeWay);
         ips114_showstr(0, 5, txt);
     }
+    else if (turnPage == 2) {
 
+    }
     else{return;}
 }
 

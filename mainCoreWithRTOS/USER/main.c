@@ -19,8 +19,6 @@
 
 #include "headfile.h"
 
-
-
 char txtTest[32];
 int main(void)
 {
@@ -49,9 +47,7 @@ int main(void)
     {
         rt_thread_mdelay(20);//new delay 必须保留
 //      ThreeWayAnalyze();  //三叉解析
-//        rt_sprintf(txtTest,"%04d",g_fGyroAngleSpeed_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
-//        rt_sprintf(txtTest,"%04d",roundIslandBegin);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
-//        rt_sprintf(txtTest,"%04d",total_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,"\n");
+
     }
 }
 
@@ -70,5 +66,7 @@ int main(void)
 ////            rt_timer_start(timerAdc);
 //        }
 //
-
+//        rt_sprintf(txtTest,"%04d",g_fGyroAngleSpeed_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
+//        rt_sprintf(txtTest,"%04d",roundIslandBegin);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
+//        rt_sprintf(txtTest,"%04d",total_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,"\n");
 

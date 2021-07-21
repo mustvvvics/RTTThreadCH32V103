@@ -160,7 +160,8 @@ void sendMessageData(void) {                //发送数据曲线进行分析
 //    rt_sprintf(txtA,"flagEntTH:%d",flagEnterThreeWay );
 //    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
 
-    rt_sprintf(txtA,"out:%d",outboundAreaSum );
+//    rt_sprintf(txtA,"flIRo:%d, 3Xsum:% 2d, width:% 3d, ratio:%d",flagEnterRoundabout, detectThreewayFeatureNum, detectThreewayFeatureNearestRowWidth, (int16)(detectThreewayFeatureNearestRowRatio * 100));
+    rt_sprintf(txtA,"row: %d, wid: %d, L: %d, R: %d",threewayFeatureRow, threewayFeatureWidth, threewayFeatureJumpPointLeft, threewayFeatureJumpPointRight);
     uart_putstr(UART_1,txtA);
     uart_putstr(UART_1,message1);
 

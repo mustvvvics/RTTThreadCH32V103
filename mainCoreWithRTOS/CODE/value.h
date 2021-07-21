@@ -11,6 +11,7 @@ extern uint8 carFlagPre;
 
 extern int16 expected_omega;
 extern int32 expected_y;
+extern int16 speed_low;
 extern int16 manual_y;
 extern int16 manual_z;
 

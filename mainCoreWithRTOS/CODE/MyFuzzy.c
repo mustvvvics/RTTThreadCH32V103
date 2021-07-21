@@ -4,21 +4,41 @@
  *  Created on: Jul 20, 2021
  *      Author: 29275
  */
-#include "MyFuzzy.h"
-#include "value.h"
-/**********舵机打角相关变量***************************/
+#include "headfile.h"
+/**********Z轴差速相关变量***************************/
 /************************ 模糊运算引擎 ************************/
 #define PMAX  100
 #define PMIN -100
 #define DMAX  100
 #define DMIN -100
 #define FMAX  100       //语言值的满幅值
-int PFF[4] = { 0,6,14,28};//偏差数值
+int PFF[4] = {0,20,40,60};//0,6,14,28
 /*输入量D语言值特征点*/
-int DFF[4] = { 0,2,4,6};//偏差变化量
+int DFF[4] = {0,15,30,50};
 /*输出量U语言值特征点*/
-int UFF[7] = { 0,150,300,450,600,750,900};//差速输出范围
+int UFF[7] = {0,50,150,200,300,350,400};//差速输出范围
 
+//较强
+//int rule[7][7]={//误差变化率 -3,-2,-1, 0, 1, 2, 3                //   误差
+//                {-12,-12,-12,-12,-10,-10,-8,},                        //   -3      0
+//                {-10,-10,-10,-8,-8,-6,-2,},                        //   -2      1
+//                {-8,-8,-6,-2, 0, 2, 4,},                        //   -1      2
+//                {-8,-6,-2, 0, 2, 6, 8,},                        //    0      3
+//                {-4,-2, 0, 2, 6, 8, 8,},                        //    1      4
+//                { 2, 6, 8, 8, 10, 10, 10,},                        //    2      5
+//                { 8, 10, 10, 12, 12, 12, 12} };
+
+////进阶
+//int rule[7][7]={//误差变化率 -3,-2,-1, 0, 1, 2, 3                //   误差
+//                {-12,-12,-12,-12,-10,-9,-9,},                        //   -3      0
+//                {-10,-10,-10,-6,-6,-5,-2,},                        //   -2      1
+//                {-6,-6,-4,-2, 0, 2, 4,},                        //   -1      2
+//                {-9,-5,-2, 0, 2, 5, 9,},                        //    0      3
+//                {-5,-2, 0, 2, 4, 9, 9,},                        //    1      4
+//                { 2, 3, 9, 9, 10, 10, 10,},                        //    2      5
+//                { 9, 10, 10, 12, 12, 12, 12}};                       //    3     6  5.94
+
+//基础
 int rule[7][7]={//误差变化率 -3,-2,-1, 0, 1, 2, 3                //   误差
                 {-6,-6,-6,-6,-5,-5,-4,},                        //   -3      0
                 {-5,-5,-5,-4,-4,-3,-1,},                        //   -2      1
@@ -192,6 +212,42 @@ float Fuzzy(float P, float D)
     U = temp1 / temp2;
 
     return U;
+}
+
+//position_front_last
+//previously on:
+//This is a algorithm to help smart car finish the speed dynamic_programming
+//在比赛时可能遇到的几种路况：
+//直道
+//弯道
+//S弯
+//环岛
+//三岔
+//90度急弯
+//半圆弯
+int16 dynamic_programming(int16 error,int16 delta)
+{
+    int16 output_speed;
+
+    if(roundIslandBegin)//环岛
+    {
+       output_speed=speed_low;//环岛速度固定
+    }
+    else//非环岛场景
+    {
+       if(error<=5 && delta<=5)//偏差和变化率都比较小 稳定直道
+       {
+           output_speed=expected_y;
+       }
+       else
+       {
+           //output_speed=speed_low*accelerate/10;//普通弯道
+           //if(output_speed<speed_low)output_speed=speed_low;
+           //if(output_speed>expected_y)output_speed=expected_y;
+           output_speed=speed_low;
+       }
+    }
+    return output_speed;
 }
 
 

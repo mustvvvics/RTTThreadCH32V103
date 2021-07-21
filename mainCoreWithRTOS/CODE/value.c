@@ -5,7 +5,8 @@ int16 position_front; //偏差
 int16 position_front_last,position_front_delta;//上一次偏差，偏差的变化率
 //期望直线速度和角速度
 int16 expected_omega=0;
-int32 expected_y=0;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
+int32 expected_y=30;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
+int16 speed_low=45;
 int16 manual_y=0; //遥控行驶
 int16 manual_z=0;
 //int32 dx=0,dy=0,dz=0,dist;//路径累计
@@ -31,7 +32,7 @@ uint8 car_flag=0;
 uint8 carFlagPre = 0;
 
 //电机PWM //限幅
-uint16 limit_pwm=5000;
+uint16 limit_pwm=8000;
 
 //速度环PID //参数
 PID motor1_pid;

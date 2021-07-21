@@ -6,7 +6,7 @@
 // ****************************************************
 
 // ***************** comment this *********************
-// laneBinarize
+//// laneBinarize
 //#define uint8 unsigned char
 //#define uint16 unsigned short
 //#define uint32 unsigned int
@@ -51,7 +51,8 @@ extern float detectDistance;
 extern int8 flagEnterRoundabout;
 extern int32 areaDetectRoundaboutLeft;
 extern int32 areaDetectRoundaboutRight;
-extern int32 areaDetectRoundaboutThres;
+extern int32 areaDetectRoundaboutThresLeft;
+extern int32 areaDetectRoundaboutThresRight;
 extern uint16 exitRoundaboutDelay;
 extern uint8 enterRoundaboutDelay;
 
@@ -188,4 +189,22 @@ extern uint8 detectThreewayFeatureMaxNum;
 extern uint8 detectThreewayFeatureNumThres;
 extern int8 globalCenterBias;
 extern uint8 laneLocationThreewayRoad;
+extern uint8 detectThreewayFeatureNearestRow;
+extern int16 detectThreewayFeatureNearestRowLeft;
+extern int16 detectThreewayFeatureNearestRowRight;
+extern int16 detectThreewayFeatureNearestRowWidthThres;
+extern int16 detectThreewayFeatureNearestRowWidth;
+extern float detectThreewayFeatureNearestRowRatio;
+extern uint8 detectLaneWidthStartRow;
+extern uint8 detectLaneWidthEndRow;
+extern uint8 threewayFeatureRow;
+extern uint8 flagThreewayFeatureFound;
+extern uint8 threewayFeatureJumpWhiteNum;
+extern uint8 threewayFeatureJumpBlackNum;
+extern int32 threewayFeatureStartCol;
+extern int32 threewayFeatureEndCol;
+extern uint8 threewayFeatureStep;
+extern uint8 threewayFeatureJumpPointLeft;
+extern uint8 threewayFeatureJumpPointRight;
+extern uint8 threewayFeatureWidth;
 #endif

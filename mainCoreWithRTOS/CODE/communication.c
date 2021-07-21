@@ -143,7 +143,6 @@ void roundIslandAnalyze(void){
             total_z = 0;
             send_to_cam();
         }
-
     }
     else {
         return;

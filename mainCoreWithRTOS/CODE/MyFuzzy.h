@@ -9,5 +9,6 @@
 #define CODE_MYFUZZY_H_
 
 float Fuzzy(float P, float D);
+int16 dynamic_programming(int16 error,int16 delta);
 
 #endif /* CODE_MYFUZZY_H_ */

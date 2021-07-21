@@ -20,6 +20,10 @@
 #ifndef _headfile_h
 #define _headfile_h
 
+
+#define BEEP_ON    gpio_set(D2, 1)
+#define BEEP_OFF   gpio_set(D2, 0)
+
 #include "common.h"
 #include <stdint.h>
 #include "board.h"

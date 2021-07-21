@@ -30,7 +30,7 @@ int main(void)
     display_init();
     encoder_init();
     timer_pit_init();                       //软定时器初始化
-
+    gpio_init(D2,GPO,0,OUT_PP); //蜂鸣器
     uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);     //通讯
 
     uart_rx_irq(UART_3, ENABLE);                            //默认抢占优先级1 次优先级0。
@@ -59,7 +59,7 @@ int main(void)
             CameraShow_flag = 0;
         }
 
-//        sendMessageData();//发送相关参数
+        sendMessageData();//发送相关参数
 
     }
 }

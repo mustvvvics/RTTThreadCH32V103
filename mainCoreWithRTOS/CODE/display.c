@@ -10,6 +10,7 @@ uint32 servoDuty = 0;
 uint8 turnpage = 0;
 uint8 clearCamFlags = 0;
 int16 parameterTest16 = 0;
+uint8 fixCamThreewayFeatureRow = 20;
 /*
 *Pass variable data on the first page
 */
@@ -27,17 +28,17 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"Turnn_D=%04d  ",(int16)(yaw_pid.Kd*100));
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor       ");
+        rt_sprintf(targetBuff,"ServoMotor     ");
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Servo=%04d         ",servoDuty);
+        rt_sprintf(targetBuff,"Servo=%04d        ",servoDuty);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"IslandBegin=%01d    ",roundIslandBegin);
+        rt_sprintf(targetBuff,"                   ");
     }
 
     else {
-        rt_sprintf(targetBuff,"                     ");
+        rt_sprintf(targetBuff,"                   ");
     }
 }
 /*
@@ -49,7 +50,9 @@ void assignValueFirst(void){
     if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
     if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
 
-    if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {car_flag = 1;}//sendParameterToCam(8,0xE2,0,car_go,0,0);break;
+    if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
+        car_flag = 1;
+        sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);}
     else if(confirmButton == 0 && (menuY + 3) == 4 && car_flag == 1){car_flag = 0;}
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //°´ÏÂÈ·ÈÏ¼ü²ÅÏìÓ¦ÐÞ¸Ä
@@ -63,7 +66,6 @@ void assignValueFirst(void){
             case 8:
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
-            case 9:roundIslandBegin = roundIslandBegin + 1 * signData;break;
             default:break;
         }
     }
@@ -76,13 +78,13 @@ void assignValueFirst(void){
 */
 void transfetFunctionSecond(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"Image Flipping   ");//Í¼ÏñºË·­Ò³
+        rt_sprintf(targetBuff,"Image Flipping ");//Í¼ÏñºË·­Ò³
     }
     else if ((4 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"clearCamFlags    ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Test16=%03d       ",parameterTest16);
+        rt_sprintf(targetBuff,"3XFeatureRow=%03d",fixCamThreewayFeatureRow);
     }
     else if ((6 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"                   ");
@@ -123,16 +125,16 @@ void assignValueSecond(void){
                 clearCamFlags = 1;
                 sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);break;
             case 5:
-                parameterTest16 = parameterTest16 + 10 * signData;
-                sendParameterToCam(16,0xE3,0,0,parameterTest16,0);break;
+                fixCamThreewayFeatureRow = fixCamThreewayFeatureRow + 1 * signData;
+                sendParameterToCam(8,0xE3,0,fixCamThreewayFeatureRow,0,0);break;
             case 6:  break;
             case 7:  break;
             default:break;
             /*
-             * Eg;sendParameterToCam(0,0xE1,parameter,0,0,0);break;
-             *    sendParameterToCam(8,0xE1,0,parameter,0,0);break;
-             *    sendParameterToCam(16,0xE1,0,0,parameter,0);break;
-             *    sendParameterToCam(32,0xE1,0,0,0,parameter);break;
+             * Eg;sendParameterToCam(0,0xE1,xxx,0,0,0);break;
+             *    sendParameterToCam(8,0xE1,0,xxx,0,0);break;
+             *    sendParameterToCam(16,0xE1,0,0,xxx,0);break;
+             *    sendParameterToCam(32,0xE1,0,0,0,xxx);break;
              */
         }
     }

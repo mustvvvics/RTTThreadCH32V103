@@ -18,7 +18,8 @@ float detectDistance = 2.0;
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
-int32 areaDetectRoundaboutThres = 400;
+int32 areaDetectRoundaboutThresLeft = 400;
+int32 areaDetectRoundaboutThresRight = 400;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
@@ -56,8 +57,7 @@ uint8 location = 0;
 */
 
 int32 slope = 0;
-//uint8 slopeRowStart=48, slopeRowEnd=35;
-uint8 slopeRowStart=38, slopeRowEnd=30;
+uint8 slopeRowStart=48, slopeRowEnd=35;
 
 int32 cameraError = 0;
 int32 cameraErrorPrevious = 0;
@@ -73,6 +73,10 @@ void laneInit() {
     for (iterRow = 0; iterRow < imgRow; ++iterRow) {
         laneLocationRight[iterRow] = imgCol - 1;
     }
+    // threewayFeatureStartCol = imgCol/2 + globalCenterBias - laneWidth[imgRow-1] * 0.6;
+    // threewayFeatureEndCol = imgCol/2 + globalCenterBias + laneWidth[imgRow-1] * 0.6;
+    threewayFeatureStartCol = 3;
+    threewayFeatureEndCol = imgCol - 4;
 }
 
 int32 laneJitterLeft = 9999;
@@ -81,7 +85,7 @@ uint8 countJitterBreakRowLeft = 0;
 uint8 countJitterBreakRowRight = 0;
 
 
-int32 pixelMeanThres = 100;
+int32 pixelMeanThres = 70;
 int32 pixelMeanPrevious = 0;
 int32 pixelMean = 0;
 
@@ -151,8 +155,8 @@ uint8 flagEnterCrossroad = 0;
 uint8 crossroadMissNumLeft = 0;
 uint8 crossroadMissNumRight = 0;
 
-uint8 detectThreeWayRoadStartRow = 35;
-uint8 detectThreeWayRoadEndRow = 5;
+uint8 detectThreeWayRoadStartRow = 45;
+uint8 detectThreeWayRoadEndRow = 0;
 uint8 detectThreewayFeatureLeft = 0;
 uint8 detectThreewayFeatureRight = 0;
 uint16 exitThreewayDelay = 0;
@@ -161,5 +165,23 @@ uint8 detectThreewayFeatureNum = 0;
 uint8 detectThreewayFeatureMaxNum = 0;
 uint8 detectThreewayFeatureNumThres = 8;
 uint8 laneLocationThreewayRoad = 0;
+uint8 detectThreewayFeatureNearestRow = 99;
+int16 detectThreewayFeatureNearestRowLeft = 0;
+int16 detectThreewayFeatureNearestRowRight = 0;
+int16 detectThreewayFeatureNearestRowWidthThres = 10;
+int16 detectThreewayFeatureNearestRowWidth = 0;
+float detectThreewayFeatureNearestRowRatio = 0;
 
 int8 globalCenterBias = -7;
+
+uint8 threewayFeatureRow = 0;
+int32 threewayFeatureStartCol = 0; // imgCol/2 + globalCenterBias - laneWidth[imgRow-1] * 0.6;
+int32 threewayFeatureEndCol = 0; // imgCol/2 + globalCenterBias + laneWidth[imgRow-1] * 0.6;
+
+uint8 threewayFeatureJumpWhiteNum = 0;
+uint8 threewayFeatureJumpBlackNum = 0;
+uint8 threewayFeatureJumpPointLeft = 0;
+uint8 threewayFeatureJumpPointRight = 0;
+uint8 threewayFeatureWidth = 0;
+uint8 threewayFeatureStep = 0;
+uint8 flagThreewayFeatureFound = 0;
