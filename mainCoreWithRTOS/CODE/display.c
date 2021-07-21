@@ -41,26 +41,27 @@ uint8 fixCamRoundaboutDetectionStartRow = 20;//+- 1
 *Pass variable data on the first page
 */
 void transfetFunctionFirst(int8 targetRow,char *targetBuff){
-    if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"CarSpeed=%04d     ",expected_y);
+
+    if ((3 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"FlashWrite          ");
     }
     else if ((4 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"Cargo&Winner      ");
     }
-    else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_P=%04d      ",(int16)(yaw_pid.Kp*100));
+    else if ((5 - menuY) == targetRow) {                //BLACK
+        rt_sprintf(targetBuff,"CarSpeed=%04d     ",expected_y);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_D=%04d      ",(int16)(yaw_pid.Kd*100));
+        rt_sprintf(targetBuff,"Turnn_P=%04d      ",(int16)(yaw_pid.Kp*100));
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor        ");
+        rt_sprintf(targetBuff,"Turnn_D=%04d      ",(int16)(yaw_pid.Kd*100));
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Servo=%04d        ",servoDuty);
+        rt_sprintf(targetBuff,"ServoMotor        ");
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"Servo=%04d        ",servoDuty);
     }
     else if ((10 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"                   ");
@@ -78,6 +79,9 @@ void assignValueFirst(void){
     if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
     if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
 
+    if (confirmButton == 1 && (menuY + 3) == 3) {
+        mainFlashWrite();
+    }
     if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
         car_flag = 1;
         sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);}
@@ -85,13 +89,13 @@ void assignValueFirst(void){
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
-            case 3:expected_y = expected_y + 5 * signData;break;
-            case 5:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
-            case 6:yaw_pid.Kd = yaw_pid.Kd + 0.1 * signData;break;
-            case 7:
+            case 5:expected_y = expected_y + 5 * signData;break;
+            case 6:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
+            case 7:yaw_pid.Kd = yaw_pid.Kd + 0.1 * signData;break;
+            case 8:
                 if (parameterAdjustButton == 1) {servoDuty = 990;pwm_duty(PWM1_CH1_A8, servoDuty);}
                 else if (parameterAdjustButton == 4){servoDuty = 670;pwm_duty(PWM1_CH1_A8, servoDuty);};break;
-            case 8:
+            case 9:
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
             default:break;
@@ -146,7 +150,7 @@ void assignValueSecond(void){
         switch (menuY + 3) {
             case 3://图像核翻页
                 turnpage = turnpage + 1 * (uint8)signData;
-                if(turnpage < 0){turnpage = 0;}else if(turnpage > 2){turnpage = 2;}
+                if(turnpage < 0){turnpage = 0;}else if(turnpage > 3){turnpage = 3;}
                 sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
             case 4:
                 clearCamFlags = 1;
@@ -218,7 +222,7 @@ void assignValueThird(void){
         switch (menuY + 3) {
             case 3://图像核翻页
                 turnpage = turnpage + 1 * (uint8)signData;
-                if(turnpage < 0){turnpage = 0;}else if(turnpage > 2){turnpage = 2;}
+                if(turnpage < 0){turnpage = 0;}else if(turnpage > 3){turnpage = 3;}
                 sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
             case 4:
                 fixCamDetectDistance = fixCamDetectDistance + 1 * signData;
@@ -259,7 +263,7 @@ void assignValueThird(void){
 */
 
 
-uint8 maxMenuRow = 9;//下滑选择限制
+uint8 maxMenuRow = 10;//下滑选择限制
 uint8 maxMenuPage = 2;//左右选择限制  total: 3 pages
 char txt1[20]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0},
                   txt5[32]={0},txt6[32]={0},txt7[32]={0};

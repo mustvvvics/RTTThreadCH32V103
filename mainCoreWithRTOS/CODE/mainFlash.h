@@ -3,7 +3,7 @@
 
 #include "headfile.h"
 
-void mainFlashRead();
-void mainFlashWrite();
+void mainFlashRead(void);
+void mainFlashWrite(void);
 
 #endif

@@ -83,5 +83,6 @@
 #include "esp8266.h"
 #include "adc.h"
 #include "MyFuzzy.h"
+#include "mainFlash.h"
 
 #endif
