@@ -7,28 +7,54 @@ uint8 parameterAdjustButton = 0;//左右参数调整响应
 uint8 confirmButton = 0;//确认按键
 uint32 servoDuty = 0;
 
+/*
+ * page 2
+ */
 uint8 turnpage = 0;
 uint8 clearCamFlags = 0;
-int16 parameterTest16 = 0;
-uint8 fixCamThreewayFeatureRow = 20;
+/******************Threewayroad*****************************************/
+uint8 fixCamThreewayFeatureRow = 20;// +- 1
+/******************Crossroad********************************************/
+uint8 fixCamDetectCrossroadMissingNumThres = 6;//+- 1
+/******************SharpCurve*******************************************/
+uint8 fixCamRangeSharpCurveRow = 35;//+- 1
+//int16 fixCamSharpCurveJitterThres = unknown;
+//int32 fixCamBigCurveThres = unknown;
+/******************Else*************************************************/
+int8 fixCamGlobalCenterBias = -7;//+- 1
+//int32 fixCamOutboundAreaThres = unknown;//+- 2000
+uint16 fixCamStartlineJumpingPointNumThres = 50;//+- 10
+/*
+ * page 3
+ */
+/******************Basic************************************************/
+uint8 fixCamDetectDistance = 20;//+- 1 实际为float 2.0 +- 0.1
+int32 fixCamPixelMeanThres = 100;//+- 10
+uint8 fixCamSlopeRowStart = 48;//+- 1
+uint8 fixCamSlopeRowEnd = 35;//+- 1
+/******************Roundabout*******************************************/
+int32 fixCamAreaDetectRoundaboutThresLeft = 400;//+- 10
+int32 fixCamAreaDetectRoundaboutThresRight = 400;//+- 10
+uint8 fixCamRoundaboutDetectionStartRow = 20;//+- 1
+
 /*
 *Pass variable data on the first page
 */
 void transfetFunctionFirst(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"CarSpeed=%04d ",expected_y);
+        rt_sprintf(targetBuff,"CarSpeed=%04d     ",expected_y);
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Cargo&Winner  ");
+        rt_sprintf(targetBuff,"Cargo&Winner      ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_P=%04d  ",(int16)(yaw_pid.Kp*100));
+        rt_sprintf(targetBuff,"Turnn_P=%04d      ",(int16)(yaw_pid.Kp*100));
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_D=%04d  ",(int16)(yaw_pid.Kd*100));
+        rt_sprintf(targetBuff,"Turnn_D=%04d      ",(int16)(yaw_pid.Kd*100));
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor     ");
+        rt_sprintf(targetBuff,"ServoMotor        ");
     }
     else if ((8 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"Servo=%04d        ",servoDuty);
@@ -36,7 +62,9 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
     else if ((9 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"                   ");
     }
-
+    else if ((10 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                   ");
+    }
     else {
         rt_sprintf(targetBuff,"                   ");
     }
@@ -78,30 +106,29 @@ void assignValueFirst(void){
 */
 void transfetFunctionSecond(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"Image Flipping ");//图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage1");//图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"clearCamFlags    ");
+        rt_sprintf(targetBuff,"clearCamFlags     ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"3XFeatureRow=%03d",fixCamThreewayFeatureRow);
+        rt_sprintf(targetBuff,"3WayFeatureRow=%03d",fixCamThreewayFeatureRow);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"CRMissNumThres=%03d",fixCamDetectCrossroadMissingNumThres);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"RgSharpCurveRow=%02d",fixCamRangeSharpCurveRow);
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"GlobCenterBias=%03d",fixCamGlobalCenterBias);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"SLJumpPointNum=%03d",fixCamStartlineJumpingPointNumThres);
     }
     else if ((10 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"                   ");
     }
-
     else {
         rt_sprintf(targetBuff,"                   ");
     }
@@ -119,7 +146,7 @@ void assignValueSecond(void){
         switch (menuY + 3) {
             case 3://图像核翻页
                 turnpage = turnpage + 1 * (uint8)signData;
-                if(turnpage < 0){turnpage = 0;}else if(turnpage > 1){turnpage = 1;}
+                if(turnpage < 0){turnpage = 0;}else if(turnpage > 2){turnpage = 2;}
                 sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
             case 4:
                 clearCamFlags = 1;
@@ -127,8 +154,93 @@ void assignValueSecond(void){
             case 5:
                 fixCamThreewayFeatureRow = fixCamThreewayFeatureRow + 1 * signData;
                 sendParameterToCam(8,0xE3,0,fixCamThreewayFeatureRow,0,0);break;
-            case 6:  break;
-            case 7:  break;
+            case 6:
+                fixCamDetectCrossroadMissingNumThres = fixCamDetectCrossroadMissingNumThres +  1 * signData;
+                sendParameterToCam(8,0xE4,0,fixCamDetectCrossroadMissingNumThres,0,0);break;
+            case 7:
+                fixCamRangeSharpCurveRow = fixCamRangeSharpCurveRow +  1 * signData;
+                sendParameterToCam(8,0xE5,0,fixCamRangeSharpCurveRow,0,0);break;
+            case 8:
+                fixCamGlobalCenterBias = fixCamGlobalCenterBias + 1 * signData;
+                sendParameterToCam(0,0xE6,fixCamGlobalCenterBias,0,0,0);break;
+            case 9:
+                fixCamStartlineJumpingPointNumThres = fixCamStartlineJumpingPointNumThres + 10 * signData;
+                sendParameterToCam(16,0xE7,0,0,fixCamStartlineJumpingPointNumThres,0);break;
+            default:break;
+        }
+    }
+    else {return;}
+}
+
+
+/*
+*Pass variable data on the Third page
+*/
+void transfetFunctionThird(int8 targetRow,char *targetBuff){
+    if ((3 - menuY) == targetRow) {                //BLACK
+        rt_sprintf(targetBuff,"ImageFlippingPage2");//图像核翻页
+    }
+    else if ((4 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"DetectDistance=%03d",fixCamDetectDistance);
+    }
+    else if ((5 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"PixelMeanThres=%03d",fixCamPixelMeanThres);
+    }
+    else if ((6 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"SlopeRowStart =%03d",fixCamSlopeRowStart);
+    }
+    else if ((7 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"SlopeRowEnd   =%03d",fixCamSlopeRowEnd );
+    }
+    else if ((8 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"DRAboutThrLeft=%03d",fixCamAreaDetectRoundaboutThresLeft);
+    }
+    else if ((9 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"DRAboutThRight=%03d",fixCamAreaDetectRoundaboutThresRight);
+    }
+    else if ((10 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"RADeteStartRow=%03d",fixCamRoundaboutDetectionStartRow);
+    }
+    else {
+        rt_sprintf(targetBuff,"                   ");
+    }
+}
+/*
+*Assign value to data on the Third page
+*/
+
+void assignValueThird(void){
+    int8 signData;
+    if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
+    if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
+
+    if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
+        switch (menuY + 3) {
+            case 3://图像核翻页
+                turnpage = turnpage + 1 * (uint8)signData;
+                if(turnpage < 0){turnpage = 0;}else if(turnpage > 2){turnpage = 2;}
+                sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
+            case 4:
+                fixCamDetectDistance = fixCamDetectDistance + 1 * signData;
+                sendParameterToCam(8,0xE8,0,fixCamDetectDistance,0,0);break;
+            case 5:
+                fixCamPixelMeanThres = fixCamPixelMeanThres + 10 * signData;
+                sendParameterToCam(32,0xE9,0,0,0,fixCamPixelMeanThres);break;
+            case 6:
+                fixCamSlopeRowStart = fixCamSlopeRowStart + 1 * signData;
+                sendParameterToCam(8,0xEA,0,fixCamSlopeRowStart,0,0);break;
+            case 7:
+                fixCamSlopeRowEnd = fixCamSlopeRowEnd + 1 * signData;
+                sendParameterToCam(8,0xEB,0,fixCamSlopeRowEnd,0,0);break;
+            case 8:
+                fixCamAreaDetectRoundaboutThresLeft = fixCamAreaDetectRoundaboutThresLeft + 10 * signData;
+                sendParameterToCam(32,0xEC,0,0,0,fixCamAreaDetectRoundaboutThresLeft);break;
+            case 9:
+                fixCamAreaDetectRoundaboutThresRight = fixCamAreaDetectRoundaboutThresRight + 10 * signData;
+                sendParameterToCam(32,0xED,0,0,0,fixCamAreaDetectRoundaboutThresRight);break;
+            case 10:
+                fixCamRoundaboutDetectionStartRow = fixCamRoundaboutDetectionStartRow + 1 * signData;
+                sendParameterToCam(8,0xEE,0,fixCamRoundaboutDetectionStartRow,0,0);break;
             default:break;
             /*
              * Eg;sendParameterToCam(0,0xE1,xxx,0,0,0);break;
@@ -141,22 +253,22 @@ void assignValueSecond(void){
     else {return;}
 }
 
+
 /*
 *Disaplay Menu
 */
 
 
 uint8 maxMenuRow = 9;//下滑选择限制
-uint8 maxMenuPage = 1;//左右选择限制
-char txt1[20]={0},txt2[20]={0},txt3[20]={0},txt4[20]={0},
-                  txt5[20]={0},txt6[20]={0},txt7[20]={0};
+uint8 maxMenuPage = 2;//左右选择限制  total: 3 pages
+char txt1[20]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0},
+                  txt5[32]={0},txt6[32]={0},txt7[32]={0};
 void disaplayMenu(void){
 
 /***********************状态栏*******************************************/
     rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
     rt_sprintf(txt2,"Vc=%03d|AC=%02d",Vc,accelerate);
 /************************************************************************/
-
     if (menuY < 0) {menuY = 0;} //限制选择范围
     else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
     if (menuX < 0) {menuX = 0;} //限制选择范围
@@ -173,11 +285,11 @@ void disaplayMenu(void){
         transfetFunctionSecond(5,txt5);transfetFunctionSecond(6,txt6);transfetFunctionSecond(7,txt7);
     }
     else if (menuX == 2) {
-
+        assignValueThird(); //更改数值
+        transfetFunctionThird(3,txt3); transfetFunctionThird(4,txt4);//传递显示
+        transfetFunctionThird(5,txt5);transfetFunctionThird(6,txt6);transfetFunctionThird(7,txt7);
     }
-
 /***********************显示每一行***************************************/
-
     ips114_showstr(0,1,txt1);
     ips114_showstr(0,2,txt2);
     if (confirmButton == 1) {ips114_showstrCheck(0,3,txt3);}else {ips114_showstrBlack(0,3,txt3);}//确定按键改变不同的颜色状态
@@ -187,7 +299,6 @@ void disaplayMenu(void){
     ips114_showstr(0,7,txt7);
 /***********************等待按键信号*************************************/
     rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
-//    ips114_clear(WHITE);    //清屏成白色
     switch (key_data) {
         case 1:
             if(confirmButton == 0) {menuX = menuX - 1;} //无确认按键按下 则可翻页选择
@@ -198,10 +309,10 @@ void disaplayMenu(void){
 
         case 3:
             if(confirmButton == 0) {menuY = menuY - 1;} //up    保持在按下确定键后不响应上下
-            else if(confirmButton == 1){parameterAdjustButton = 0;}else {return;}break;
+            else if(confirmButton == 1){parameterAdjustButton = 0;confirmButton = 0;}else {return;}break;
         case 5:
             if(confirmButton == 0) {menuY = menuY + 1;} //down
-            else if(confirmButton == 1){parameterAdjustButton = 0;}else {return;}break;
+            else if(confirmButton == 1){parameterAdjustButton = 0;confirmButton = 0;}else {return;}break;
         case 2://确定键
             if (confirmButton == 0) {confirmButton = 1;} else {confirmButton = 0;parameterAdjustButton = 0;}break;
         default:
@@ -212,7 +323,6 @@ void disaplayMenu(void){
 char txtcqupt[32]={0};
 void display_entry(void *parameter)
 {
-
     rt_sprintf(txtcqupt,"CQUPT                              ");
     ips114_showstrGRAY(0,0,txtcqupt);
     while(1)
@@ -224,8 +334,6 @@ void display_entry(void *parameter)
 rt_thread_t tidDisplay;
 void display_init(void)
 {
-//    rt_thread_t tidDisplay;
-
     //初始化屏幕
     ips114_init();
     

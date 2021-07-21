@@ -85,6 +85,7 @@ void analysisFixParameter(uint8 *line){
             if (line[5] == 1 ) {negativeNumber = -1;}else if (line[5] == 0) {negativeNumber = 1;}
             switch (line[4]) { //功能字选择
 //Eg:                case 0xE1: parameterTest = negativeNumber * line[6];break;
+                case 0xE6:globalCenterBias = negativeNumber * line[6];break;
                 default:
                     break;
             }
@@ -100,6 +101,12 @@ void analysisFixParameter(uint8 *line){
                         clearCamFlags = 0;}
                     break;
                 case 0xE3:threewayFeatureRow = line[6];break;
+                case 0xE4:detectCrossroadMissingNumThres = line[6];break;
+                case 0xE5:rangeSharpCurveRow = line[6];break;
+                case 0xE8:detectDistance = line[6] / 10;break; //实际为float
+                case 0xEA:slopeRowStart = line[6];break;
+                case 0xEB:slopeRowEnd = line[6];break;
+                case 0xEE:roundaboutDetectionStartRow = line[6];break;
                 default:
                     break;
             }
@@ -107,7 +114,7 @@ void analysisFixParameter(uint8 *line){
         else if (line[2] == 0xA1 && line[3] == 0xA6) { //int16
             switch (line[4]) {
 //Eg:                case 0xE3:parameterTest16 = ((int16)line[5] << 8) | line[6];break;
-//                case 0xE3: parameterTest16 = ((int16)line[5] << 8) | line[6];break;
+                case 0xE7: startlineJumpingPointNumThres = ((int16)line[5] << 8) | line[6];break;
                 default:
                     break;
             }
@@ -115,6 +122,9 @@ void analysisFixParameter(uint8 *line){
         else if (line[1] == 0xA3) {                    //int32
             switch (line[2]) {
 //Eg:                case 0xE4:parameterTest32 = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
+                case 0xE9:pixelMeanThres = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
+                case 0xEC:areaDetectRoundaboutThresLeft = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
+                case 0xED:areaDetectRoundaboutThresRight = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 default:
                     break;
             }
