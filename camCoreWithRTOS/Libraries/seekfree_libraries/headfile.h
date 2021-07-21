@@ -91,5 +91,6 @@
 #include "displayCam.h"
 #include "esp8266Cam.h"
 #include "timerPitCam.h"
+#include "camFlash.h"
 
 #endif

@@ -22,7 +22,6 @@ void setup()
  // 自动连接WiFi。以下语句的参数是连接ESP8266时的WiFi名称
  //wifiManager.autoConnect("ESP_EEESP", "12345678");
 
-    //  WiFi.begin("CQUPT","");
   WiFi.begin("CQUPT-1024G", "");
 
  //    IPAddress softLocal(192,168,128,2);   // 1 设置内网WIFI IP地址

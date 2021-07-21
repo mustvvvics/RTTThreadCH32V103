@@ -27,6 +27,7 @@ int main(void)
     rt_thread_mdelay(3000);                 //保证摄像头初始化完成
 
     laneInit();
+    camFlashRead();
     display_init();
     encoder_init();
     timer_pit_init();                       //软定时器初始化

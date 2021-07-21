@@ -30,12 +30,10 @@ int main(void)
     motor_init();
     pwm_init(PWM1_CH1_A8, 50, 338);//舵机初始化 //默认在中位上       舵机 TIMER1  338 670 1000
 
-    esp8266Init();
+    esp8266Init();      //8266线程
     PID_Init();
-//  timer_pit_init();
 
     timer_pitAdc_init(); //初始化ADC电压采集
-
 
     //串口3初始化
     uart_init(UART_3, 921600, UART3_TX_B10, UART3_RX_B11);  //串口3初始化 波特率115200
@@ -48,28 +46,8 @@ int main(void)
 
     while(1)
     {
-        rt_thread_mdelay(20); //new delay //必须保留
-//      ThreeWayAnalyze();  //三叉解析
-
+        rt_thread_mdelay(2); //new delay //必须保留
+        ThreeWayAnalyze();  //三叉解析
     }
 }
-
-/*******************************************************************************/
-
-
-//        sendMessage(); //发送曲线 三叉解析
-//        getAdc();
-//        if (car_flag == 1) {
-//            rt_thread_delete(tidDisplay);
-////            rt_timer_stop(timerAdc);
-//            //rt_thread_detach(tidDisplay);
-//        }
-//        else {
-//            rt_thread_startup(tidDisplay);
-////            rt_timer_start(timerAdc);
-//        }
-//
-//        rt_sprintf(txtTest,"%04d",g_fGyroAngleSpeed_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
-//        rt_sprintf(txtTest,"%04d",roundIslandBegin);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,",");
-//        rt_sprintf(txtTest,"%04d",total_z);uart_putstr(UART_2,txtTest);uart_putstr(UART_2,"\n");
 

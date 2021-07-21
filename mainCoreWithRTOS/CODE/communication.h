@@ -20,7 +20,7 @@
 extern vuint8  uart_flag;                   //接收数据标志位
 extern uint8   temp_buff[LINE_LEN];         //主机用于接收数据的BUFF
 extern uint8 threeWayIn;
-extern uint8 threeWayOut;
+extern uint8 threeWaySum;
 extern int16 threeWayOutAngle;
 extern int8 ThreeWayDirection;
 

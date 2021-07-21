@@ -50,7 +50,7 @@ void data_analysis(uint8 *line)
             roundIslandBegin = 0;
             break;
         case 1://三叉
-//            ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
+            ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
             car_flag = 0;
             break;
         case 2://车库
@@ -69,39 +69,40 @@ void data_analysis(uint8 *line)
 /*
  * 三叉路口决策
  */
-int8 ThreeWayDirection = 0;
-int16 threeWayOutAngle = 0;
+//int8 ThreeWayDirection = 0;
+//int16 threeWayOutAngle = 0;
 uint8 threeWayIn = 0;
-uint8 threeWayOut = 0;
+//uint8 threeWayOut = 0;
 uint8 threeWaySum = 0;
 void ThreeWayAnalyze(void){
     if (ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 0) {//第一次进入
         ThreeWayIntersectionFlag = 0;//清标志
-        ThreeWayDirection = -1; //才能按照摄像头朝向行驶  中断中行驶决策
+//        ThreeWayDirection = -1; //才能按照摄像头朝向行驶  中断中行驶决策
         threeWayIn = 1;
-        pwm_duty(PWM1_CH1_A8, 990); //舵机左转
+        pwm_duty(PWM1_CH1_A8, 670); //舵机向左
       }
     else if (ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 0) { //第一次出
         ThreeWayIntersectionFlag = 0;
-//        threeWayIn = 0;               //在外部中断中,当完成姿态变形出三叉后 释放flag
-        threeWayOut = 1;                //用于在中断中变形
-        threeWayOutAngle = 1500;          //变形力度
+        threeWayIn = 0;               //直接转舵机 或在外部中断中,当完成姿态变形出三叉后 释放flag
+
+//        threeWayOut = 1;                //用于在中断中变形
+//        threeWayOutAngle = 1500;          //变形力度
         threeWaySum = 1;                //进入一次三叉
-        pwm_duty(PWM1_CH1_A8, 670);
+        pwm_duty(PWM1_CH1_A8, 990);     //第一次出转舵机向后
     }
     else if (ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 1) { //第二次进
-        ThreeWayIntersectionFlag = 0; //才能按照摄像头朝向行驶
-        ThreeWayDirection = 1;
+        ThreeWayIntersectionFlag = 0;
+//        ThreeWayDirection = 1;
         threeWayIn = 1;
-        pwm_duty(PWM1_CH1_A8, 338); //舵机右转
+        pwm_duty(PWM1_CH1_A8, 670); //舵机向左
     }
     else if (ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 1){ //第二次出
         ThreeWayIntersectionFlag = 0;
-//        threeWayIn = 0;
-        threeWayOut = 1;  //用于在中断中变形
-        threeWayOutAngle = -1500;
+        threeWayIn = 0;
+//        threeWayOut = 1;  //用于在中断中变形
+//        threeWayOutAngle = -1500;
         threeWaySum = 0;
-        pwm_duty(PWM1_CH1_A8, 670);
+        pwm_duty(PWM1_CH1_A8, 338); //舵机还原
     }
 }
 

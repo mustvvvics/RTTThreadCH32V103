@@ -59,9 +59,9 @@ void Tcp_Decode(void)
         clearError();//清除累计误差
     }
 
-    else if (strcmp((char *)esp8266_buf,"fuzzy\r\n") == 0) {
-        sendFuzzyData();
-    }
+//    else if (strcmp((char *)esp8266_buf,"fuzzy\r\n") == 0) {
+//        sendFuzzyData();
+//    }
     /**************************************************************************/
     //参数修改 调速
     else if(esp8266_buf[4] == 'S' && esp8266_buf[0] == 'C')
@@ -152,9 +152,9 @@ void Tcp_Decode(void)
 //
 //    else if(strcmp((char *)esp8266_buf,"Left\r\n") == 0)
 //    {go_left=1;uart_putstr(UART_2,"#0015received_Left!\n");rt_mb_send(key_mailbox, 9);}
-//
-//    else if(strcmp((char *)esp8266_buf,"ThreeWay\r\n") == 0)
-//    {ThreeWayIntersectionFlag = 1;uart_putstr(UART_2,"#ThreeWay!\n");}
+
+    else if(strcmp((char *)esp8266_buf,"ThreeWay\r\n") == 0)
+    {ThreeWayIntersectionFlag = 1;uart_putstr(UART_2,"#ThreeWay!\n");}
 
     ESP8266_Clear();
 }
@@ -251,10 +251,10 @@ void esp8266Entry(void *parameter)
         Tcp_Decode();
     }
 }
-
+rt_thread_t tidEsp8266;
 void esp8266Init(void)
 {
-    rt_thread_t tidEsp8266;
+
 
     //初始化
     Esp_Init();
