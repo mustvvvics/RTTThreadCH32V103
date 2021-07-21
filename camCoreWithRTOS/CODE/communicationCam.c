@@ -103,7 +103,7 @@ void analysisFixParameter(uint8 *line){
                 case 0xE3:threewayFeatureRow = line[6];break;
                 case 0xE4:detectCrossroadMissingNumThres = line[6];break;
                 case 0xE5:rangeSharpCurveRow = line[6];break;
-                case 0xE8:detectDistance = line[6] / 10;break; //实际为float
+                case 0xE8:detectDistance = (line[6] / 10) + ((line[6] % 10) * 0.1) ;break; //实际为float
                 case 0xEA:slopeRowStart = line[6];break;
                 case 0xEB:slopeRowEnd = line[6];break;
                 case 0xEE:roundaboutDetectionStartRow = line[6];break;
