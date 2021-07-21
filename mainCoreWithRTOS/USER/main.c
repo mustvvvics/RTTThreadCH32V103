@@ -16,7 +16,6 @@
  * @Taobao          https://seekfree.taobao.com/
  * @date            2020-12-04
  ********************************************************************************************************************/
-
 #include "headfile.h"
 
 char txtTest[32];
@@ -47,7 +46,7 @@ int main(void)
     while(1)
     {
         rt_thread_mdelay(2); //new delay //必须保留
-        ThreeWayAnalyze();  //三叉解析
+
     }
 }
 

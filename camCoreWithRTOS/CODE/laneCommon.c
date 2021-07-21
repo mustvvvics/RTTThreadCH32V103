@@ -138,7 +138,7 @@ uint8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
 int32 outboundAreaSum = 0;
-int32 outboundAreaThres = 13000;
+int32 outboundAreaThres = 8000;
 uint8 flagEnterOutbound = 0;
 uint8 exitOutboundDelay = 0;
 uint8 confirmOutboundDelay = 0;
@@ -174,7 +174,7 @@ float detectThreewayFeatureNearestRowRatio = 0;
 
 int8 globalCenterBias = -7;
 
-uint8 threewayFeatureRow = 0;
+uint8 threewayFeatureRow = 20;
 int32 threewayFeatureStartCol = 0; // imgCol/2 + globalCenterBias - laneWidth[imgRow-1] * 0.6;
 int32 threewayFeatureEndCol = 0; // imgCol/2 + globalCenterBias + laneWidth[imgRow-1] * 0.6;
 
@@ -185,3 +185,18 @@ uint8 threewayFeatureJumpPointRight = 0;
 uint8 threewayFeatureWidth = 0;
 uint8 threewayFeatureStep = 0;
 uint8 flagThreewayFeatureFound = 0;
+
+// detectThreewayroad3
+uint8 leftStartFlagThreewayFeatureFound = 0;
+uint8 rightStartFlagThreewayFeatureFound = 0;
+uint16 leftStartThreewayFeatureJumpPointLeft = 0;
+uint16 rightStartThreewayFeatureJumpPointRight = 0;
+uint16 rightStartThreewayFeatureJumpPointLeft = 0;
+uint16 leftStartThreewayFeatureJumpPointRight = 0;
+
+uint16 leftStartThreewayFeatureWidth = 0;
+uint16 rightStartThreewayFeatureWidth = 0;
+uint16 threewayFeatureWidthSum = 16;
+
+//detectCrossroad2
+uint8 detectCrossroadRow[3] = {10, 25, 40};

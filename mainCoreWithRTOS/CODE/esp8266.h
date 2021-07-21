@@ -14,7 +14,6 @@ extern rt_thread_t tidEsp8266;
 void Esp_Init(void);
 void ESP8266_Clear(void);
 void Tcp_Decode(void);
-void sendMessage(void);
 void esp8266Init(void);
 void sendFuzzyData(void);
 

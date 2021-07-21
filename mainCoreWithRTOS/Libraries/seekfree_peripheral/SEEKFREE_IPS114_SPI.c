@@ -359,9 +359,9 @@ void ips114_showcharCheck(uint16 x,uint16 y,const int8 dat) //按下确认使用
         {
             if(temp&0x01)
             {
-                ips114_writedata_16bit(YELLOW);
+                ips114_writedata_16bit(WHITE);
             }
-            else            ips114_writedata_16bit(BLACK);
+            else            ips114_writedata_16bit(RED);
             temp>>=1;
         }
     }

@@ -72,11 +72,7 @@ void gyroDataAnalysis(uint8 *line)
 /*
  * 分析修改数据
  */
-int8 parameterTest;
-uint8 parameterTest8;
-int16 parameterTest16;
-int32 parameterTest32;
-
+uint8 steerStatusFromMain = 0;
 int8 negativeNumber = 0;
 void analysisFixParameter(uint8 *line){
     if (line[0] != 0xDE) { return ;} //不为修改参数的帧头直接返回
@@ -107,6 +103,7 @@ void analysisFixParameter(uint8 *line){
                 case 0xEA:slopeRowStart = line[6];break;
                 case 0xEB:slopeRowEnd = line[6];break;
                 case 0xEE:roundaboutDetectionStartRow = line[6];break;
+                case 0xDA:steerStatusFromMain = line[6];break;
                 default:
                     break;
             }

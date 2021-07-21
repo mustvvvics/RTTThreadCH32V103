@@ -1,6 +1,5 @@
 #include "headfile.h"
 
-
 int8 menuX = 0;      //菜单左右
 int8 menuY = 0;      //菜单上下
 uint8 parameterAdjustButton = 0;//左右参数调整响应
@@ -8,7 +7,7 @@ uint8 confirmButton = 0;//确认按键
 uint32 servoDuty = 0;
 
 /*
- * page 2
+ * page 2 in cam display
  */
 uint8 turnpage = 0;
 uint8 clearCamFlags = 0;
@@ -25,7 +24,7 @@ int8 fixCamGlobalCenterBias = -7;//+- 1
 //int32 fixCamOutboundAreaThres = unknown;//+- 2000
 uint16 fixCamStartlineJumpingPointNumThres = 50;//+- 10
 /*
- * page 3
+ * page 3 in cam display
  */
 /******************Basic************************************************/
 uint8 fixCamDetectDistance = 20;//+- 1 实际为float 2.0 +- 0.1
@@ -43,7 +42,7 @@ uint8 fixCamRoundaboutDetectionStartRow = 20;//+- 1
 void transfetFunctionFirst(int8 targetRow,char *targetBuff){
 
     if ((3 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"FlashWrite          ");
+        rt_sprintf(targetBuff,"FlashWrite        ");
     }
     else if ((4 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"Cargo&Winner      ");
@@ -104,13 +103,12 @@ void assignValueFirst(void){
     else {return;}
 }
 
-
 /*
 *Pass variable data on the second page
 */
 void transfetFunctionSecond(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage1");//图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage1"); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"clearCamFlags     ");
@@ -182,7 +180,7 @@ void assignValueSecond(void){
 */
 void transfetFunctionThird(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage2");//图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage2"); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"DetectDistance=%03d",fixCamDetectDistance);
@@ -215,7 +213,7 @@ void transfetFunctionThird(int8 targetRow,char *targetBuff){
 
 void assignValueThird(void){
     int8 signData;
-    if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
+    if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; } //increase
     if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
@@ -257,15 +255,13 @@ void assignValueThird(void){
     else {return;}
 }
 
-
 /*
 *Disaplay Menu
 */
 
-
 uint8 maxMenuRow = 10;//下滑选择限制
 uint8 maxMenuPage = 2;//左右选择限制  total: 3 pages
-char txt1[20]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0},
+char txt1[20]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0}, //承载数组
                   txt5[32]={0},txt6[32]={0},txt7[32]={0};
 void disaplayMenu(void){
 
@@ -305,10 +301,10 @@ void disaplayMenu(void){
     rt_mb_recv(key_mailbox, &key_data, RT_WAITING_FOREVER);
     switch (key_data) {
         case 1:
-            if(confirmButton == 0) {menuX = menuX - 1;} //无确认按键按下 则可翻页选择
+            if(confirmButton == 0) {menuX = menuX - 1;menuY = 0;} //无确认按键按下 则可翻页选择
             else if(confirmButton == 1){parameterAdjustButton = 1;}else{return;}break;//left 确认按键按下 进行参数调整
         case 4:
-            if(confirmButton == 0) {menuX = menuX + 1;}
+            if(confirmButton == 0) {menuX = menuX + 1;menuY = 0;}
             else if(confirmButton == 1){parameterAdjustButton = 4;}else {return;}break;//right
 
         case 3:

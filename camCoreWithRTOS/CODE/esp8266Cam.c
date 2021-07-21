@@ -37,7 +37,7 @@ void Tcp_Decode(void)
         uart_putstr(UART_1,"#0007camera\n");
     }
     else if(strcmp((char *)esp8266_buf,"ClearElement\r\n") == 0){
-        flagEnterRoundabout=0;flagEnterThreeWay=0;
+        flagEnterRoundabout=0;flagEnterThreeWay=0;flagEnterOutbound=0;
         uart_putstr(UART_1,"#0008Cleard!\n");
     }
     else if(strcmp((char *)esp8266_buf,"ShowCamera\r\n") == 0){
@@ -150,7 +150,7 @@ void esp8266Init(void)
 //const char* message1 = "\n";
 
 void sendMessageData(void) {                //发送数据曲线进行分析
-    char txtA[32];
+    char txtA[64];
 //    rt_sprintf(txtA,"ThreeFeaN:%d",detectThreewayFeatureNum );
 //    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
 //
@@ -161,9 +161,16 @@ void sendMessageData(void) {                //发送数据曲线进行分析
 //    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
 
 //    rt_sprintf(txtA,"flIRo:%d, 3Xsum:% 2d, width:% 3d, ratio:%d",flagEnterRoundabout, detectThreewayFeatureNum, detectThreewayFeatureNearestRowWidth, (int16)(detectThreewayFeatureNearestRowRatio * 100));
-    rt_sprintf(txtA,"row: %d, wid: %d, L: %d, R: %d",threewayFeatureRow, threewayFeatureWidth, threewayFeatureJumpPointLeft, threewayFeatureJumpPointRight);
-    uart_putstr(UART_1,txtA);
-    uart_putstr(UART_1,message1);
-
-
+    if (leftStartFlagThreewayFeatureFound && rightStartFlagThreewayFeatureFound) {
+        if (leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft < 5 && \
+                leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft >-5) {
+            if(leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight < 5 && \
+                    leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight > -5) {
+                rt_sprintf(txtA,"Ro:%2d,LBi:%3d, RBi:%3d, LWi:%3d, RWi:%3d,sum:%d",threewayFeatureRow, leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft,leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight,
+                        leftStartThreewayFeatureJumpPointLeft-leftStartThreewayFeatureJumpPointRight,rightStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointRight, threewayFeatureWidthSum);
+                uart_putstr(UART_1,txtA);
+                uart_putstr(UART_1,message1);
+            }
+        }
+    }
 }

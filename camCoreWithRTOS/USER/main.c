@@ -60,7 +60,7 @@ int main(void)
             CameraShow_flag = 0;
         }
 
-        sendMessageData();//发送相关参数
+//        sendMessageData();//发送相关参数
 
     }
 }

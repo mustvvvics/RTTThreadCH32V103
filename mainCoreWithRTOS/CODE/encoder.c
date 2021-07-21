@@ -2,15 +2,12 @@
 
 int16 encoder_data[4];
 
-int16 ABS(int16 x){
-    return x>0?x:-x;
-}
+int16 ABS(int16 x){return x>0?x:-x;}
 
 void clearError(void){  //清空误差
     expected_omega = 0;
     position_front = 0;
     g_fGyroAngleSpeed_z = 0;
-//    expected_y = 0;
     speed_conversion(0,0,0);
     yaw_pid.LocSum = 0;
     yaw_pid.Ek = 0;
@@ -20,11 +17,10 @@ void clearError(void){  //清空误差
     yaw_w_pid.err = 0;
     yaw_w_pid.err_last = 0;
     yaw_w_pid.actual_val = 0;
-//    manual_y=0;manual_z=0;
     go_forward=0;go_backward=0;
     go_left=0;go_right=0;
     elementFlag = 0;
-//    pidModel = 0;
+//    ThreeWayIntersectionFlag = 0;
 }
 
 void encoder_init(void)
@@ -35,7 +31,6 @@ void encoder_init(void)
 
 void encoder_get(void) //in isr.c :void EXTI2_IRQHandler(void)
 {
-
     //获取编码器数据
     if(gpio_get(B5))
         encoder_data[0] = ABS(timer_quad_get(TIMER_3));

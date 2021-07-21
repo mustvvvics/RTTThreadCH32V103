@@ -28,4 +28,6 @@ void AngleZ_Get(void)
     //计算角速度
     icm_gyro_z  = icm_gyro_z / 16.4;  //计算角速度值
     g_fGyroAngleSpeed_z=ICM_newValues(icm_gyro_z);
+//    icm_gyro_y = icm_gyro_y /16.4;  //俯仰
+//    icm_gyro_x = icm_gyro_x /16.4;  //横滚
 }

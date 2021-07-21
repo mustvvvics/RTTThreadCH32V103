@@ -1,10 +1,3 @@
-/*
- * communication.h Ö÷ºËÐÄ
- *
- *  Created on: Jun 30, 2021
- *      Author: 29275
- */
-
 #ifndef CODE_COMMUNICATION_H_
 #define CODE_COMMUNICATION_H_
 
@@ -23,7 +16,6 @@ extern uint8 threeWayIn;
 extern uint8 threeWaySum;
 extern int16 threeWayOutAngle;
 extern int8 ThreeWayDirection;
-
 void ThreeWayAnalyze(void);
 void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);

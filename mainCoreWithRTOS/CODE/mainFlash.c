@@ -26,8 +26,6 @@ void mainFlashRead(void){
 
 }
 
-
-
 uint8 writeVar = 0;
 uint8 writeMax = 32;
 void mainFlashWrite(void){

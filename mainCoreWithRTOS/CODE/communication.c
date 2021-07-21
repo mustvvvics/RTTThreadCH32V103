@@ -22,7 +22,6 @@ void get_slave_data(uint8 data)
             uart_flag = E_FRAME_HEADER_ERROR;
         }
     }
-
     if(LINE_LEN == uart_num)
     {
         uart_flag = E_OK;
@@ -48,61 +47,86 @@ void data_analysis(uint8 *line)
     switch (elementFlag) {
         case 0://无元素
             roundIslandBegin = 0;
+            ThreeWayIntersectionFlag = 0;
             break;
         case 1://三叉
-            ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
-            car_flag = 0;
+            if (car_flag == 1) {
+                ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
+            }
             break;
         case 2://车库
 
             break;
         case 3: //刹车
             car_flag = 0;
-            sendFuzzyData();
+//            sendFuzzyData();
             break;
         case 4:
-            roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
+            if (car_flag == 1) {
+                roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
+            }
             break;
     }
 
 }
+void threeWayClearOtherThings(void){
+    position_front_delta = 0;position_front = 0;expected_omega = 0;g_fGyroAngleSpeed_z = 0;
+}
 /*
  * 三叉路口决策
  */
-//int8 ThreeWayDirection = 0;
-//int16 threeWayOutAngle = 0;
 uint8 threeWayIn = 0;
-//uint8 threeWayOut = 0;
 uint8 threeWaySum = 0;
+uint8 ThreeWayIntersectionFlagPre = 0; //检测上升沿使用
+uint8 steerStatus = 0;//0 朝向前  1 朝向左  2朝向后
 void ThreeWayAnalyze(void){
-    if (ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 0) {//第一次进入
-        ThreeWayIntersectionFlag = 0;//清标志
-//        ThreeWayDirection = -1; //才能按照摄像头朝向行驶  中断中行驶决策
-        threeWayIn = 1;
-        pwm_duty(PWM1_CH1_A8, 670); //舵机向左
-      }
-    else if (ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 0) { //第一次出
-        ThreeWayIntersectionFlag = 0;
-        threeWayIn = 0;               //直接转舵机 或在外部中断中,当完成姿态变形出三叉后 释放flag
 
-//        threeWayOut = 1;                //用于在中断中变形
-//        threeWayOutAngle = 1500;          //变形力度
-        threeWaySum = 1;                //进入一次三叉
-        pwm_duty(PWM1_CH1_A8, 990);     //第一次出转舵机向后
+//            ThreeWayIntersectionFlag = 0;//清标志  是由cam核清理
+    if (ThreeWayIntersectionFlagPre == 1 && ThreeWayIntersectionFlag == 0) {//正常路段会发送flag = 0
+        ThreeWayIntersectionFlagPre = 0; //还原上升沿触发
     }
-    else if (ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 1) { //第二次进
-        ThreeWayIntersectionFlag = 0;
-//        ThreeWayDirection = 1;
+    else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 0) {//第一次进入
+        pwm_duty(PWM1_CH1_A8, 672); //舵机向左
+        steerStatus = 1;
+        sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
+//        threeWayClearOtherThings(); //清理误差 防止转动
+        ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 1;
-        pwm_duty(PWM1_CH1_A8, 670); //舵机向左
+
+//        threeWayClearOtherThings();
+
+      }
+    else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 0) { //第一次出
+        pwm_duty(PWM1_CH1_A8, 1000);     //第一次出转舵机向后
+        steerStatus = 2;
+        sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
+//        threeWayClearOtherThings();
+        ThreeWayIntersectionFlagPre = 1;//已完成上升沿
+        threeWayIn = 0;               //先前进入三叉 此次是出去
+        threeWaySum = 1;                //进入一次三叉
+
+//        threeWayClearOtherThings();
     }
-    else if (ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 1){ //第二次出
-        ThreeWayIntersectionFlag = 0;
-        threeWayIn = 0;
-//        threeWayOut = 1;  //用于在中断中变形
-//        threeWayOutAngle = -1500;
-        threeWaySum = 0;
+    else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 1) { //第二次进
+        pwm_duty(PWM1_CH1_A8, 672); //舵机向左
+        steerStatus = 1;
+        sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
+//        threeWayClearOtherThings();
+        ThreeWayIntersectionFlagPre = 1;//已完成上升沿
+        threeWayIn = 1;
+
+//        threeWayClearOtherThings();
+    }
+    else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 1){ //第二次出
         pwm_duty(PWM1_CH1_A8, 338); //舵机还原
+        steerStatus = 0;
+//        threeWayClearOtherThings();
+        sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
+        ThreeWayIntersectionFlagPre = 1;//已完成上升沿
+        threeWayIn = 0;
+        threeWaySum = 0;
+
+//        threeWayClearOtherThings();
     }
 }
 
@@ -209,14 +233,14 @@ void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData
         parameterBuff[7] = 0xEE;                            //帧尾
         uart_putbuff(UART_3, parameterBuff, 8);             //通过串口3将数据发送出去。
     }
-    else if (parameterBit == 32) { ////Parameter>>8;Parameter>>16;Parameter>>24;Parameter&0xFF;
+    else if (parameterBit == 32) {
         parameterBuff[0] = 0xDE;                            //帧头
 
         parameterBuff[1] = 0xA3;                            //功能字占位
         parameterBuff[2] = featuresWord;                    //功能字
 
         parameterBuff[3] = (parameterData32>>24)&0xFF;       //数据
-        parameterBuff[4] = (parameterData32>>16)&0xFF;      //其反解析：u32 = (u8[0]<<24)|(u8[1]<<16)|(u8[2]<<8)| u8[3];
+        parameterBuff[4] = (parameterData32>>16)&0xFF;
         parameterBuff[5] = (parameterData32>>8)&0xFF;
         parameterBuff[6] = parameterData32&0xFF;
 

@@ -6,7 +6,7 @@
 // ****************************************************
 
 // ***************** comment this *********************
-//// laneBinarize
+// laneBinarize
 //#define uint8 unsigned char
 //#define uint16 unsigned short
 //#define uint32 unsigned int
@@ -207,4 +207,15 @@ extern uint8 threewayFeatureStep;
 extern uint8 threewayFeatureJumpPointLeft;
 extern uint8 threewayFeatureJumpPointRight;
 extern uint8 threewayFeatureWidth;
+
+// detectThreewayroad3
+extern uint8 leftStartFlagThreewayFeatureFound;
+extern uint8 rightStartFlagThreewayFeatureFound;
+extern uint16 leftStartThreewayFeatureJumpPointLeft;
+extern uint16 rightStartThreewayFeatureJumpPointRight;
+extern uint16 rightStartThreewayFeatureJumpPointLeft;
+extern uint16 leftStartThreewayFeatureJumpPointRight;
+extern uint16 leftStartThreewayFeatureWidth;
+extern uint16 rightStartThreewayFeatureWidth;
+extern uint16 threewayFeatureWidthSum;
 #endif

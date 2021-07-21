@@ -34,7 +34,7 @@ void show_speed(void)
         rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
         ips114_showstr(0, 1, txt);
 
-        rt_sprintf(txt,"outboSum=%05d|              ",outboundAreaSum);
+        rt_sprintf(txt,"outboSum=%05d|StStatus=%05d",outboundAreaSum,steerStatusFromMain);
         ips114_showstr(0, 2, txt);
         rt_sprintf(txt,"areaRoLf=%05d|areaRoRi=%05d",areaDetectRoundaboutLeft,areaDetectRoundaboutRight);
         ips114_showstr(0, 3, txt);

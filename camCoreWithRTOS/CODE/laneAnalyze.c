@@ -601,15 +601,12 @@ void detectThreeWayRoad(Mat outMat) {
 }
 
 void detectThreeWayRoad2(Mat outMat) {
-//    if (threewayFeatureRow++ > 40) {
-//        threewayFeatureRow = 0;
-//    }
     flagThreewayFeatureFound = 0;
     flagEnterThreeWay = 0;
     threewayFeatureJumpWhiteNum = threewayFeatureJumpBlackNum = 0;
     threewayFeatureWidth = 0;
-    threewayFeatureJumpPointRight = threewayFeatureJumpPointLeft = 0;
     threewayFeatureStep = 0;
+    threewayFeatureJumpPointRight = threewayFeatureJumpPointLeft = 0;
 
     pixelMeanPrevious = 2 * outMat[imgRow-4][imgCol/2+globalCenterBias];
     pixelMean = outMat[threewayFeatureRow][threewayFeatureStartCol] + outMat[threewayFeatureRow][threewayFeatureStartCol+1];
@@ -645,8 +642,6 @@ void detectThreeWayRoad2(Mat outMat) {
                 threewayFeatureStep = 2;
                 threewayFeatureJumpPointRight = iterCol;
                 pixelMeanPrevious = pixelMean; // pixelMeanPrevious -- white
-                flagThreewayFeatureFound = 1;
-                break;
             }
         } else if (threewayFeatureStep == 2) {
             if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
@@ -655,12 +650,171 @@ void detectThreeWayRoad2(Mat outMat) {
                 break;
             }
         }
-        if (iterCol >= threewayFeatureEndCol) {
-            return;
-        }
     }
     if (flagThreewayFeatureFound) {
         threewayFeatureWidth = threewayFeatureJumpPointRight - threewayFeatureJumpPointLeft;
+    }
+}
+
+void detectThreeWayRoad3(Mat outMat) {
+    if (flagEnterThreeWay == 2) {
+        if (exitThreewayDelay != 0) {
+            --exitThreewayDelay;
+        } else {
+            flagEnterThreeWay = 3;
+            exitThreewayDelay = 100;
+        }
+        return;
+    }
+
+    if (flagEnterThreeWay == 3){
+        if (exitThreewayDelay != 0) {
+            --exitThreewayDelay;
+        } else {
+            flagEnterThreeWay = 0;
+        }
+        return;
+    }
+
+    if (flagEnterThreeWay == 1) {
+//        uart_putstr(UART_1,"flag 1\n");
+        if (flagEnterOutbound) {
+            flagEnterThreeWay = 2;
+            exitThreewayDelay = 10;
+        }
+        return;
+    }
+
+    threewayFeatureWidthSum = 0;
+    flagEnterThreeWay = 0;
+    threewayFeatureWidth = 0;
+    threewayFeatureStep = 0;
+    exitThreewayDelay = 0;
+
+    leftStartFlagThreewayFeatureFound = rightStartFlagThreewayFeatureFound = 0;
+    leftStartThreewayFeatureJumpPointLeft = rightStartThreewayFeatureJumpPointRight = 0;
+    rightStartThreewayFeatureJumpPointLeft = leftStartThreewayFeatureJumpPointRight = 0;
+
+    // left start
+    //printf("left start!!!!!!!!!!\n");
+    pixelMeanPrevious = 2 * outMat[imgRow-4][imgCol/2+globalCenterBias];
+    pixelMean = outMat[threewayFeatureRow][threewayFeatureStartCol] + outMat[threewayFeatureRow][threewayFeatureStartCol+1];
+    iterCol = threewayFeatureStartCol;
+    //printf("start pixelMeanPrevious: %d\n", pixelMeanPrevious);
+    //printf("start pixelMean: %d\n", pixelMean);
+
+    if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+        for (; iterCol < imgCol/2+globalCenterBias; iterCol+=2) {
+            pixelMean = outMat[threewayFeatureRow][iterCol] + outMat[threewayFeatureRow][iterCol+1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                continue;
+            }
+            break;
+        }
+        if (iterCol >= imgCol/2+globalCenterBias) {
+            //printf("nononononononononononono\n");
+            return;
+        }
+    }
+    pixelMeanPrevious = pixelMean; // pixelMeanPrevious -- white
+    //printf("start col: %d, start pixelMean:%d\n", iterCol, pixelMeanPrevious);
+
+    for (; iterCol < threewayFeatureEndCol; iterCol+=2) {
+        pixelMean = outMat[threewayFeatureRow][iterCol] + outMat[threewayFeatureRow][iterCol+1];
+        //printf("at col %d, in step %d, pixelMeanPrevious %d, pixelMean %d\n", iterCol, threewayFeatureStep, pixelMeanPrevious, pixelMean);
+        if (threewayFeatureStep == 0) { // detect white to black
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                threewayFeatureStep = 1;
+                leftStartThreewayFeatureJumpPointLeft = iterCol;
+                pixelMeanPrevious = pixelMean; // pixelMeanPrevious -- black
+            }
+        } else if (threewayFeatureStep == 1) { // detect black to white
+            if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
+                threewayFeatureStep = 2;
+                leftStartThreewayFeatureJumpPointRight = iterCol;
+                pixelMeanPrevious = pixelMean; // pixelMeanPrevious -- white
+                leftStartFlagThreewayFeatureFound = 1;
+                //printf("got left start feature!\n");
+                break;
+            }
+        } else if (threewayFeatureStep == 2) {
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                leftStartFlagThreewayFeatureFound = 1;
+                //printf("got left start feature!\n");
+                break;
+            }
+        }
+    }
+
+    // right start
+    //printf("right start!!!!!!!!!!!!!\n");
+    pixelMeanPrevious = 2 * outMat[imgRow-4][imgCol/2+globalCenterBias];
+    pixelMean = outMat[threewayFeatureRow][threewayFeatureEndCol] + outMat[threewayFeatureRow][threewayFeatureEndCol-1];
+    iterCol = threewayFeatureEndCol;
+    threewayFeatureStep = 0;
+    //printf("start pixelMeanPrevious: %d\n", pixelMeanPrevious);
+    //printf("start pixelMean: %d\n", pixelMean);
+
+    if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+        for (; iterCol > imgCol/2+globalCenterBias; iterCol-=2) {
+            pixelMean = outMat[threewayFeatureRow][iterCol] + outMat[threewayFeatureRow][iterCol-1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                continue;
+            }
+            break;
+        }
+        if (iterCol <= imgCol/2+globalCenterBias) {
+            //printf("nononononononononononono\n");
+            return;
+        }
+    }
+    pixelMeanPrevious = pixelMean; // pixelMeanPrevious -- white
+    //printf("start col: %d, start pixelMean:%d\n", iterCol, pixelMeanPrevious);
+
+    for (; iterCol > threewayFeatureStartCol; iterCol-=2) {
+        pixelMean = outMat[threewayFeatureRow][iterCol] + outMat[threewayFeatureRow][iterCol-1];
+        //printf("at col %d, in step %d, pixelMeanPrevious %d, pixelMean %d\n", iterCol, threewayFeatureStep, pixelMeanPrevious, pixelMean);
+        if (threewayFeatureStep == 0) { // detect white to black
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                threewayFeatureStep = 1;
+                rightStartThreewayFeatureJumpPointRight = iterCol;
+                pixelMeanPrevious = pixelMean; // pixelMeanPrevious -- black
+            }
+        } else if (threewayFeatureStep == 1) {
+            if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
+                threewayFeatureStep = 2;
+                rightStartThreewayFeatureJumpPointLeft = iterCol;
+                pixelMeanPrevious = pixelMean; // pixelMeanPrevious -- white
+                rightStartFlagThreewayFeatureFound = 1;
+                //printf("got right start feature!\n");
+                break;
+            }
+        } else if (threewayFeatureStep == 2) {
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                rightStartFlagThreewayFeatureFound = 1;
+                //printf("got right start feature!\n");
+                break;
+            }
+        }
+    }
+
+    //printf("\nleftStartThreewayFeatureJumpPointLeft: %d\n", leftStartThreewayFeatureJumpPointLeft);
+    //printf("leftStartThreewayFeatureJumpPointRight: %d\n",  leftStartThreewayFeatureJumpPointRight);
+    //printf("rightStartThreewayFeatureJumpPointLeft: %d\n",  rightStartThreewayFeatureJumpPointLeft);
+    //printf("rightStartThreewayFeatureJumpPointRight: %d\n", rightStartThreewayFeatureJumpPointRight);
+
+    if (leftStartFlagThreewayFeatureFound && rightStartFlagThreewayFeatureFound) {
+        if (abs(leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft) < 6 && \
+                abs(leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight) < 6) {
+            threewayFeatureWidthSum += leftStartThreewayFeatureJumpPointRight-leftStartThreewayFeatureJumpPointLeft;
+            threewayFeatureWidthSum += rightStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointLeft;
+            if (threewayFeatureWidthSum > 20) {
+                flagEnterThreeWay = 1;
+                accelerateRatio = 5;
+            } else {
+                accelerateRatio = 10;
+            }
+        }
     }
 }
 
@@ -752,19 +906,19 @@ void detectOutOfBounds(Mat outMat) {
             confirmOutboundDelay = 200;
         } else if (confirmOutboundDelay == 1) {
             confirmOutboundDelay = 0;
-
-            // recompare average pixel value
-            outboundAreaSum = 0;
-            for (iterRow = imgRow-1; iterRow > 45; --iterRow) {
-                for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
-                    outboundAreaSum += outMat[iterRow][iterCol];
-                }
-            }
-            if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
-                flagEnterOutbound = 2; // out of bounds is confirmed
-            } else {
-                flagEnterOutbound = 0;
-            }
+            flagEnterOutbound = 0;
+//            // recompare average pixel value
+//            outboundAreaSum = 0;
+//            for (iterRow = imgRow-1; iterRow > 45; --iterRow) {
+//                for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
+//                    outboundAreaSum += outMat[iterRow][iterCol];
+//                }
+//            }
+//            if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
+//                flagEnterOutbound = 2; // out of bounds is confirmed
+//            } else {
+//                flagEnterOutbound = 0;
+//            }
         } else {
             --confirmOutboundDelay;
         }
@@ -851,7 +1005,7 @@ void detectCrossroad() {
     crossroadMissNumRight = 0;
     flagEnterCrossroad = 0;
 
-    for (iterRow = slopeRowEnd; iterRow > slopeRowStart+10; --iterRow) {
+    for (iterRow = slopeRowEnd; iterRow > slopeRowEnd-10; --iterRow) {
         if (!flagDetectLeft[iterRow]) {
             ++crossroadMissNumLeft;
         }
@@ -860,8 +1014,23 @@ void detectCrossroad() {
         }
     }
     if (crossroadMissNumLeft > detectCrossroadMissingNumThres && crossroadMissNumRight > detectCrossroadMissingNumThres) {
-        flagEnterCrossroad = 1;
+        crossroadMissNumLeft = crossroadMissNumRight = 0;
+        for (iterRow = slopeRowEnd-10; iterRow > slopeRowEnd-20; --iterRow) {
+            if (!flagDetectLeft[iterRow]) {
+                ++crossroadMissNumLeft;
+            }
+            if (!flagDetectRight[iterRow]) {
+                ++crossroadMissNumRight;
+            }
+        }
+        if (crossroadMissNumLeft < 10 - detectCrossroadMissingNumThres && crossroadMissNumRight < 10 - detectCrossroadMissingNumThres) {
+            flagEnterCrossroad = 1;
+        }
     }
+}
+
+void detectCrossroad2(Mat outMat) {
+
 }
 
 void adaptCrossroad() {
@@ -884,18 +1053,30 @@ void laneAnalyze(Mat outMat){
     missCounterLeft = 0;
     missCounterRight = 0;
 
-    detectStartLine(outMat);
+    if (steerStatusFromMain == 0) {
+        globalCenterBias = -7;
+    } else if (steerStatusFromMain == 1){
+        globalCenterBias = -4;
+    } else if (steerStatusFromMain == 2) {
+        globalCenterBias = -5;
+    }
+
     detectOutOfBounds(outMat);
-
     // threeway mode does not need full camera error
-    // if (flagEnterThreeWay) {
-    //  // ..........................
-    //  markSlopeStartCenter();
-    //  passParameter();
-    //  cameraError = 0;
-    //  return;
-    // }
+    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
+        // ..........................
+//        markSlopeStartCenter();
+        detectThreeWayRoad3(outMat);
+        flagEnterOutbound = 0;
+        passParameter();
+        return;
+    }
 
+    if (flagEnterThreeWay == 3) {
+        flagEnterOutbound = 0;
+    }
+
+    detectStartLine(outMat);
     for (iterRow = imgRow-1; iterRow != 255; --iterRow){
         if (abs(flagEnterRoundabout) == 2) {
             locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
@@ -911,9 +1092,7 @@ void laneAnalyze(Mat outMat){
     // foresight();
 
     // detectSBend();
-    if (!flagEnterRoundabout) {
-        detectThreeWayRoad2(outMat);
-    }
+
 
     if (!flagEnterRoundabout && !flagEnterThreeWay) {
         detectCrossroad();
@@ -923,8 +1102,13 @@ void laneAnalyze(Mat outMat){
     }
 
     if (!flagEnterCrossroad) {
-//        detectRoundabout(outMat);
+        detectRoundabout(outMat);
     }
+
+    if (!flagEnterRoundabout) {
+        detectThreeWayRoad3(outMat);
+    }
+
     detectSharpCurve();
     if (sharpCurveStatus) { //  && !flagEnterRoundabout
         adaptSharpCurve();
@@ -974,6 +1158,10 @@ void regression() {
 
 // error composition: slope, front points jitter
 void computeError() {
+    if (flagEnterThreeWay==1 || flagEnterThreeWay == 2) {
+        cameraError = 0;
+        return;
+    }
     // which method to limit slope?
 
     //slopeRowStart = rangeComputeSlopeNear + specialCaseStart;
@@ -991,10 +1179,9 @@ void computeError() {
     // if (flagEnterRoundabout != 0) {
     //   cameraError = cameraError * 100 / 260;
     // }
-    if (cameraError > 80) {
+    if (cameraError > 80 || cameraError < -80) {
         cameraError = cameraErrorPrevious;
     } else {
         cameraErrorPrevious = cameraError;
     }
 }
-
