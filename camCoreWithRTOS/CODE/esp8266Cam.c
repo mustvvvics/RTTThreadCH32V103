@@ -161,16 +161,22 @@ void sendMessageData(void) {                //发送数据曲线进行分析
 //    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
 
 //    rt_sprintf(txtA,"flIRo:%d, 3Xsum:% 2d, width:% 3d, ratio:%d",flagEnterRoundabout, detectThreewayFeatureNum, detectThreewayFeatureNearestRowWidth, (int16)(detectThreewayFeatureNearestRowRatio * 100));
-    if (leftStartFlagThreewayFeatureFound && rightStartFlagThreewayFeatureFound) {
-        if (leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft < 5 && \
-                leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft >-5) {
-            if(leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight < 5 && \
-                    leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight > -5) {
-                rt_sprintf(txtA,"Ro:%2d,LBi:%3d, RBi:%3d, LWi:%3d, RWi:%3d,sum:%d",threewayFeatureRow, leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft,leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight,
-                        leftStartThreewayFeatureJumpPointLeft-leftStartThreewayFeatureJumpPointRight,rightStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointRight, threewayFeatureWidthSum);
-                uart_putstr(UART_1,txtA);
-                uart_putstr(UART_1,message1);
-            }
-        }
+//    if (leftStartFlagThreewayFeatureFound && rightStartFlagThreewayFeatureFound) {
+//        if (leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft < 5 && \
+//                leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft >-5) {
+//            if(leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight < 5 && \
+//                    leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight > -5) {
+//                rt_sprintf(txtA,"Ro:%2d,LBi:%3d, RBi:%3d, LWi:%3d, RWi:%3d,sum:%d",threewayFeatureRow, leftStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointLeft,leftStartThreewayFeatureJumpPointRight-rightStartThreewayFeatureJumpPointRight,
+//                        leftStartThreewayFeatureJumpPointLeft-leftStartThreewayFeatureJumpPointRight,rightStartThreewayFeatureJumpPointLeft-rightStartThreewayFeatureJumpPointRight, threewayFeatureWidthSum);
+//                uart_putstr(UART_1,txtA);
+//                uart_putstr(UART_1,message1);
+//            }
+//        }
+//    }
+    if (laneWidthSlopeLeft > 0 && laneWidthSlopeRight < 0) {
+        rt_sprintf(txtA,"widLef:%03d, widRig:%03d", laneWidthSlopeLeft, laneWidthSlopeRight);
+        uart_putstr(UART_1,txtA);
+        uart_putstr(UART_1,message1);
     }
+
 }

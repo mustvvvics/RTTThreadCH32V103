@@ -43,7 +43,7 @@ void show_speed(void)
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"CenterBias=%03d|JpPointNum=%03d",globalCenterBias,startlineJumpingPointNumThres);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"              |              ");
+        rt_sprintf(txt,"jitterLeft=%04d|jitterRigh=%04d", laneJitterLeft, laneJitterRight);
         ips114_showstr(0, 6, txt);
         rt_sprintf(txt,"                             ");
         ips114_showstr(0, 7, txt);

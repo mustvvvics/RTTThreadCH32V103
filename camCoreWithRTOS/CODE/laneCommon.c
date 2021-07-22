@@ -8,6 +8,7 @@ int32 laneLocationRight[imgRow] = {0};
 
 int32 laneCenter[imgRow] = {imgCol / 2};
 int32 laneCenterPrevious = imgCol / 2;
+uint8 laneCenterBiased = 0;
 
 // lane detection flag for each row
 uint8 flagDetectLeft[imgRow] = {0};
@@ -72,7 +73,9 @@ int32 averLaneCenter, averRowIndex;
 void laneInit() {
     for (iterRow = 0; iterRow < imgRow; ++iterRow) {
         laneLocationRight[iterRow] = imgCol - 1;
+        laneWidthPresent[iterRow] = 9999;
     }
+    laneCenterBiased = imgCol/2 + globalCenterBias;
     // threewayFeatureStartCol = imgCol/2 + globalCenterBias - laneWidth[imgRow-1] * 0.6;
     // threewayFeatureEndCol = imgCol/2 + globalCenterBias + laneWidth[imgRow-1] * 0.6;
     threewayFeatureStartCol = 3;
@@ -85,7 +88,7 @@ uint8 countJitterBreakRowLeft = 0;
 uint8 countJitterBreakRowRight = 0;
 
 
-int32 pixelMeanThres = 70;
+int32 pixelMeanThres = 100;
 int32 pixelMeanPrevious = 0;
 int32 pixelMean = 0;
 
@@ -138,11 +141,12 @@ uint8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
 int32 outboundAreaSum = 0;
-int32 outboundAreaThres = 8000;
+int32 outboundAreaThres = 10000;
 uint8 flagEnterOutbound = 0;
 uint8 exitOutboundDelay = 0;
 uint8 confirmOutboundDelay = 0;
 uint8 exitRoundaboutStraightLaneNum = 0;
+uint8 rangeDetectOutBound = 45;
 
 uint8 accelerateRatio = 10;
 uint8 flagCameraElement = 0;
@@ -186,7 +190,6 @@ uint8 threewayFeatureWidth = 0;
 uint8 threewayFeatureStep = 0;
 uint8 flagThreewayFeatureFound = 0;
 
-// detectThreewayroad3
 uint8 leftStartFlagThreewayFeatureFound = 0;
 uint8 rightStartFlagThreewayFeatureFound = 0;
 uint16 leftStartThreewayFeatureJumpPointLeft = 0;
@@ -200,3 +203,18 @@ uint16 threewayFeatureWidthSum = 16;
 
 //detectCrossroad2
 uint8 detectCrossroadRow[3] = {10, 25, 40};
+
+// detectWidth
+uint16 laneWidthCenter[imgRow] = {0};
+int32 laneWidthLeft[imgRow] = {0};
+int32 laneWidthRight[imgRow] = {0};
+uint16 laneWidthPresent[imgRow] = {0};
+// uint16 laneWidthLeft = 0;
+// uint16 laneWidthRight = 0;
+int32 latestWhiteRowPixelMean = 0;
+int32 pixelMeanNear = 0;
+uint8 maxAvailableRow = 0;
+uint8 threewayWidthFeatureRow = 0;
+int32 threewayWidthFeatureRowCenterJitter = 0;
+int32 laneWidthSlopeLeft = 0;
+int32 laneWidthSlopeRight = 0;

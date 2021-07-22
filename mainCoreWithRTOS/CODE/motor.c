@@ -105,22 +105,23 @@ void speed_conversion(float Vx, float Vy,float Vz)
 //
 void motor_conversion(void)
 {
+
     if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 0 )//正向行驶
     {
         expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
         //x,y,z轴的期望速度输入
 //        speed_conversion(0,dynamic_programming(-position_front,position_front_delta),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
-        speed_conversion(0,expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+        speed_conversion(0,(expected_y * accelerate) / 10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
     }
     else if (car_flag == 1 && threeWayIn == 1) { //变形
         expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
-        speed_conversion(-expected_y,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+        speed_conversion((-expected_y * accelerate) / 10,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
     }
     else if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 1 ) {//逆向行驶
         expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
                 //x,y,z轴的期望速度输入
         //        speed_conversion(0,dynamic_programming(-position_front,position_front_delta),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
-        speed_conversion(0,-expected_y,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+        speed_conversion(0,(-expected_y * accelerate) / 10 ,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
     }
     else
     {
@@ -153,6 +154,14 @@ void motor_conversion(void)
     motor4_ctl(motor4_pwm);
 
 }
+//舵机朝向与行驶在中线的镜头偏移量
+//    if (steerStatusFromMain == 0) {
+//        globalCenterBias = -7;    //速度45
+//    } else if (steerStatusFromMain == 1){
+//        globalCenterBias = -13;   //速度40
+//    } else if (steerStatusFromMain == 2) {
+//        globalCenterBias = -5;    //速度45
+
 //ENC3 y = 0.0264x - 11.085
 //y37.878+419=x;
 //ENC2 y = 0.0259x - 5.1331
@@ -161,3 +170,6 @@ void motor_conversion(void)
 //287+41y=x;
 //ENC1 y = 0.0246x - 9.3414
 // 379+40.65y=x;
+
+
+//    }

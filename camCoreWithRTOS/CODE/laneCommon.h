@@ -42,7 +42,7 @@ extern float detectDistance;
 #define laneFound 1
 #define laneMiss 0
 
-#define laneNear    15
+#define laneNear    20
 //#define laneFar       10
 
 // roundabout status flag
@@ -165,6 +165,7 @@ extern uint8 flagEnterOutbound;
 extern uint8 exitOutboundDelay;
 extern uint8 confirmOutboundDelay;
 extern uint8 exitRoundaboutStraightLaneNum;
+extern uint8 rangeDetectOutBound;
 
 extern uint8 accelerateRatio;
 extern uint8 flagCameraElement;
@@ -218,4 +219,17 @@ extern uint16 leftStartThreewayFeatureJumpPointRight;
 extern uint16 leftStartThreewayFeatureWidth;
 extern uint16 rightStartThreewayFeatureWidth;
 extern uint16 threewayFeatureWidthSum;
+
+extern uint16 laneWidthPresent[imgRow];
+extern int32 laneWidthLeft[imgRow];
+extern int32 laneWidthRight[imgRow];
+extern int32 latestWhiteRowPixelMean;
+extern uint8 laneCenterBiased;
+extern int32 pixelMeanNear;
+extern uint16 laneWidthCenter[imgRow];
+extern uint8 maxAvailableRow;
+extern uint8 threewayWidthFeatureRow;
+extern int32 threewayWidthFeatureRowCenterJitter;
+extern int32 laneWidthSlopeLeft;
+extern int32 laneWidthSlopeRight;
 #endif

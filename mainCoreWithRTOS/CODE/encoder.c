@@ -20,6 +20,8 @@ void clearError(void){  //Çå¿ÕÎó²î
     go_forward=0;go_backward=0;
     go_left=0;go_right=0;
     elementFlag = 0;
+    roundIslandBegin = 0;
+    ThreeWayIntersectionFlag = 0;
 //    ThreeWayIntersectionFlag = 0;
 }
 

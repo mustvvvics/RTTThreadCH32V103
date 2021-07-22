@@ -92,8 +92,8 @@ void assignValueFirst(void){
             case 6:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
             case 7:yaw_pid.Kd = yaw_pid.Kd + 0.1 * signData;break;
             case 8:
-                if (parameterAdjustButton == 1) {servoDuty = 990;pwm_duty(PWM1_CH1_A8, servoDuty);}
-                else if (parameterAdjustButton == 4){servoDuty = 670;pwm_duty(PWM1_CH1_A8, servoDuty);};break;
+                if (parameterAdjustButton == 1) {servoDuty = 1000;pwm_duty(PWM1_CH1_A8, servoDuty);}
+                else if (parameterAdjustButton == 4){servoDuty = 672;pwm_duty(PWM1_CH1_A8, servoDuty);};break;
             case 9:
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
