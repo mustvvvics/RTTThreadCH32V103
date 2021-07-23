@@ -40,11 +40,18 @@ int main(void)
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 //    esp8266Init();
-    camFlashRead();                         //读flash
-    rt_thread_mdelay(100);
-    itoaChar(elementTableFromMain,elementQueue,10);
+//    camFlashRead();                         //读flash
+    flagCameraElement = 5;
+//    rt_thread_mdelay(500);
+    if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
+        itoaChar(elementTableFromMain,elementQueue,10);
+    }
+    rt_thread_mdelay(1000);
+
     while(1)
     {
+
+
         //等待摄像头采集完毕
         rt_sem_take(camera_sem, RT_WAITING_FOREVER);
         //开始处理摄像头图像
@@ -62,7 +69,8 @@ int main(void)
 //        }
 
 //        sendMessageData();//发送相关参数
-        if (camFlashWriteFlag == 1)
-        {camFlashWrite();rt_thread_mdelay(10);camFlashWriteFlag = 0;}
+//        if (camFlashWriteFlag == 1)
+//        {camFlashWrite();rt_thread_mdelay(10);camFlashWriteFlag = 0;}
+
     }
 }

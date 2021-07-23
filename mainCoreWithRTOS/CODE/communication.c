@@ -9,6 +9,7 @@
 uint8   temp_buff[LINE_LEN];            //主机用于接收数据的BUFF
 vuint8  uart_flag;                   //接收数据标志位
 
+uint8 sendMainFlashToCam = 0;
 void get_slave_data(uint8 data)
 {
     static uint8 uart_num = 0;
@@ -48,6 +49,7 @@ void data_analysis(uint8 *line)
         case 0://无元素
             roundIslandBegin = 0;
             ThreeWayIntersectionFlag = 0;
+            sendMainFlashToCam = 0;
             break;
         case 1://三叉
             if (car_flag == 1) {
@@ -65,6 +67,9 @@ void data_analysis(uint8 *line)
             if (car_flag == 1) {
                 roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
             }
+            break;
+        case 5:
+            sendMainFlashToCam = 1;
             break;
     }
 

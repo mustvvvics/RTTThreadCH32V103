@@ -5,5 +5,6 @@
 
 void mainFlashRead(void);
 void mainFlashWrite(void);
+void sendFlashDataToCam(void);
 
 #endif

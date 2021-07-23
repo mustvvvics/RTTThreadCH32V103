@@ -170,9 +170,7 @@ void analysisFixParameter(uint8 *line){
                 case 0xDC:elementTableLengthFromMain = line[6];break;
                 case 0xDD:drivingDirection = line[6];break;
                 case 0xDF:
-                    if (camFlashWriteFlag == 0) {
-                        camFlashWriteFlag = line[6];
-                    } break;//从机写falsh
+                    if (camFlashWriteFlag == 0) {camFlashWriteFlag = line[6];} break;//从机接受主机数据
                 case 0xAB:carStart = line[6];break;
                 default:
                     break;

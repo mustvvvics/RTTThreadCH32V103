@@ -16,6 +16,8 @@ extern uint8 threeWayIn;
 extern uint8 threeWaySum;
 extern int16 threeWayOutAngle;
 extern int8 ThreeWayDirection;
+extern uint8 sendMainFlashToCam;
+
 void ThreeWayAnalyze(void);
 void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);
