@@ -5,7 +5,8 @@ int8 menuY = 0;      //菜单上下
 uint8 parameterAdjustButton = 0;//左右参数调整响应
 uint8 confirmButton = 0;//确认按键
 uint32 servoDuty = 0;
-
+int32 elementTable = 0; //元素顺序表
+uint8 elementTableLength = 0;
 /*
  * page 2 in cam display
  */
@@ -42,31 +43,31 @@ uint8 fixCamRoundaboutDetectionStartRow = 20;//+- 1
 void transfetFunctionFirst(int8 targetRow,char *targetBuff){
 
     if ((3 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"FlashWrite        ");
+        rt_sprintf(targetBuff,"FlashWrite          ");
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Cargo&Winner      ");
+        rt_sprintf(targetBuff,"Cargo&Winner        ");
     }
     else if ((5 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"CarSpeed=%04d     ",expected_y);
+        rt_sprintf(targetBuff,"CarSpeed=%04d       ",expected_y);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_P=%04d      ",(int16)(yaw_pid.Kp*100));
+        rt_sprintf(targetBuff,"Turnn_P=%04d        ",(int16)(yaw_pid.Kp*100));
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_D=%04d      ",(int16)(yaw_pid.Kd*100));
+        rt_sprintf(targetBuff,"Turnn_D=%04d        ",(int16)(yaw_pid.Kd*100));
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor        ");
+        rt_sprintf(targetBuff,"ServoMotor          ");
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Servo=%04d        ",servoDuty);
+        rt_sprintf(targetBuff,"Servo=%04d          ",servoDuty);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"                     ");
     }
     else {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"                     ");
     }
 }
 /*
@@ -108,31 +109,31 @@ void assignValueFirst(void){
 */
 void transfetFunctionSecond(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage1"); //图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage1  "); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"clearCamFlags     ");
+        rt_sprintf(targetBuff,"clearCamFlags       ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"3WayFeatureRow=%03d",fixCamThreewayFeatureRow);
+        rt_sprintf(targetBuff,"3WayFeatureRow=%03d  ",fixCamThreewayFeatureRow);
     }
     else if ((6 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"CRMissNumThres=%03d",fixCamDetectCrossroadMissingNumThres);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RgSharpCurveRow=%02d",fixCamRangeSharpCurveRow);
+        rt_sprintf(targetBuff,"RgSharpCurveRow=%02d  ",fixCamRangeSharpCurveRow);
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"GlobCenterBias=%03d",fixCamGlobalCenterBias);
+        rt_sprintf(targetBuff,"GlobCenterBias=%03d  ",fixCamGlobalCenterBias);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SLJumpPointNum=%03d",fixCamStartlineJumpingPointNumThres);
+        rt_sprintf(targetBuff,"SLJumpPointNum=%03d  ",fixCamStartlineJumpingPointNumThres);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"                     ");
     }
     else {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"                     ");
     }
 }
 /*
@@ -180,33 +181,34 @@ void assignValueSecond(void){
 */
 void transfetFunctionThird(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage2"); //图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage2  "); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DetectDistance=%03d",fixCamDetectDistance);
+        rt_sprintf(targetBuff,"DetectDistance=%03d  ",fixCamDetectDistance);
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"PixelMeanThres=%03d",fixCamPixelMeanThres);
+        rt_sprintf(targetBuff,"PixelMeanThres=%03d  ",fixCamPixelMeanThres);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SlopeRowStart =%03d",fixCamSlopeRowStart);
+        rt_sprintf(targetBuff,"SlopeRowStart =%03d  ",fixCamSlopeRowStart);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SlopeRowEnd   =%03d",fixCamSlopeRowEnd );
+        rt_sprintf(targetBuff,"SlopeRowEnd   =%03d  ",fixCamSlopeRowEnd );
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DRAboutThrLeft=%03d",fixCamAreaDetectRoundaboutThresLeft);
+        rt_sprintf(targetBuff,"DRAboutThrLeft=%03d  ",fixCamAreaDetectRoundaboutThresLeft);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DRAboutThRight=%03d",fixCamAreaDetectRoundaboutThresRight);
+        rt_sprintf(targetBuff,"DRAboutThRight=%03d  ",fixCamAreaDetectRoundaboutThresRight);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RADeteStartRow=%03d",fixCamRoundaboutDetectionStartRow);
+        rt_sprintf(targetBuff,"RADeteStartRow=%03d  ",fixCamRoundaboutDetectionStartRow);
     }
     else {
-        rt_sprintf(targetBuff,"                   ");
+        rt_sprintf(targetBuff,"                     ");
     }
 }
+
 /*
 *Assign value to data on the Third page
 */
@@ -245,11 +247,74 @@ void assignValueThird(void){
                 sendParameterToCam(8,0xEE,0,fixCamRoundaboutDetectionStartRow,0,0);break;
             default:break;
             /*
-             * Eg;sendParameterToCam(0,0xE1,xxx,0,0,0);break;
-             *    sendParameterToCam(8,0xE1,0,xxx,0,0);break;
-             *    sendParameterToCam(16,0xE1,0,0,xxx,0);break;
-             *    sendParameterToCam(32,0xE1,0,0,0,xxx);break;
+             * Eg;sendParameterToCam(0,0xE1,abc,0,0,0);break;
+             *    sendParameterToCam(8,0xE1,0,abc,0,0);break;
+             *    sendParameterToCam(16,0xE1,0,0,abc,0);break;
+             *    sendParameterToCam(32,0xE1,0,0,0,abc);break;
              */
+        }
+    }
+    else {return;}
+}
+
+/*
+*Pass variable data on the Fourth page
+*/
+void transfetFunctionFourth(int8 targetRow,char *targetBuff){
+    if ((3 - menuY) == targetRow) {                //BLACK
+        rt_sprintf(targetBuff,"ClearChoose         ");
+    }
+    else if ((4 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"RoundAbout  :a|1    ");
+    }
+    else if ((5 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"ThreeWay    :b|2    ");
+    }
+    else if ((6 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"CrossRoad   :c|3    ");
+    }
+    else if ((7 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"AbruptSlope :d|4    ");
+    }
+    else if ((8 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"Garage      :e|5    ");
+    }
+    else if ((9 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"SendElementTable    ");
+    }
+    else if ((10 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                    ");
+    }
+    else {
+        rt_sprintf(targetBuff,"                    ");
+    }
+}
+/*
+ * Create a table related to the order of the elements
+ */
+void createElementTable(uint8 element){
+    elementTable = elementTable * 10 + element;
+    elementTableLength = elementTableLength + 1;
+}
+
+/*
+ * Assign value to data on the Fourth page
+ */
+
+void assignValueFourth(void){
+    if (confirmButton == 1) { //按下确认键才响应修改
+        switch (menuY + 3) {
+            case 3:elementTable = 0;elementTableLength = 0;break;
+            case 4:createElementTable(1);break;
+            case 5:createElementTable(2);break;
+            case 6:createElementTable(3);break;
+            case 7:createElementTable(4);break;
+            case 8:createElementTable(5);break;
+            case 9:
+                sendParameterToCam(32,0xDB,0,0,0,elementTable); //告知顺序
+                sendParameterToCam(8,0xDC,0,elementTableLength,0,0); //告知元素个数:长度
+                break;
+            default:break;
         }
     }
     else {return;}
@@ -260,14 +325,20 @@ void assignValueThird(void){
 */
 
 uint8 maxMenuRow = 10;//下滑选择限制
-uint8 maxMenuPage = 2;//左右选择限制  total: 3 pages
-char txt1[20]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0}, //承载数组
+uint8 maxMenuPage = 3;//左右选择限制  total: 4 pages
+char txt1[32]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0}, //承载数组
                   txt5[32]={0},txt6[32]={0},txt7[32]={0};
 void disaplayMenu(void){
 
 /***********************状态栏*******************************************/
-    rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
-    rt_sprintf(txt2,"Vc=%03d|AC=%02d",Vc,accelerate);
+    if (menuX != 3) {
+        rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
+        rt_sprintf(txt2,"Vc=%03d|AC=%02d           ",Vc,accelerate);
+    }
+    else {
+        rt_sprintf(txt1,"carF=%01d|Fg=%02d  ",car_flag,elementFlag);
+        rt_sprintf(txt2,"Num=%02d|Order=%09d ",elementTableLength,elementTable);//显示传输元素队列 当menuX = 3 时候触发
+    }
 /************************************************************************/
     if (menuY < 0) {menuY = 0;} //限制选择范围
     else if (menuY > maxMenuRow - 3) {menuY = maxMenuRow - 3;} //max - 3;now max = 15
@@ -288,6 +359,11 @@ void disaplayMenu(void){
         assignValueThird(); //更改数值
         transfetFunctionThird(3,txt3); transfetFunctionThird(4,txt4);//传递显示
         transfetFunctionThird(5,txt5);transfetFunctionThird(6,txt6);transfetFunctionThird(7,txt7);
+    }
+    else if (menuX == 3) {
+        assignValueFourth(); //更改数值
+        transfetFunctionFourth(3,txt3); transfetFunctionFourth(4,txt4);//传递显示
+        transfetFunctionFourth(5,txt5);transfetFunctionFourth(6,txt6);transfetFunctionFourth(7,txt7);
     }
 /***********************显示每一行***************************************/
     ips114_showstr(0,1,txt1);
@@ -346,3 +422,5 @@ void display_init(void)
         rt_thread_startup(tidDisplay);
     }
 }
+
+

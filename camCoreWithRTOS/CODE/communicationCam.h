@@ -12,11 +12,15 @@ extern int16 encoder_left_front,encoder_left_rear;
 extern uint8 receiveMainBuff[receiveBuffLength];
 extern uint8 gyroRoundFinishFlag;
 extern uint8 steerStatusFromMain;
+extern int32 elementTableFromMain;
+extern uint8 elementTableLengthFromMain;
+extern char elementTableChar[16];
 
 void encoder_init(void);
 void get_sensor_data(void);
 void process_data(void);
 void gyroDataAnalysis(uint8 *line);
 void analysisFixParameter(uint8 *line);
+char* itoaChar(int num,char* str,int radix);
 
 #endif /* CODE_COMMUNICATIONCAM_H_ */

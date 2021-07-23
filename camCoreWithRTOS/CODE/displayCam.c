@@ -23,7 +23,7 @@ void show_speed(void)
         ips114_showstr(0, 5, txt);
         rt_sprintf(txt,"3WayFeaRow=%03d|3WayFeaNum=%03d",threewayFeatureRow,detectThreewayFeatureNum);
         ips114_showstr(0, 6, txt);
-        rt_sprintf(txt,"                             ");
+        rt_sprintf(txt,"Num=%02d|ElementTable=%09d",elementTableLengthFromMain,elementTableFromMain);
         ips114_showstr(0, 7, txt);
     }
 /************************************************************************************/
@@ -64,6 +64,7 @@ void show_speed(void)
         ips114_showstr(0, 5, txt);
         rt_sprintf(txt,"              |               ");
         ips114_showstr(0, 6, txt);
+//        ips114_showstr(0, 6, elementTableChar);
         rt_sprintf(txt,"                             ");
         ips114_showstr(0, 7, txt);
     }

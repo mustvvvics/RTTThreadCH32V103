@@ -56,7 +56,7 @@ extern int32 areaDetectRoundaboutThresRight;
 extern uint16 exitRoundaboutDelay;
 extern uint8 enterRoundaboutDelay;
 
-#define rangeCountJitter    20
+#define rangeCountJitter    15
 
 #define laneGainNear 1
 #define laneGainFar 1
@@ -178,6 +178,7 @@ extern uint8 flagEnterCrossroad;
 
 extern uint8 crossroadMissNumLeft;
 extern uint8 crossroadMissNumRight;
+extern uint16 crossroadWidthSum;
 
 extern uint8 detectThreeWayRoadStartRow;
 extern uint8 detectThreeWayRoadEndRow;
