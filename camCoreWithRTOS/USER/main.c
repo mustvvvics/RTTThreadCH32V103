@@ -27,7 +27,7 @@ int main(void)
     rt_thread_mdelay(3000);                 //保证摄像头初始化完成
 
     laneInit();
-    camFlashRead();
+
     display_init();
     encoder_init();
     timer_pit_init();                       //软定时器初始化
@@ -39,9 +39,10 @@ int main(void)
 
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
-
-    esp8266Init();
-
+//    esp8266Init();
+    camFlashRead();                         //读flash
+    rt_thread_mdelay(100);
+    itoaChar(elementTableFromMain,elementTableChar,10);
     while(1)
     {
         //等待摄像头采集完毕

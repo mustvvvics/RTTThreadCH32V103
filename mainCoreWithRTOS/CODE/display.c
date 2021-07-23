@@ -7,6 +7,7 @@ uint8 confirmButton = 0;//确认按键
 uint32 servoDuty = 0;
 int32 elementTable = 0; //元素顺序表
 uint8 elementTableLength = 0;
+uint8 drivingDirectionToCam = 1;
 /*
  * page 2 in cam display
  */
@@ -52,19 +53,19 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"CarSpeed=%04d       ",expected_y);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_P=%04d        ",(int16)(yaw_pid.Kp*100));
+        rt_sprintf(targetBuff,"CarDirection=%01d      ",drivingDirectionToCam);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turnn_D=%04d        ",(int16)(yaw_pid.Kd*100));
+        rt_sprintf(targetBuff,"Turnn_P=%04d        ",(int16)(yaw_pid.Kp*100));
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor          ");
+        rt_sprintf(targetBuff,"Turnn_D=%04d        ",(int16)(yaw_pid.Kd*100));
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Servo=%04d          ",servoDuty);
+        rt_sprintf(targetBuff,"ServoMotor          ");
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                     ");
+        rt_sprintf(targetBuff,"Servo=%04d          ",servoDuty);
     }
     else {
         rt_sprintf(targetBuff,"                     ");
@@ -81,6 +82,7 @@ void assignValueFirst(void){
 
     if (confirmButton == 1 && (menuY + 3) == 3) {
         mainFlashWrite();
+        sendParameterToCam(8,0xDF,0,0,0,0);//让从机写flash
     }
     if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
         car_flag = 1;clearCamFlags = 1;confirmButton = 0;
@@ -90,12 +92,18 @@ void assignValueFirst(void){
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
             case 5:expected_y = expected_y + 5 * signData;break;
-            case 6:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
-            case 7:yaw_pid.Kd = yaw_pid.Kd + 0.1 * signData;break;
-            case 8:
+            case 6:
+                drivingDirectionToCam = drivingDirectionToCam + 1 * signData;
+                if (drivingDirectionToCam <= 0) {drivingDirectionToCam = 0;}
+                else{drivingDirectionToCam = 1;}
+                sendParameterToCam(8,0xDD,0,drivingDirectionToCam,0,0);break;
+                break;
+            case 7:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
+            case 8:yaw_pid.Kd = yaw_pid.Kd + 0.1 * signData;break;
+            case 9:
                 if (parameterAdjustButton == 1) {servoDuty = 1000;pwm_duty(PWM1_CH1_A8, servoDuty);}
                 else if (parameterAdjustButton == 4){servoDuty = 672;pwm_duty(PWM1_CH1_A8, servoDuty);};break;
-            case 9:
+            case 10:
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
             default:break;
@@ -244,7 +252,7 @@ void assignValueThird(void){
                 sendParameterToCam(32,0xED,0,0,0,fixCamAreaDetectRoundaboutThresRight);break;
             case 10:
                 fixCamRoundaboutDetectionStartRow = fixCamRoundaboutDetectionStartRow + 1 * signData;
-                sendParameterToCam(8,0xEE,0,fixCamRoundaboutDetectionStartRow,0,0);break;
+                sendParameterToCam(8,0xAA,0,fixCamRoundaboutDetectionStartRow,0,0);break;
             default:break;
             /*
              * Eg;sendParameterToCam(0,0xE1,abc,0,0,0);break;
@@ -280,10 +288,10 @@ void transfetFunctionFourth(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"Garage      :e|5    ");
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SendElementTable    ");
+        rt_sprintf(targetBuff,"Delay       :f|6    ");
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                    ");
+        rt_sprintf(targetBuff,"SendElementTable    ");
     }
     else {
         rt_sprintf(targetBuff,"                    ");
@@ -310,7 +318,8 @@ void assignValueFourth(void){
             case 6:createElementTable(3);break;
             case 7:createElementTable(4);break;
             case 8:createElementTable(5);break;
-            case 9:
+            case 9:createElementTable(6);break;
+            case 10:
                 sendParameterToCam(32,0xDB,0,0,0,elementTable); //告知顺序
                 sendParameterToCam(8,0xDC,0,elementTableLength,0,0); //告知元素个数:长度
                 break;

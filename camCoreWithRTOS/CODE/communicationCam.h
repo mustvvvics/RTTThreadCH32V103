@@ -15,6 +15,7 @@ extern uint8 steerStatusFromMain;
 extern int32 elementTableFromMain;
 extern uint8 elementTableLengthFromMain;
 extern char elementTableChar[16];
+extern uint8 drivingDirection;
 
 void encoder_init(void);
 void get_sensor_data(void);

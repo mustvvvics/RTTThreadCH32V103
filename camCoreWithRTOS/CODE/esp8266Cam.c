@@ -117,7 +117,7 @@ void esp8266Entry(void *parameter)
 //    esp8266_buf[esp8266_cnt-3] = '\0';//消除显示乱码
     esp8266_buf[esp8266_cnt-2] = '\0';//消除显示乱码
 //    esp8266_buf[esp8266_cnt-1] = '\0';//消除显示乱码
-    ips114_showstr(0,7,esp8266_buf);
+//    ips114_showstr(0,7,esp8266_buf);  //显示ip地址
     ESP8266_Clear();
     while(1)
     {

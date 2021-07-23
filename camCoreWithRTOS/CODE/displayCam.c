@@ -10,7 +10,8 @@ void show_speed(void)
     if (turnPage == 0) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
-        rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
+//        ips114_showstrGray(50,0, elementTableChar);
+        rt_sprintf(txt,"Error   =%05d|Direction=%04d",cameraError,drivingDirection);
         ips114_showstr(0, 1, txt);
 
         rt_sprintf(txt,"FgCElement=%03d|Accelerate=%03d",flagCameraElement,accelerateRatio);
@@ -23,13 +24,14 @@ void show_speed(void)
         ips114_showstr(0, 5, txt);
         rt_sprintf(txt,"3WayFeaRow=%03d|3WayFeaNum=%03d",threewayFeatureRow,detectThreewayFeatureNum);
         ips114_showstr(0, 6, txt);
-        rt_sprintf(txt,"Num=%02d|ElementTable=%09d",elementTableLengthFromMain,elementTableFromMain);
+        rt_sprintf(txt,"Num=%02d|ElementTable=%09d ",elementTableLengthFromMain,elementTableFromMain);
         ips114_showstr(0, 7, txt);
     }
 /************************************************************************************/
     else if (turnPage == 1) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
+//        ips114_showstrGray(50,0, elementTableChar);
         rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
         ips114_showstr(0, 1, txt);
 
@@ -42,7 +44,7 @@ void show_speed(void)
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"CenterBias=%03d|JpPointNum=%03d",globalCenterBias,startlineJumpingPointNumThres);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"jitterLef=%04d|jitterRig=%04d", laneJitterLeft, laneJitterRight);
+        rt_sprintf(txt,"jitterLef=%04d|jitterRig=%04d",laneJitterLeft,laneJitterRight);
         ips114_showstr(0, 6, txt);
         rt_sprintf(txt,"                             ");
         ips114_showstr(0, 7, txt);
@@ -50,6 +52,7 @@ void show_speed(void)
     else if (turnPage == 2) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
+//        ips114_showstrGray(50,0, elementTableChar);
         rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
         ips114_showstr(0, 1, txt);
 

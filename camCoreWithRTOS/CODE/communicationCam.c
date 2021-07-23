@@ -6,15 +6,23 @@ uint8 receiveMainBuff[receiveBuffLength];      //接收主机数据buff
 
 uint8 gyroRoundFinishFlag = 0;                 //接收陀螺仪Flag
 int16 slave_position=0;                         //传递误差
-int32 elementTableFromMain = 0;                 //元素顺序
-uint8 elementTableLengthFromMain = 0;           //元素个数
-char elementTableChar[16];
 
+/*
+ * 1环岛     2三叉      3十字     4斜坡   5车库   6延时
+ */
+int32 elementTableFromMain = 11325;                 //元素顺序
+uint8 elementTableLengthFromMain = 5;           //元素个数
+char elementTableChar[16] = {0};                //转成字符串
+/*
+ * 0 left  1 right
+ */
+uint8 drivingDirection = 1;                     //行驶方向
 int16 ABS(int16 x){                             //绝对值
     return x>0?x:-x;
 }
 
 /*
+ * change int to char
  * itoaChar(elementTableFromMain,elementTableChar,10;
  */
 char* itoaChar(int num,char* str,int radix)//value: 要转换的整数，string: 转换后的字符串,radix: 转换进制数
@@ -149,9 +157,11 @@ void analysisFixParameter(uint8 *line){
                 case 0xE8:detectDistance = (line[6] / 10) + ((line[6] % 10) * 0.1) ;break; //实际为float
                 case 0xEA:slopeRowStart = line[6];break;
                 case 0xEB:slopeRowEnd = line[6];break;
-                case 0xEE:roundaboutDetectionStartRow = line[6];break;
+                case 0xAA:roundaboutDetectionStartRow = line[6];break;
                 case 0xDA:steerStatusFromMain = line[6];break;
                 case 0xDC:elementTableLengthFromMain = line[6];break;
+                case 0xDD:drivingDirection = line[6];break;
+                case 0xDF:if (line[6] == 0) {camFlashWrite();}break;//从机写falsh
                 default:
                     break;
             }

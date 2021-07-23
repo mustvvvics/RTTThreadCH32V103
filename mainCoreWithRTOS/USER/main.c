@@ -28,7 +28,7 @@ int main(void)
     encoder_init();
     motor_init();
     pwm_init(PWM1_CH1_A8, 50, 338);//舵机初始化 //默认在中位上       舵机 TIMER1  338 672 1000
-    esp8266Init();      //8266线程
+//    esp8266Init();      //8266线程
     PID_Init();
 
     timer_pitAdc_init(); //初始化ADC电压采集
