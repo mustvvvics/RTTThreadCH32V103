@@ -4,6 +4,7 @@
 #include "headfile.h"
 
 extern rt_thread_t tidDisplay;
+extern uint8 mainWriteFlashFlag;
 void display_init(void);
 
 #endif

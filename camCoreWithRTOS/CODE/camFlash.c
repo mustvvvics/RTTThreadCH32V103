@@ -6,8 +6,8 @@
  *  len 1-256
  */
 uint16 buffMax = 14;
-uint32 write_buff[14] ;//flash
-uint32 read_buff[14] ;
+uint32 write_buff[14] = {0} ;//flash
+uint32 read_buff[14] = {0};
 
 uint8 flashCheck = 0;
 void camFlashRead(void){
@@ -28,9 +28,6 @@ void camFlashRead(void){
         rangeSharpCurveRow = read_buff[11];
         globalCenterBias = read_buff[12];
         startlineJumpingPointNumThres = read_buff[13];
-
-
-        flashCheck = 0;
 //read_buff[14];
 //read_buff[15];
 //read_buff[16];
@@ -38,40 +35,34 @@ void camFlashRead(void){
 //read_buff[18];
     }
     else {
-        return;
+        elementTableLengthFromMain = 0;elementTableFromMain = 0;
+
+        drivingDirection = 1;detectDistance = 1.7;pixelMeanThres = 100;
+        slopeRowStart=48;slopeRowEnd=35;
+        areaDetectRoundaboutThresLeft = 1000;areaDetectRoundaboutThresRight = 1000;
+        roundaboutDetectionStartRow = 20;globalCenterBias = -7;startlineJumpingPointNumThres = 50;
     }
 
 }
-uint8 flashClear = 1;
+//uint8 flashClear = 1;
 void camFlashWrite(void){
-    flashClear = flash_erase_page(FLASH_SECTION_15,FLASH_PAGE_0);
-    if (flashClear == 0) {
-        flash_page_program(FLASH_SECTION_15, FLASH_PAGE_0, write_buff, buffMax);
-        write_buff[0] = drivingDirection;//方向
-        write_buff[1] = elementTableLengthFromMain;//顺序表长度
-        write_buff[2] = elementTableFromMain;//顺序表
-        write_buff[3] = (int16)(detectDistance * 10);
-        write_buff[4] = pixelMeanThres;
-        write_buff[5] = slopeRowStart;
-        write_buff[6] = slopeRowEnd;
-        write_buff[7] = areaDetectRoundaboutThresLeft;
-        write_buff[8] = areaDetectRoundaboutThresRight;
-        write_buff[9] = roundaboutDetectionStartRow;
-        write_buff[10] = detectCrossroadMissingNumThres;
-        write_buff[11] = rangeSharpCurveRow;
-        write_buff[12] = globalCenterBias;
-        write_buff[13] = startlineJumpingPointNumThres;
 
-        flashClear = 1;
-    //    write_buff[14] =
-    //    write_buff[15] =
-    //    write_buff[16] =
-    //    write_buff[17] =
-    //    write_buff[18] =
-    }
-    else {
-        return;
-    }
+    flash_erase_page(FLASH_SECTION_15,FLASH_PAGE_0);
+    write_buff[0] = drivingDirection;//方向
+    write_buff[1] = elementTableLengthFromMain;//顺序表长度
+    write_buff[2] = elementTableFromMain;//顺序表
+    write_buff[3] = (int16)(detectDistance * 10);
+    write_buff[4] = pixelMeanThres;
+    write_buff[5] = slopeRowStart;
+    write_buff[6] = slopeRowEnd;
+    write_buff[7] = areaDetectRoundaboutThresLeft;
+    write_buff[8] = areaDetectRoundaboutThresRight;
+    write_buff[9] = roundaboutDetectionStartRow;
+    write_buff[10] = detectCrossroadMissingNumThres;
+    write_buff[11] = rangeSharpCurveRow;
+    write_buff[12] = globalCenterBias;
+    write_buff[13] = startlineJumpingPointNumThres;
+    flash_page_program(FLASH_SECTION_15, FLASH_PAGE_0, write_buff, buffMax);
 
 }
 

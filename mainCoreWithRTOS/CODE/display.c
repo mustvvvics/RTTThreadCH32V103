@@ -75,18 +75,19 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
 /*
 *Assign value to data
 */
-
+uint8 mainWriteFlashFlag = 0;
 void assignValueFirst(void){
     int8 signData;
     if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
     if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
 
-    if (confirmButton == 1 && (menuY + 3) == 3) {
+    if (confirmButton == 1 && (menuY + 3) == 3 && mainWriteFlashFlag == 0) {
         mainFlashWrite();
         sendParameterToCam(8,0xDF,0,1,0,0);//让从机写flash
+        mainWriteFlashFlag = 1;
     }
     if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
-        car_flag = 1;clearCamFlags = 1;confirmButton = 0;carStart = 1;
+        car_flag = 1;clearCamFlags = 1;confirmButton = 0;carStart = 1;mainWriteFlashFlag = 0;
         sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号
         sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
     }
@@ -348,7 +349,7 @@ char txt1[32]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0}, //承载数组
 void disaplayMenu(void){
 
 /***********************状态栏*******************************************/
-    if (menuX != 3) {
+    if (menuX < 3) {
         rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
         rt_sprintf(txt2,"Vc=%03d|AC=%02d           ",Vc,accelerate);
     }
