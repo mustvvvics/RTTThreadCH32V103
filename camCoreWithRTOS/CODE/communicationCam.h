@@ -23,6 +23,6 @@ void get_sensor_data(void);
 void process_data(void);
 void gyroDataAnalysis(uint8 *line);
 void analysisFixParameter(uint8 *line);
-char* itoaChar(int num,char* str,int radix);
+char* itoaChar(int32 num,char* str,uint8 radix);
 
 #endif /* CODE_COMMUNICATIONCAM_H_ */

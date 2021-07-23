@@ -27,24 +27,29 @@ int16 ABS(int16 x){                             //绝对值
  * change int to char
  * itoaChar(elementTableFromMain,elementTableChar,10;
  */
-char* itoaChar(int num,char* str,int radix)//value: 要转换的整数，string: 转换后的字符串,radix: 转换进制数
+char* itoaChar(int32 num,char* str,uint8 radix)//value: 要转换的整数，string: 转换后的字符串,radix: 转换进制数
 {
     char index[]="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//索引表
-    unsigned unum;//存放要转换的整数的绝对值,转换的整数可能是负数
-    int i=0,j,k;//i用来指示设置字符串相应位，转换之后i其实就是字符串的长度；转换后顺序是逆序的，有正负的情况，k用来指示调整顺序的开始位置;j用来指示调整顺序时的交换。
+    uint32 unum;//存放要转换的整数的绝对值,转换的整数可能是负数
+    int16 i=0,j,k;//i用来指示设置字符串相应位，转换之后i其实就是字符串的长度；转换后顺序是逆序的，有正负的情况，k用来指示调整顺序的开始位置;j用来指示调整顺序时的交换。
 
     //获取要转换的整数的绝对值
-    if(radix==10&&num<0)//要转换成十进制数并且是负数
-    {
-        unum=(unsigned)-num;//将num的绝对值赋给unum
-        str[i++]='-';//在字符串最前面设置为'-'号，并且索引加1
+//    if(radix==10&&num<0)//要转换成十进制数并且是负数
+//    {
+//        unum=(unsigned)-num;//将num的绝对值赋给unum
+//        str[i++]='-';//在字符串最前面设置为'-'号，并且索引加1
+//    }
+//    else
+    if ( num >= 0) {
+        unum=num;//若是num为正，直接赋值给unum
     }
-    else unum=(unsigned)num;//若是num为正，直接赋值给unum
-
+    else{
+        unum = 0;
+    }
     //转换部分，注意转换后是逆序的
     do
     {
-        str[i++]=index[unum%(unsigned)radix];//取unum的最后一位，并设置为str对应位，指示索引加1
+        str[i++]=index[unum%radix];//取unum的最后一位，并设置为str对应位，指示索引加1
         unum/=radix;//unum去掉最后一位
 
     }while(unum);//直至unum为0退出循环

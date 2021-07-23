@@ -47,7 +47,7 @@ uint8 flash_check (FLASH_SECTION_enum sector_num, FLASH_PAGE_enum page_num)
 //  @param      sector_num      需要写入的扇区编号   参数范围 FLASH_SECTION_00-FLASH_SECTION_15
 //  @param      page_num        当前扇区页的编号     参数范围 FLASH_PAGE_0-FLASH_PAGE_3
 //  @return                     返回1有表示失败  返回0表示成功
-//  @since      v1.0
+//  @since      v1.0             flash_erase_page(FLASH_SECTION_15,FLASH_PAGE_0);
 //  Sample usage:               flash_erase_page(FLASH_SECTION_00,FLASH_PAGE_0);
 //-------------------------------------------------------------------------------------------------------------------
 uint8 flash_erase_page (FLASH_SECTION_enum sector_num, FLASH_PAGE_enum page_num)

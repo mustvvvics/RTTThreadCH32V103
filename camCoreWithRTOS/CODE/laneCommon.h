@@ -56,7 +56,7 @@ extern int32 areaDetectRoundaboutThresRight;
 extern uint16 exitRoundaboutDelay;
 extern uint8 enterRoundaboutDelay;
 
-#define rangeCountJitter    15
+#define rangeCountJitter    20
 
 #define laneGainNear 1
 #define laneGainFar 1
@@ -233,4 +233,8 @@ extern uint8 threewayWidthFeatureRow;
 extern int32 threewayWidthFeatureRowCenterJitter;
 extern int32 laneWidthSlopeLeft;
 extern int32 laneWidthSlopeRight;
+
+extern uint8 iterElement;
+extern uint8 delayCounter;
+extern uint8 startLineCounter;
 #endif

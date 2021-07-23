@@ -304,8 +304,13 @@ void transfetFunctionFourth(int8 targetRow,char *targetBuff){
  * Create a table related to the order of the elements
  */
 void createElementTable(uint8 element){
-    elementTable = elementTable * 10 + element;
-    elementTableLength = elementTableLength + 1;
+    if (elementTableLength < 9 && elementTable < 2100000000) {
+        elementTable = elementTable * 10 + element;
+        elementTableLength = elementTableLength + 1;
+    }
+    else {
+        elementTable = 0;elementTableLength = 0;
+    }
 }
 
 /*

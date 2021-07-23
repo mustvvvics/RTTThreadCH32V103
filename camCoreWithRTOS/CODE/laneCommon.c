@@ -13,14 +13,14 @@ uint8 laneCenterBiased = 0;
 // lane detection flag for each row
 uint8 flagDetectLeft[imgRow] = {0};
 uint8 flagDetectRight[imgRow] = {0};
-float detectDistance = 2.0;
+float detectDistance = 1.7;
 
 // roundabout status flag
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
-int32 areaDetectRoundaboutThresLeft = 400;
-int32 areaDetectRoundaboutThresRight = 400;
+int32 areaDetectRoundaboutThresLeft = 1000;
+int32 areaDetectRoundaboutThresRight = 1000;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
@@ -219,3 +219,6 @@ uint8 threewayWidthFeatureRow = 0;
 int32 threewayWidthFeatureRowCenterJitter = 0;
 int32 laneWidthSlopeLeft = 0;
 int32 laneWidthSlopeRight = 0;
+uint8 iterElement = 0;
+uint8 delayCounter = 0;
+uint8 startLineCounter = 0;
