@@ -83,7 +83,7 @@ void assignValueFirst(void){
 
     if (confirmButton == 1 && (menuY + 3) == 3) {
         mainFlashWrite();
-        sendParameterToCam(8,0xDF,0,0,0,0);//让从机写flash
+        sendParameterToCam(8,0xDF,0,1,0,0);//让从机写flash
     }
     if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
         car_flag = 1;clearCamFlags = 1;confirmButton = 0;carStart = 1;

@@ -135,6 +135,7 @@ void gyroDataAnalysis(uint8 *line)
  */
 uint8 steerStatusFromMain = 0;
 int8 negativeNumber = 0;
+uint8 camFlashWriteFlag = 0;
 void analysisFixParameter(uint8 *line){
     if (line[0] != 0xDE) { return ;} //不为修改参数的帧头直接返回
     else if (line[0] == 0xDE) {//帧尾帧头校验成功
@@ -168,7 +169,7 @@ void analysisFixParameter(uint8 *line){
                 case 0xDA:steerStatusFromMain = line[6];break;
                 case 0xDC:elementTableLengthFromMain = line[6];break;
                 case 0xDD:drivingDirection = line[6];break;
-                case 0xDF:if (line[6] == 0) {camFlashWrite();}break;//从机写falsh
+                case 0xDF:camFlashWriteFlag = line[6]; break;//从机写falsh
                 case 0xAB:carStart = line[6];break;
                 default:
                     break;

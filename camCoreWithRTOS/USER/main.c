@@ -56,11 +56,12 @@ int main(void)
         timet2 = rt_tick_get();
 
         timeControl = timet2 - timet1;
-        if (CameraShow_flag == 1) {
-            sendMessage();//发送赛道信息
-            CameraShow_flag = 0;
-        }
-
+//        if (CameraShow_flag == 1) {
+//            sendMessage();//发送赛道信息
+//            CameraShow_flag = 0;
+//        }
+        if (camFlashWriteFlag == 1)
+        {camFlashWrite();rt_thread_mdelay(10);camFlashWriteFlag = 0;}
 //        sendMessageData();//发送相关参数
 
     }
