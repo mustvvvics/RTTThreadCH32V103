@@ -53,7 +53,7 @@ void show_speed(void)
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
 //        ips114_showstrGray(50,0, elementTableChar);
-        rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
+        rt_sprintf(txt,"Error   =%05d|carStart=%05d",cameraError,carStart);
         ips114_showstr(0, 1, txt);
 
         rt_sprintf(txt,"RAStartRow=%03d|              ",roundaboutDetectionStartRow);

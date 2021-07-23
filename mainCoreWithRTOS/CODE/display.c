@@ -8,6 +8,7 @@ uint32 servoDuty = 0;
 int32 elementTable = 0; //元素顺序表
 uint8 elementTableLength = 0;
 uint8 drivingDirectionToCam = 1;
+uint8 carStart = 0;
 /*
  * page 2 in cam display
  */
@@ -85,8 +86,10 @@ void assignValueFirst(void){
         sendParameterToCam(8,0xDF,0,0,0,0);//让从机写flash
     }
     if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
-        car_flag = 1;clearCamFlags = 1;confirmButton = 0;
-        sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);}
+        car_flag = 1;clearCamFlags = 1;confirmButton = 0;carStart = 1;
+        sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号
+        sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
+    }
     else if(confirmButton == 0 && (menuY + 3) == 4 && car_flag == 1){car_flag = 0;}
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改

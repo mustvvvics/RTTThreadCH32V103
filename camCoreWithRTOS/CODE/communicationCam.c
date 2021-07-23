@@ -10,9 +10,11 @@ int16 slave_position=0;                         //传递误差
 /*
  * 1环岛     2三叉      3十字     4斜坡   5车库   6延时
  */
-int32 elementTableFromMain = 11325;                 //元素顺序
-uint8 elementTableLengthFromMain = 5;           //元素个数
-char elementTableChar[16] = {0};                //转成字符串
+int32 elementTableFromMain = 11325;         //元素顺序
+uint8 elementTableLengthFromMain = 5;       //元素个数
+char elementQueue[16] = {0};                //转成字符串
+uint8 carStart = 0;                         //启动信号
+
 /*
  * 0 left  1 right
  */
@@ -162,6 +164,7 @@ void analysisFixParameter(uint8 *line){
                 case 0xDC:elementTableLengthFromMain = line[6];break;
                 case 0xDD:drivingDirection = line[6];break;
                 case 0xDF:if (line[6] == 0) {camFlashWrite();}break;//从机写falsh
+                case 0xAB:carStart = line[6];break;
                 default:
                     break;
             }
@@ -182,7 +185,7 @@ void analysisFixParameter(uint8 *line){
                 case 0xED:areaDetectRoundaboutThresRight = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 case 0xDB:
                     elementTableFromMain = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];
-                    itoaChar(elementTableFromMain,elementTableChar,10);//int to char
+                    itoaChar(elementTableFromMain,elementQueue,10);//int to char
                     break;
                 default:
                     break;

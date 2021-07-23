@@ -42,7 +42,7 @@ int main(void)
 //    esp8266Init();
     camFlashRead();                         //读flash
     rt_thread_mdelay(100);
-    itoaChar(elementTableFromMain,elementTableChar,10);
+    itoaChar(elementTableFromMain,elementQueue,10);
     while(1)
     {
         //等待摄像头采集完毕
