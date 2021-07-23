@@ -93,4 +93,6 @@
 #include "timerPitCam.h"
 #include "camFlash.h"
 
+extern rt_sem_t camera_sem;
+
 #endif

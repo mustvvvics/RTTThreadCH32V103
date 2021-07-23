@@ -19,8 +19,8 @@ float detectDistance = 2.0;
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
-int32 areaDetectRoundaboutThresLeft = 400;
-int32 areaDetectRoundaboutThresRight = 400;
+int32 areaDetectRoundaboutThresLeft = 1000;
+int32 areaDetectRoundaboutThresRight = 1000;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;

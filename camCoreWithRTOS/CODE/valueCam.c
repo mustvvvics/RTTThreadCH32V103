@@ -16,5 +16,5 @@ rt_tick_t timet1 = 0;           //计算运行时间
 rt_tick_t timet2 = 0;
 rt_tick_t timeControl = 0;
 
-uint8 turnPage = 0;
+int8 turnPage = 0;
 uint8 clearCamFlags = 0;

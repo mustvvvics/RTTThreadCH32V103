@@ -9,7 +9,7 @@ uint32 servoDuty = 0;
 /*
  * page 2 in cam display
  */
-uint8 turnpage = 0;
+int8 turnpage = 0;
 uint8 clearCamFlags = 0;
 /******************Threewayroad*****************************************/
 uint8 fixCamThreewayFeatureRow = 20;// +- 1
@@ -82,7 +82,7 @@ void assignValueFirst(void){
         mainFlashWrite();
     }
     if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
-        car_flag = 1;
+        car_flag = 1;clearCamFlags = 1;confirmButton = 0;
         sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);}
     else if(confirmButton == 0 && (menuY + 3) == 4 && car_flag == 1){car_flag = 0;}
 
@@ -147,9 +147,9 @@ void assignValueSecond(void){
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
             case 3://图像核翻页
-                turnpage = turnpage + 1 * (uint8)signData;
+                turnpage = turnpage + 1 * signData;
                 if(turnpage < 0){turnpage = 0;}else if(turnpage > 3){turnpage = 3;}
-                sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
+                sendParameterToCam(0,0xE1,turnpage,0,0,0);break;
             case 4:
                 clearCamFlags = 1;
                 sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);break;
@@ -219,9 +219,9 @@ void assignValueThird(void){
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
             case 3://图像核翻页
-                turnpage = turnpage + 1 * (uint8)signData;
+                turnpage = turnpage + 1 * signData;
                 if(turnpage < 0){turnpage = 0;}else if(turnpage > 3){turnpage = 3;}
-                sendParameterToCam(8,0xE1,0,turnpage,0,0);break;
+                sendParameterToCam(0,0xE1,turnpage,0,0,0);break;
             case 4:
                 fixCamDetectDistance = fixCamDetectDistance + 1 * signData;
                 sendParameterToCam(8,0xE8,0,fixCamDetectDistance,0,0);break;

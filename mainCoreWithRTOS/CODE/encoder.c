@@ -22,6 +22,7 @@ void clearError(void){  //Çå¿ÕÎó²î
     elementFlag = 0;
     roundIslandBegin = 0;
     ThreeWayIntersectionFlag = 0;
+
 //    ThreeWayIntersectionFlag = 0;
 }
 

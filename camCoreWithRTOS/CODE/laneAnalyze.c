@@ -831,7 +831,7 @@ void detectOutOfBounds(Mat outMat) {
 
     outboundAreaSum = 0;
     if (flagEnterThreeWay == 1) {
-        for (iterRow = imgRow-1-15; iterRow > rangeDetectOutBound-15; --iterRow) {
+        for (iterRow = imgRow-1-9; iterRow > rangeDetectOutBound-9; --iterRow) {
             for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
                 outboundAreaSum += outMat[iterRow][iterCol];
             }
@@ -993,12 +993,12 @@ void laneAnalyze(Mat outMat){
     }
 
     if (!flagEnterCrossroad) {
-//        detectRoundabout(outMat);
+        detectRoundabout(outMat);
     }
 
     if (!flagEnterRoundabout) {
         //print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-        detectLaneWidthForThreeway();
+//        detectLaneWidthForThreeway();
         //print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
         // detectThreeWayRoad(outMat);
     }
@@ -1072,7 +1072,7 @@ void computeError() {
     //}
     //print("slope start at %d, end at %d\n", slopeRowStart, slopeRowEnd);
     if (flagEnterThreeWay) {
-        slope = regression(slopeRowStart, slopeRowEnd-5, laneCenter);
+        slope = regression(slopeRowStart, slopeRowEnd-4, laneCenter);
     } else {
         slope = regression(slopeRowStart, slopeRowEnd, laneCenter);
     }

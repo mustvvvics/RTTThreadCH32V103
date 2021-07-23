@@ -1,8 +1,8 @@
 #include "headfile.h"
 
 char txt[48]={0};
-uint16 showVar,showVarc,showVarr;//遍历边线数组
-uint16 showline = 0,showline1 = 0,showline2 = 0;//显示图像行
+uint16 showVar;//遍历边线数组
+uint16 showline = 0;//显示图像行
 void show_speed(void)
 {
 /***************变量名 = 8个字母空缺用空格补齐;数值统一%05d**************************/
@@ -28,7 +28,6 @@ void show_speed(void)
     }
 /************************************************************************************/
     else if (turnPage == 1) {
-        showVar = 0;showVarc = 0;showVarr = 0;
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
         rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
@@ -43,13 +42,12 @@ void show_speed(void)
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"CenterBias=%03d|JpPointNum=%03d",globalCenterBias,startlineJumpingPointNumThres);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"jitterLeft=%04d|jitterRigh=%04d", laneJitterLeft, laneJitterRight);
+        rt_sprintf(txt,"jitterLef=%04d|jitterRig=%04d", laneJitterLeft, laneJitterRight);
         ips114_showstr(0, 6, txt);
         rt_sprintf(txt,"                             ");
         ips114_showstr(0, 7, txt);
     }
     else if (turnPage == 2) {
-        showVar = 0;showVarc = 0;showVarr = 0;
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
         rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
@@ -62,36 +60,27 @@ void show_speed(void)
 
         rt_sprintf(txt,"SpRowStart=%03d|SlopRowEnd=%03d",slopeRowStart,slopeRowEnd);
         ips114_showstr(0, 4, txt);
-        rt_sprintf(txt,"RAboutLeft=%03d|RAboutRigh=%03d",areaDetectRoundaboutThresLeft,areaDetectRoundaboutThresRight);
+        rt_sprintf(txt,"AboutLeft=%04d|AboutRigh=%04d",areaDetectRoundaboutThresLeft,areaDetectRoundaboutThresRight);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"              |              ");
+        rt_sprintf(txt,"              |               ");
         ips114_showstr(0, 6, txt);
         rt_sprintf(txt,"                             ");
         ips114_showstr(0, 7, txt);
     }
     else if (turnPage == 3) {
-        ips114_clear(BLACK);
-        for (showVar = 0; showVar < imgRow; ++showVar) {
 
+        ips114_clear(BLACK);
+        rt_sem_take(camera_sem, RT_WAITING_FOREVER);
+        for (showVar = 0; showVar < imgRow; ++showVar) {
             ips114_drawpoint( (uint16)laneLocationLeft[showVar]+32,showline,YELLOW);
             ips114_drawpoint( (uint16)laneLocationLeft[showVar]+32,showline + 1,YELLOW);
-            showline = showline + 2;
-            if (showline > 100) {showline = 0;}
+            ips114_drawpoint((uint16)laneCenter[showVar]+32,showline,WHITE);
+            ips114_drawpoint((uint16)laneCenter[showVar]+32,showline + 1,WHITE);
+            ips114_drawpoint((uint16)laneLocationRight[showVar]+32,showline,YELLOW);
+            ips114_drawpoint((uint16)laneLocationRight[showVar]+32,showline + 1,YELLOW);
+            if (showline > 96) {showline = 0;showVar = 0;}
+            else {showline = showline + 2;}
         }
-        for (showVarc = 0; showVarc < imgRow; ++showVarc) {
-            ips114_drawpoint((uint16)laneCenter[showVarc]+32,showline1,WHITE);
-            ips114_drawpoint((uint16)laneCenter[showVarc]+32,showline1 + 1,WHITE);
-            showline1 = showline1 + 2;
-            if (showline1 > 100) {showline1 = 0;}
-        }
-        for (showVarr = 0; showVarr < imgRow; ++showVarr) {
-            ips114_drawpoint((uint16)laneLocationRight[showVarr]+32,showline2,YELLOW);
-            ips114_drawpoint((uint16)laneLocationRight[showVarr]+32,showline2 + 1,YELLOW);
-            showline2 = showline2 + 2;
-            if (showline2 > 100) {showline2 = 0;}
-        }
-        rt_thread_mdelay(200);
-
     }
     else{return;}
 }

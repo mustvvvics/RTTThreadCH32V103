@@ -81,6 +81,7 @@ void analysisFixParameter(uint8 *line){
             if (line[5] == 1 ) {negativeNumber = -1;}else if (line[5] == 0) {negativeNumber = 1;}
             switch (line[4]) { //¹¦ÄÜ×ÖÑ¡Ôñ
 //Eg:                case 0xE1: parameterTest = negativeNumber * line[6];break;
+                case 0xE1:turnPage = negativeNumber * line[6];break;
                 case 0xE6:globalCenterBias = negativeNumber * line[6];break;
                 default:
                     break;
@@ -89,7 +90,7 @@ void analysisFixParameter(uint8 *line){
         else if (line[1] == 0xA8 && line[4] == 0xA0) { //uint8
             switch (line[5]) {
 //Eg:                case 0xE2:parameterTest8 = line[6];break;
-                case 0xE1:turnPage = line[6];break;
+
                 case 0xE2:
                     clearCamFlags = line[6];
                     if (clearCamFlags == 1) {
