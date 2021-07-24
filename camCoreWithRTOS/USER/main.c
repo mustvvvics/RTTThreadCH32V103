@@ -31,7 +31,7 @@ int main(void)
     display_init();
     encoder_init();
     timer_pit_init();                       //软定时器初始化
-    gpio_init(D2,GPO,0,OUT_PP); //蜂鸣器
+//    gpio_init(D2,GPO,0,OUT_PP); //蜂鸣器
     uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);     //通讯
 
     uart_rx_irq(UART_3, ENABLE);                            //默认抢占优先级1 次优先级0。
@@ -40,17 +40,13 @@ int main(void)
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 //    esp8266Init();
-//    camFlashRead();                         //读flash
-    flagCameraElement = 5;
-//    rt_thread_mdelay(500);
-    if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
-        itoaChar(elementTableFromMain,elementQueue,10);
-    }
-    rt_thread_mdelay(1000);
+
+////    rt_thread_mdelay(500);
+
+//    rt_thread_mdelay(1000);
 
     while(1)
     {
-
 
         //等待摄像头采集完毕
         rt_sem_take(camera_sem, RT_WAITING_FOREVER);
@@ -59,18 +55,9 @@ int main(void)
         timet1 = rt_tick_get();
         laneAnalyze(mt9v03x_image);
         computeError();
-
         timet2 = rt_tick_get();
-
         timeControl = timet2 - timet1;
-//        if (CameraShow_flag == 1) {
-//            sendMessage();//发送赛道信息
-//            CameraShow_flag = 0;
-//        }
 
-//        sendMessageData();//发送相关参数
-//        if (camFlashWriteFlag == 1)
-//        {camFlashWrite();rt_thread_mdelay(10);camFlashWriteFlag = 0;}
 
     }
 }
