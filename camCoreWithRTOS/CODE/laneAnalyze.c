@@ -559,7 +559,7 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 3;
-            exitThreewayDelay = 150;
+            exitThreewayDelay = 80;
         }
         return;
     }
@@ -847,7 +847,7 @@ void foresight() {
     // }
     accelerateRatio = 10;
     if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2 || flagEnterThreeWay == 3) {
-        accelerateRatio = 8;
+        accelerateRatio = 7;
     }
 }
 
@@ -1016,28 +1016,32 @@ void laneAnalyze(Mat outMat){
     // detectTriangleForThreeway(outMat);
     // detectRoundabout(outMat);
     // detectCrossroad();
-
-    switch (elementQueue[iterElement]) {
-        case '#':
-            carRun();
-            break;
-        case '1':
-            detectRoundabout(outMat);
-            break;
-        case '2':
-            detectLaneWidthForThreeway();
-            //detectTriangleForThreeway(outMat);
-            break;
-        case '3':
-            detectCrossroad();
-            break;
-        case '5':
-            detectStartLine(outMat);
-            break;
-        case '6':
-            delayForAWhile();
-            break;
+    if (elementQueue[iterElement] != '\0') {
+        switch (elementQueue[iterElement]) {
+            case '#':
+                carRun();
+                break;
+            case '1':
+                detectRoundabout(outMat);
+                break;
+            case '2':
+                detectLaneWidthForThreeway();
+                //detectTriangleForThreeway(outMat);
+                break;
+            case '3':
+                detectCrossroad();
+                break;
+            case '5':
+                detectStartLine(outMat);
+                break;
+            case '6':
+                delayForAWhile();
+                break;
+            default:
+                break;
+        }
     }
+
 
     markSlopeStartCenter();
     passParameter();
