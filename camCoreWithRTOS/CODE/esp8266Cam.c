@@ -123,6 +123,7 @@ void esp8266Entry(void *parameter)
     {
         rt_sem_take(esp8266_sem, RT_WAITING_FOREVER);
         Tcp_Decode();
+
     }
 
 }
@@ -150,7 +151,7 @@ void esp8266Init(void)
 //const char* message1 = "\n";
 
 void sendMessageData(void) {                //发送数据曲线进行分析
-    char txtA[64];
+    char txtA[64] = "ext:000";
 //    rt_sprintf(txtA,"ThreeFeaN:%d",detectThreewayFeatureNum );
 //    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
 //
@@ -173,10 +174,33 @@ void sendMessageData(void) {                //发送数据曲线进行分析
 //            }
 //        }
 //    }
-    if (laneWidthSlopeLeft > 0 && laneWidthSlopeRight < 0) {
-        rt_sprintf(txtA,"widLef:%03d, widRig:%03d", laneWidthSlopeLeft, laneWidthSlopeRight);
+//    if (laneWidthSlopeLeft > 0 && laneWidthSlopeRight < 0) {
+//        rt_sprintf(txtA,"widLef:%03d, widRig:%03d", laneWidthSlopeLeft, laneWidthSlopeRight);
+//        uart_putstr(UART_1,txtA);
+//        uart_putstr(UART_1,message1);
+//    }
+    if (exitRoundaboutDelay != 0) {
+//        rt_sprintf(txtA,"exitD:%d", exitRoundaboutDelay);
+        txtA[0] = 'e';
+        txtA[1] = 'x';
+        txtA[2] = 't';
+        txtA[4] = exitRoundaboutDelay / 100 + '0';
+        txtA[5] = exitRoundaboutDelay / 10 % 10 + '0';
+        txtA[6] = exitRoundaboutDelay % 10 + '0';
         uart_putstr(UART_1,txtA);
         uart_putstr(UART_1,message1);
     }
+    if (enterRoundaboutDelay != 0) {
+        txtA[0] = 'e';
+        txtA[1] = 'n';
+        txtA[2] = 't';
+        txtA[4] = enterRoundaboutDelay / 100 + '0';
+        txtA[5] = enterRoundaboutDelay / 10 % 10 + '0';
+        txtA[6] = enterRoundaboutDelay % 10 + '0';
+//        rt_sprintf(txtA,"enterD:%d", enterRoundaboutDelay);
+        uart_putstr(UART_1,txtA);
+        uart_putstr(UART_1,message1);
+    }
+
 
 }

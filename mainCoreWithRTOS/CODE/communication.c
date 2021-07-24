@@ -167,7 +167,7 @@ void roundIslandAnalyze(void){
     }
     else if (roundIslandBeginPre == 1 && roundIslandBegin == 1){
         total_z += g_fGyroAngleSpeed_z;
-        if (total_z > 84000 || total_z < -84000) {
+        if (total_z > 80000 || total_z < -80000) {
             roundIslandBegin = 0;
             roundFinishFlag = 1;
             total_z = 0;

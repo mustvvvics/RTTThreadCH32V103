@@ -101,7 +101,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
                 flagDetectRight[iterRow] = laneFound;
                 break;
             } else {
-                laneLocationRight[iterRow] = laneLocationLeft[iterRow] + laneWidth[iterRow] * 1.3;
+                laneLocationRight[iterRow] = laneLocationLeft[iterRow] + laneWidth[iterRow] * 0.8;
                 flagDetectRight[iterRow] = laneFound;
             }
         }
@@ -129,7 +129,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
                 flagDetectLeft[iterRow] = laneFound;
                 break;
             } else {
-                laneLocationLeft[iterRow] = laneLocationRight[iterRow] - laneWidth[iterRow] * 1.3;
+                laneLocationLeft[iterRow] = laneLocationRight[iterRow] - laneWidth[iterRow] * 0.8;
                 flagDetectLeft[iterRow] = laneFound;
             }
         }
@@ -177,8 +177,8 @@ void laneInterpolation(){
             laneLocationLeft[iterRow] = laneLocationRight[iterRow] -\
                                         (laneGainNear  * laneWidth[iterRow]);
         }else if (!flagDetectLeft[iterRow] && !flagDetectRight[iterRow]) {
-            laneLocationLeft[iterRow] = laneLocationLeft[iterRow+1];
-            laneLocationRight[iterRow] = laneLocationRight[iterRow+1];
+            laneLocationLeft[iterRow] = globalCenterBias;
+            laneLocationRight[iterRow] = imgCol + globalCenterBias;
         }
     }
     // far-end lane interpolation, interpolate with previous lane bias
@@ -215,8 +215,8 @@ void computeLaneCenter() {
     }
 
     // restrict lane center location
-    laneCenter[iterRow] = min(laneCenter[iterRow], imgCol-1);
-    laneCenter[iterRow] = max(laneCenter[iterRow], 0);
+    laneCenter[iterRow] = min(laneCenter[iterRow], laneLocationRight[iterRow]-1);
+    laneCenter[iterRow] = max(laneCenter[iterRow], laneLocationLeft[iterRow]+1);
 
     laneCenterPrevious = laneCenter[iterRow];
 }
@@ -346,22 +346,13 @@ void detectSBend() {
 
 // flagEnterRoundabout: 0 -- no roundabout, -1 -- left, 1 -- right
 void detectRoundabout(Mat outMat) {
-    if (exitRoundaboutDelay > 0) {
+    if (flagEnterRoundabout == 3) {
         if (exitRoundaboutDelay == 1) {
+            flagEnterRoundabout = 0;
             ++iterElement;
             exitRoundaboutDelay = 0;
-        }
-        else {
+        } else {
             --exitRoundaboutDelay;
-        }
-        return;
-    }
-
-    if (abs(flagEnterRoundabout) == 2) {
-        if (gyroRoundFinishFlag == 1) {
-            flagEnterRoundabout = 0;
-            exitRoundaboutDelay = 200;
-            gyroRoundFinishFlag = 0;
         }
         return;
     }
@@ -371,22 +362,33 @@ void detectRoundabout(Mat outMat) {
         return;
     }
 
+    if (abs(flagEnterRoundabout) == 2) {
+        if (gyroRoundFinishFlag == 1) {
+            flagEnterRoundabout = 3;
+            exitRoundaboutDelay = 50;
+            gyroRoundFinishFlag = 0;
+        }
+        return;
+    }
+
+
+
     if (flagEnterRoundabout != 0) {
         if (flagEnterRoundabout == 1 || flagEnterRoundabout == -1) {
             switch (flagEnterRoundabout) {
                 case 1:
-                    if (countJitterBreakRowRight < 30 && laneJitterRight < 0) {
+                    if (countJitterBreakRowRight < 30) {
                         flagEnterRoundabout = 2;
-                        enterRoundaboutDelay = 100;
+                        enterRoundaboutDelay = 80;
                         gyroRoundFinishFlag = 0;
                         exitRoundaboutDelay = 0;
                     }
                     break;
                 case -1:
-                    if (countJitterBreakRowLeft < 30 && laneJitterLeft < 0) {
+                    if (countJitterBreakRowLeft < 30) {
                         flagEnterRoundabout = -2;
                         exitRoundaboutDelay = 0;
-                        enterRoundaboutDelay = 100;
+                        enterRoundaboutDelay = 80;
                         gyroRoundFinishFlag = 0;
                     }
                     break;
@@ -422,7 +424,7 @@ void detectRoundabout(Mat outMat) {
         }
 
         // lower
-        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-3; iterRow++) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-4; iterRow++) {
             if (flagDetectLeft[iterRow+1] || flagDetectLeft[iterRow+2]) {
                 if (abs(laneLocationLeft[iterRow] - laneLocationLeft[iterRow-1]) < 10) {
                     continue;
@@ -447,7 +449,7 @@ void detectRoundabout(Mat outMat) {
                                             * laneWidth[49] / laneWidth[iterRow]     \
                                             - roundaboutSlopeRowLocation;
             }
-            if (areaDetectRoundaboutLeft > areaDetectRoundaboutThresLeft) {
+            if (areaDetectRoundaboutLeft > areaDetectRoundaboutThresLeft && laneJitterRight < 40) {
                 laneCenterPrevious = imgCol / 4 + globalCenterBias;
                 flagEnterRoundabout = -1;
                 return;
@@ -470,7 +472,7 @@ void detectRoundabout(Mat outMat) {
         }
 
         // lower
-        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-3; iterRow++) {
+        for (iterRow = roundaboutDetectionStartRow; iterRow < imgRow-4; iterRow++) {
             if (flagDetectRight[iterRow+1] || flagDetectRight[iterRow+2]) {
                 if (abs(laneLocationRight[iterRow] - laneLocationRight[iterRow-1]) < 10) {
                     continue;
@@ -495,7 +497,7 @@ void detectRoundabout(Mat outMat) {
                                             - (laneLocationRight[iterRow] - imgCol / 2 + globalCenterBias) \
                                             * laneWidth[49] / laneWidth[iterRow];
             }
-            if (areaDetectRoundaboutRight > areaDetectRoundaboutThresRight) {
+            if (areaDetectRoundaboutRight > areaDetectRoundaboutThresRight && laneJitterLeft < 40) {
                 laneCenterPrevious = imgCol * 3 / 4 + globalCenterBias;
                 flagEnterRoundabout = 1;
                 return;
@@ -818,16 +820,20 @@ void detectOutOfBounds(Mat outMat) {
                 outboundAreaSum += outMat[iterRow][iterCol];
             }
         }
+
+        if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres - 5000) {
+            flagEnterOutbound = 1; // suspect to be out of bounds
+        }
     } else {
         for (iterRow = imgRow-1; iterRow > rangeDetectOutBound; --iterRow) {
             for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
                 outboundAreaSum += outMat[iterRow][iterCol];
             }
         }
-    }
 
-    if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
-        flagEnterOutbound = 1; // suspect to be out of bounds
+        if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
+            flagEnterOutbound = 1; // suspect to be out of bounds
+        }
     }
 }
 
@@ -840,9 +846,6 @@ void foresight() {
     // }
     accelerateRatio = 10;
     if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2 || flagEnterThreeWay == 3) {
-        accelerateRatio = 8;
-    }
-    if (flagEnterRoundabout) {
         accelerateRatio = 8;
     }
 }
@@ -870,7 +873,7 @@ void passParameter() {
 void detectCrossroad() {
     if (flagEnterCrossroad == 1) {
         if (exitCrossroadDelay == 0) {
-            exitCrossroadDelay = 20;
+            exitCrossroadDelay = 40;
         } else if (exitCrossroadDelay == 1) {
             ++iterElement;
             exitCrossroadDelay = 0;
@@ -967,7 +970,8 @@ void laneAnalyze(Mat outMat){
     // threeway mode does not need full camera error
     if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
         flagEnterOutbound = 0;
-        detectLaneWidthForThreeway();
+        // detectLaneWidthForThreeway();
+        detectTriangleForThreeway(outMat);
         foresight();
         passParameter();
         return;
@@ -1005,6 +1009,7 @@ void laneAnalyze(Mat outMat){
 
     // detectTriangleForThreeway(outMat);
     // detectRoundabout(outMat);
+    // detectCrossroad();
 
     switch (elementQueue[iterElement]) {
         case '#':
@@ -1027,7 +1032,6 @@ void laneAnalyze(Mat outMat){
             delayForAWhile();
             break;
     }
-
 
     markSlopeStartCenter();
     passParameter();

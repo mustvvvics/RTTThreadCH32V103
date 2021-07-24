@@ -96,12 +96,11 @@ void EXTI2_IRQHandler(void)
             encoder_get();                                  //主核编码器
         }
         //计算偏差变化
-
         position_front_delta = position_front - position_front_last;
         position_front_last = -position_front;
         ThreeWayAnalyze();  //三叉解析
-        motor_conversion();
         roundIslandAnalyze();//环岛通讯flag
+        motor_conversion();//控制在最后，时序问题
 
         EXTI_ClearITPendingBit(EXTI_Line2);
     }

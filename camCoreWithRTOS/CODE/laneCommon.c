@@ -19,8 +19,8 @@ float detectDistance = 1.7;
 int8 flagEnterRoundabout = 0;
 int32 areaDetectRoundaboutLeft = 0;
 int32 areaDetectRoundaboutRight = 0;
-int32 areaDetectRoundaboutThresLeft = 1000;
-int32 areaDetectRoundaboutThresRight = 1000;
+int32 areaDetectRoundaboutThresLeft = 400;
+int32 areaDetectRoundaboutThresRight = 400;
 
 float slopeDetectRoundabout = 0;
 float roundaboutSlopeRowLocation = 0;
@@ -144,8 +144,8 @@ uint8 rangeDetectOutBound = 45;
 uint8 accelerateRatio = 10;
 uint8 flagCameraElement = 0;
 
-uint8 detectCrossroadStartRow = 35;
-uint8 detectCrossroadEndRow = 25;
+uint8 detectCrossroadStartRow = 20;
+uint8 detectCrossroadEndRow = 10;
 uint8 detectCrossroadMissingNumThres = 6;
 uint8 exitCrossroadDelay = 0;
 uint8 flagEnterCrossroad = 0;

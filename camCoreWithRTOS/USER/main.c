@@ -32,6 +32,8 @@ int main(void)
     encoder_init();
     timer_pit_init();                       //软定时器初始化
     gpio_init(D2,GPO,0,OUT_PP); //蜂鸣器
+
+
     uart_init(UART_3,921600,UART3_TX_B10,UART3_RX_B11);     //通讯
 
     uart_rx_irq(UART_3, ENABLE);                            //默认抢占优先级1 次优先级0。
@@ -40,11 +42,14 @@ int main(void)
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 
+
     flagCameraElement = 5;
     if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
         itoaChar(elementTableFromMain,elementQueue,10);
     }
     rt_thread_mdelay(1000);
+
+//    esp8266Init();
 
     while(1)
     {
@@ -57,6 +62,6 @@ int main(void)
         computeError();
         timet2 = rt_tick_get();
         timeControl = timet2 - timet1;
-
+//        sendMessageData();
     }
 }

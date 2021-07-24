@@ -108,7 +108,14 @@ void motor_conversion(void)
 
     if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 0 )//正向行驶
     {
-        expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
+        if(roundIslandBegin)
+        {
+            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+        }
+        else
+        {
+            expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
+        }
         //x,y,z轴的期望速度输入
 //        speed_conversion(0,dynamic_programming(-position_front,position_front_delta),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
         speed_conversion(0,(expected_y * accelerate) / 10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));

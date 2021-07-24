@@ -5,8 +5,8 @@ int16 position_front; //偏差
 int16 position_front_last,position_front_delta;//上一次偏差，偏差的变化率
 //期望直线速度和角速度
 int16 expected_omega=0;
-int32 expected_y=30;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
-int16 speed_low=45;
+int32 expected_y=50;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
+int16 speed_low=50;
 int16 manual_y=0; //遥控行驶
 int16 manual_z=0;
 //int32 dx=0,dy=0,dz=0,dist;//路径累计
@@ -23,7 +23,7 @@ float yaw_w_I=0;//0.002;//0.039;//0.1;//0.06;//  0.02
 float yaw_w_D=0.002;//6.389;//3.7;////0.26;//0.15   0
 
 //待整定 转向环参数
-float yaw_P=7;//2.9->50;
+float yaw_P=8;//7;//2.9->50;
 float yaw_I=0;
 float yaw_D=0.005;
 

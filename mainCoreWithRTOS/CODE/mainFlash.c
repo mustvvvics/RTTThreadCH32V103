@@ -33,13 +33,13 @@ void mainFlashRead(void){
         expected_y = read_buff[14];
     }
     else {
-        expected_y = 0;
-        elementTableLength = 0;elementTable = 0;
-        drivingDirectionToCam = 1;fixCamDetectDistance = 17;fixCamPixelMeanThres = 100;
-        fixCamSlopeRowStart=48;fixCamSlopeRowEnd=35;
-        fixCamAreaDetectRoundaboutThresLeft = 1000;fixCamAreaDetectRoundaboutThresRight = 1000;
-        fixCamRoundaboutDetectionStartRow = 20;fixCamGlobalCenterBias = -7;
-        fixCamStartlineJumpingPointNumThres = 50;
+        expected_y = 40;
+//        elementTableLength = 6;elementTable = 113322;
+//        drivingDirectionToCam = 1;fixCamDetectDistance = 17;fixCamPixelMeanThres = 100;
+//        fixCamSlopeRowStart=48;fixCamSlopeRowEnd=35;
+//        fixCamAreaDetectRoundaboutThresLeft = 400;fixCamAreaDetectRoundaboutThresRight = 400;
+//        fixCamRoundaboutDetectionStartRow = 20;fixCamGlobalCenterBias = -7;
+//        fixCamStartlineJumpingPointNumThres = 50;
     }
 
 }
