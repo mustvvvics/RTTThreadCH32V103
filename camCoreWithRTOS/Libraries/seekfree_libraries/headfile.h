@@ -91,7 +91,7 @@
 #include "displayCam.h"
 #include "esp8266Cam.h"
 #include "timerPitCam.h"
-#include "camFlash.h"
+//#include "camFlash.h"
 
 extern rt_sem_t camera_sem;
 

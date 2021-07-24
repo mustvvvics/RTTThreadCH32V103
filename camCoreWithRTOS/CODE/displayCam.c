@@ -22,8 +22,8 @@ void show_speed(void)
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"FgEnStartL=%03d|FgOutBound=%03d", flagEnterStartLine,flagEnterOutbound);
         ips114_showstr(0, 5, txt);
-//        rt_sprintf(txt,"3WayFeaRow=%03d|3WayFeaNum=%03d",threewayFeatureRow,detectThreewayFeatureNum);
-//        ips114_showstr(0, 6, txt);
+        rt_sprintf(txt,"iterElemen=%03d|               ",iterElement);
+        ips114_showstr(0, 6, txt);
         rt_sprintf(txt,"Num=%02d|ElementTable=%09d ",elementTableLengthFromMain,elementTableFromMain);
         ips114_showstr(0, 7, txt);
     }
