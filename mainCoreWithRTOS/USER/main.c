@@ -45,7 +45,9 @@ int main(void)
     while(1)
     {
         rt_thread_mdelay(2); //new delay //±ÿ–Î±£¡Ù
-
+        if (sendMainFlashToCam == 1) {
+            sendFlashDataToCam();
+        }
     }
 }
 

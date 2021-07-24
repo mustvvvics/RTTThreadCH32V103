@@ -8,10 +8,6 @@ void show_speed(void)
 /***************变量名 = 8个字母空缺用空格补齐;数值统一%05d**************************/
 /************************************************************************************/
     if (turnPage == 0) {
-        if (camFlashWriteFlag == 1) {
-                 itoaChar(elementTableFromMain,elementQueue,10);
-                 camFlashWriteFlag = 0;
-             }
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
 //        ips114_showstrGray(50,0, elementTableChar);

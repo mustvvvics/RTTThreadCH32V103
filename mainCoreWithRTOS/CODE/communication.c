@@ -49,6 +49,7 @@ void data_analysis(uint8 *line)
         case 0://无元素
             roundIslandBegin = 0;
             ThreeWayIntersectionFlag = 0;
+            sendMainFlashToCam = 0;
             break;
         case 1://三叉
             if (car_flag == 1) {
@@ -66,6 +67,9 @@ void data_analysis(uint8 *line)
             if (car_flag == 1) {
                 roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
             }
+            break;
+        case 5:
+            sendMainFlashToCam = 1;
             break;
     }
 
