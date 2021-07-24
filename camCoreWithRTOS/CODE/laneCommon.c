@@ -172,7 +172,7 @@ uint8 maxAvailableRow = 0;
 int32 laneWidthSlopeLeft = 0;
 int32 laneWidthSlopeRight = 0;
 uint8 iterElement = 0;
-uint8 delayCounter = 0;
+uint16 delayCounter = 0;
 uint8 startLineCounter = 0;
 
 // threeway

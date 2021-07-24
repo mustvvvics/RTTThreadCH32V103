@@ -183,7 +183,7 @@ extern int32 laneWidthSlopeLeft;
 extern int32 laneWidthSlopeRight;
 
 extern uint8 iterElement;
-extern uint8 delayCounter;
+extern uint16 delayCounter;
 extern uint8 startLineCounter;
 
 extern int8 globalCenterBias;

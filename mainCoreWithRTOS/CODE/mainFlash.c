@@ -34,7 +34,7 @@ void mainFlashRead(void){
     }
     else {
         expected_y = 40;
-//        elementTableLength = 6;elementTable = 113322;
+//        elementTableLength = 9;elementTable = 113636225;
 //        drivingDirectionToCam = 1;fixCamDetectDistance = 17;fixCamPixelMeanThres = 100;
 //        fixCamSlopeRowStart=48;fixCamSlopeRowEnd=35;
 //        fixCamAreaDetectRoundaboutThresLeft = 370;fixCamAreaDetectRoundaboutThresRight = 370;

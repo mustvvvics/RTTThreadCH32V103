@@ -559,7 +559,7 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 3;
-            exitThreewayDelay = 200;
+            exitThreewayDelay = 150;
         }
         return;
     }
@@ -594,7 +594,7 @@ void detectLaneWidthForThreeway() {
         laneWidthSlopeRight = regression(imgRow-1, maxAvailableRow, laneWidthRight);
     }
 
-    if (laneWidthSlopeLeft > 10 && laneWidthSlopeRight < -10) {
+    if (laneWidthSlopeLeft > 8 && laneWidthSlopeRight < -8) {
         flagEnterThreeWay = 1;
     }
 
@@ -796,6 +796,7 @@ void detectOutOfBounds(Mat outMat) {
         } else if (exitOutboundDelay == 1) {
             exitOutboundDelay = 0;
             flagEnterOutbound = 0;
+            ++iterElement;
         } else {
             --exitOutboundDelay;
         }
@@ -815,13 +816,13 @@ void detectOutOfBounds(Mat outMat) {
 
     outboundAreaSum = 0;
     if (flagEnterThreeWay == 1) {
-        for (iterRow = imgRow-1+15; iterRow > rangeDetectOutBound + 15; --iterRow) {
+        for (iterRow = imgRow-1; iterRow > rangeDetectOutBound; --iterRow) {
             for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
                 outboundAreaSum += outMat[iterRow][iterCol];
             }
         }
 
-        if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres - 5000) {
+        if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
             flagEnterOutbound = 1; // suspect to be out of bounds
         }
     } else {
@@ -868,6 +869,9 @@ void passParameter() {
     if (flagEnterOutbound) {
         flagCameraElement = 3;
     }
+//    if (flagEnterCrossroad) {
+//        flagCameraElement = 3;
+//    }
 }
 
 void detectCrossroad() {
@@ -889,11 +893,12 @@ void detectCrossroad() {
     flagEnterCrossroad = 0;
     crossroadWidthSum = 0;
 
-    for (iterRow = detectCrossroadStartRow; iterRow > detectCrossroadEndRow; --iterRow) {
+    for (iterRow = detectCrossroadStartRow+10; iterRow > detectCrossroadEndRow+10; --iterRow) {
         crossroadWidthSum += laneWidthPresent[iterRow];
     }
 
     if (crossroadWidthSum > 50000) {
+
         flagEnterCrossroad = 1;
     }
 
@@ -930,7 +935,7 @@ void markSlopeStartCenter() {
 
 void delayForAWhile() {
     if (delayCounter == 0) {
-        delayCounter = 100;
+        delayCounter = 40;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
@@ -969,9 +974,10 @@ void laneAnalyze(Mat outMat){
 
     // threeway mode does not need full camera error
     if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
+
+         detectLaneWidthForThreeway();
+//        detectTriangleForThreeway(outMat);
         flagEnterOutbound = 0;
-        // detectLaneWidthForThreeway();
-        detectTriangleForThreeway(outMat);
         foresight();
         passParameter();
         return;
@@ -1019,8 +1025,8 @@ void laneAnalyze(Mat outMat){
             detectRoundabout(outMat);
             break;
         case '2':
-            // detectLaneWidthForThreeway();
-            detectTriangleForThreeway(outMat);
+            detectLaneWidthForThreeway();
+            //detectTriangleForThreeway(outMat);
             break;
         case '3':
             detectCrossroad();
