@@ -559,7 +559,7 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 3;
-            exitThreewayDelay = 80;
+            exitThreewayDelay = 90;
         }
         return;
     }
@@ -569,6 +569,7 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 0;
+            ++iterElement;
         }
         return;
     }
@@ -576,7 +577,7 @@ void detectLaneWidthForThreeway() {
     if (flagEnterThreeWay == 1) {
         if (flagEnterOutbound) {
             flagEnterThreeWay = 2;
-            exitThreewayDelay = 10;
+            exitThreewayDelay = 15;
         }
         return;
     }
@@ -846,8 +847,11 @@ void foresight() {
     //  accelerateRatio = 10;
     // }
     accelerateRatio = 10;
-    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2 || flagEnterThreeWay == 3) {
+    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
         accelerateRatio = 7;
+    }
+    if (flagEnterCrossroad == 3) {
+        accelerateRatio = 9;
     }
 }
 
@@ -973,7 +977,7 @@ void laneAnalyze(Mat outMat){
     detectOutOfBounds(outMat);
 
     // threeway mode does not need full camera error
-    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
+    if (flagEnterThreeWay == 1) {
 
          detectLaneWidthForThreeway();
 //        detectTriangleForThreeway(outMat);
@@ -983,7 +987,7 @@ void laneAnalyze(Mat outMat){
         return;
     }
 
-    if (flagEnterThreeWay == 3) {
+    if (flagEnterThreeWay == 3 || flagEnterThreeWay == 2) {
         flagEnterOutbound = 0;
     }
 

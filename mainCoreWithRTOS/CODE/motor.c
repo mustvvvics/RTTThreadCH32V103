@@ -109,6 +109,7 @@ void motor_conversion(void)
     {
         if(roundIslandBegin)
         {
+//            expected_y = 50;
             yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
             expected_omega = PID_Loc(0,-position_front,&yaw_pid);//环岛 P:8.0 D:0.005
         }
@@ -121,8 +122,9 @@ void motor_conversion(void)
         speed_conversion(0,(expected_y * accelerate) / 10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
     }
     else if (car_flag == 1 && threeWayIn == 1) { //变形
-        yaw_pid.Kp = 11;yaw_pid.Kd = 0.005;
-        expected_omega = PID_Loc(0,-position_front,&yaw_pid);//P:11.0 D:0.05
+//        yaw_pid.Kp = 11;yaw_pid.Kd = 0.005;
+//        expected_omega = PID_Loc(0,-position_front,&yaw_pid);//P:11.0 D:0.05
+        expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
         speed_conversion((-expected_y * accelerate) / 10,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
     }
     else if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 1 ) {//逆向行驶
