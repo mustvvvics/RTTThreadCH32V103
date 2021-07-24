@@ -107,16 +107,7 @@ extern int32 *destiArray;
 extern uint8 *flagDetectRefer;
 extern uint8 *flagDetectDesti;
 
-#define rowStartThreeWayDetect  15
-#define rowStopThreeWayDetect   13
-#define colStartThreeWayDetect  91
-#define colStopThreeWayDetect   97
-#define threeWayDetectThreshold 100 * (colStopThreeWayDetect - colStartThreeWayDetect) * (rowStopThreeWayDetect - rowStartThreeWayDetect)
-#define threeWayLaneThres       100
-
 extern uint16 detectPointSum;
-extern uint8 flagEnterThreeWay;
-extern uint8 flagDetectedThreeWayFeature;
 
 extern uint8 missCounterLeft;
 extern uint8 missCounterRight;
@@ -180,47 +171,6 @@ extern uint8 crossroadMissNumLeft;
 extern uint8 crossroadMissNumRight;
 extern uint16 crossroadWidthSum;
 
-extern uint8 detectThreeWayRoadStartRow;
-extern uint8 detectThreeWayRoadEndRow;
-extern uint8 detectThreewayFeatureLeft;
-extern uint8 detectThreewayFeatureRight;
-extern uint16 exitThreewayDelay;
-extern uint8 enterThreewayDelay;
-extern uint8 detectThreewayFeatureNum;
-extern uint8 detectThreewayFeatureMaxNum;
-extern uint8 detectThreewayFeatureNumThres;
-extern int8 globalCenterBias;
-extern uint8 laneLocationThreewayRoad;
-extern uint8 detectThreewayFeatureNearestRow;
-extern int16 detectThreewayFeatureNearestRowLeft;
-extern int16 detectThreewayFeatureNearestRowRight;
-extern int16 detectThreewayFeatureNearestRowWidthThres;
-extern int16 detectThreewayFeatureNearestRowWidth;
-extern float detectThreewayFeatureNearestRowRatio;
-extern uint8 detectLaneWidthStartRow;
-extern uint8 detectLaneWidthEndRow;
-extern uint8 threewayFeatureRow;
-extern uint8 flagThreewayFeatureFound;
-extern uint8 threewayFeatureJumpWhiteNum;
-extern uint8 threewayFeatureJumpBlackNum;
-extern int32 threewayFeatureStartCol;
-extern int32 threewayFeatureEndCol;
-extern uint8 threewayFeatureStep;
-extern uint8 threewayFeatureJumpPointLeft;
-extern uint8 threewayFeatureJumpPointRight;
-extern uint8 threewayFeatureWidth;
-
-// detectThreewayroad3
-extern uint8 leftStartFlagThreewayFeatureFound;
-extern uint8 rightStartFlagThreewayFeatureFound;
-extern uint16 leftStartThreewayFeatureJumpPointLeft;
-extern uint16 rightStartThreewayFeatureJumpPointRight;
-extern uint16 rightStartThreewayFeatureJumpPointLeft;
-extern uint16 leftStartThreewayFeatureJumpPointRight;
-extern uint16 leftStartThreewayFeatureWidth;
-extern uint16 rightStartThreewayFeatureWidth;
-extern uint16 threewayFeatureWidthSum;
-
 extern uint16 laneWidthPresent[imgRow];
 extern int32 laneWidthLeft[imgRow];
 extern int32 laneWidthRight[imgRow];
@@ -229,12 +179,29 @@ extern uint8 laneCenterBiased;
 extern int32 pixelMeanNear;
 extern uint16 laneWidthCenter[imgRow];
 extern uint8 maxAvailableRow;
-extern uint8 threewayWidthFeatureRow;
-extern int32 threewayWidthFeatureRowCenterJitter;
 extern int32 laneWidthSlopeLeft;
 extern int32 laneWidthSlopeRight;
 
 extern uint8 iterElement;
 extern uint8 delayCounter;
 extern uint8 startLineCounter;
+
+extern int8 globalCenterBias;
+
+// threeway
+extern uint8 flagEnterThreeWay;
+extern uint8 flagDetectedThreeWayFeature;
+extern uint8 exitThreewayDelay;
+extern uint8 threewayDetectRow;
+extern uint8 threewayWidthFeatureRow;
+extern int32 threewayWidthFeatureRowCenterJitter;
+extern uint8 threewayFeatureStartRow;
+extern uint16 threewayFeatureLeft[30];
+extern uint16 threewayFeatureRight[30];
+extern uint16 threewayFeatureWidth[30];
+extern uint16 threewayFeatureCenter[30];
+extern uint16 threewayFeatureCenterPrevious;
+extern uint8 threewayFeatureLeftFound;
+extern uint8 threewayFeatureRightFound;
+extern uint8 threewayFeatureNearestRow;
 #endif

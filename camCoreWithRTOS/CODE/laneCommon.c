@@ -35,7 +35,7 @@ ushort jitterBendLeft = 0;
 
 // predefined lane half width
 int32 laneWidth[imgRow] = {
-    36, 28, 28, 30, 30, 32, 32, 34, 36, 36,
+    26, 28, 28, 30, 30, 32, 32, 34, 36, 36,
     38, 40, 40, 42, 44, 46, 46, 48, 50, 50,
     52, 54, 54, 56, 58, 60, 62, 64, 64, 68,
     68, 68, 70, 72, 74, 76, 76, 80, 80, 80,
@@ -72,14 +72,10 @@ int32 averLaneCenter, averRowIndex;
 
 void laneInit() {
     for (iterRow = 0; iterRow < imgRow; ++iterRow) {
-        laneLocationRight[iterRow] = imgCol - 1;
+        laneLocationRight[iterRow] = imgCol + globalCenterBias;
         laneWidthPresent[iterRow] = 9999;
     }
     laneCenterBiased = imgCol/2 + globalCenterBias;
-    // threewayFeatureStartCol = imgCol/2 + globalCenterBias - laneWidth[imgRow-1] * 0.6;
-    // threewayFeatureEndCol = imgCol/2 + globalCenterBias + laneWidth[imgRow-1] * 0.6;
-    threewayFeatureStartCol = 3;
-    threewayFeatureEndCol = imgCol - 4;
 }
 
 int32 laneJitterLeft = 9999;
@@ -87,8 +83,7 @@ int32 laneJitterRight = 9999;
 uint8 countJitterBreakRowLeft = 0;
 uint8 countJitterBreakRowRight = 0;
 
-
-int32 pixelMeanThres = 100;
+int32 pixelMeanThres = 70;
 int32 pixelMeanPrevious = 0;
 int32 pixelMean = 0;
 
@@ -98,8 +93,6 @@ uint8 *flagDetectRefer;
 uint8 *flagDetectDesti;
 
 uint16 detectPointSum = 0;
-uint8 flagEnterThreeWay = 0;
-uint8 flagDetectedThreeWayFeature = 0;
 
 uint8 missCounterLeft = 0;
 uint8 missCounterRight = 0;
@@ -160,47 +153,8 @@ uint8 crossroadMissNumLeft = 0;
 uint8 crossroadMissNumRight = 0;
 uint16 crossroadWidthSum = 0;
 
-uint8 detectThreeWayRoadStartRow = 45;
-uint8 detectThreeWayRoadEndRow = 0;
-uint8 detectThreewayFeatureLeft = 0;
-uint8 detectThreewayFeatureRight = 0;
-uint16 exitThreewayDelay = 0;
-uint8 enterThreewayDelay = 0;
-uint8 detectThreewayFeatureNum = 0;
-uint8 detectThreewayFeatureMaxNum = 0;
-uint8 detectThreewayFeatureNumThres = 8;
-uint8 laneLocationThreewayRoad = 0;
-uint8 detectThreewayFeatureNearestRow = 99;
-int16 detectThreewayFeatureNearestRowLeft = 0;
-int16 detectThreewayFeatureNearestRowRight = 0;
-int16 detectThreewayFeatureNearestRowWidthThres = 10;
-int16 detectThreewayFeatureNearestRowWidth = 0;
-float detectThreewayFeatureNearestRowRatio = 0;
 
 int8 globalCenterBias = -7;
-
-uint8 threewayFeatureRow = 20;
-int32 threewayFeatureStartCol = 0; // imgCol/2 + globalCenterBias - laneWidth[imgRow-1] * 0.6;
-int32 threewayFeatureEndCol = 0; // imgCol/2 + globalCenterBias + laneWidth[imgRow-1] * 0.6;
-
-uint8 threewayFeatureJumpWhiteNum = 0;
-uint8 threewayFeatureJumpBlackNum = 0;
-uint8 threewayFeatureJumpPointLeft = 0;
-uint8 threewayFeatureJumpPointRight = 0;
-uint8 threewayFeatureWidth = 0;
-uint8 threewayFeatureStep = 0;
-uint8 flagThreewayFeatureFound = 0;
-
-uint8 leftStartFlagThreewayFeatureFound = 0;
-uint8 rightStartFlagThreewayFeatureFound = 0;
-uint16 leftStartThreewayFeatureJumpPointLeft = 0;
-uint16 rightStartThreewayFeatureJumpPointRight = 0;
-uint16 rightStartThreewayFeatureJumpPointLeft = 0;
-uint16 leftStartThreewayFeatureJumpPointRight = 0;
-
-uint16 leftStartThreewayFeatureWidth = 0;
-uint16 rightStartThreewayFeatureWidth = 0;
-uint16 threewayFeatureWidthSum = 16;
 
 //detectCrossroad2
 uint8 detectCrossroadRow[3] = {10, 25, 40};
@@ -215,10 +169,23 @@ uint16 laneWidthPresent[imgRow] = {0};
 int32 latestWhiteRowPixelMean = 0;
 int32 pixelMeanNear = 0;
 uint8 maxAvailableRow = 0;
-uint8 threewayWidthFeatureRow = 0;
-int32 threewayWidthFeatureRowCenterJitter = 0;
 int32 laneWidthSlopeLeft = 0;
 int32 laneWidthSlopeRight = 0;
 uint8 iterElement = 0;
 uint8 delayCounter = 0;
 uint8 startLineCounter = 0;
+
+// threeway
+uint8 exitThreewayDelay = 0;
+uint8 flagEnterThreeWay = 0;
+uint8 flagDetectedThreeWayFeature = 0;
+uint8 threewayWidthFeatureRow = 0;
+uint8 threewayFeatureStartRow = 5;
+uint16 threewayFeatureLeft[30] = {0};
+uint16 threewayFeatureRight[30] = {0};
+uint16 threewayFeatureWidth[30] = {0};
+uint16 threewayFeatureCenter[30] = {0};
+uint16 threewayFeatureCenterPrevious = 0;
+uint8 threewayFeatureLeftFound = 0;
+uint8 threewayFeatureRightFound = 0;
+uint8 threewayFeatureNearestRow = 0;

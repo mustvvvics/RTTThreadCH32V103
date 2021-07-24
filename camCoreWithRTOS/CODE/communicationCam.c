@@ -159,7 +159,7 @@ void analysisFixParameter(uint8 *line){
                         flagEnterRoundabout=0;flagEnterThreeWay=0;gyroRoundFinishFlag = 0;
                         clearCamFlags = 0;}
                     break;
-                case 0xE3:threewayFeatureRow = line[6];break;
+//                case 0xE3:threewayFeatureRow = line[6];break;
                 case 0xE4:detectCrossroadMissingNumThres = line[6];break;
                 case 0xE5:rangeSharpCurveRow = line[6];break;
                 case 0xE8:detectDistance = (line[6] / 10) + ((line[6] % 10) * 0.1) ;break; //Êµ¼ÊÎªfloat
