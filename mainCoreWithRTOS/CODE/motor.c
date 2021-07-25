@@ -119,7 +119,7 @@ void speedPidConversion(void){
         yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
     }
 }
-
+uint8 car_flagPre = 0;
 void motor_conversion(void)
 {
     //for test
@@ -142,16 +142,16 @@ void motor_conversion(void)
         conversion_speed();//编码器计数
         if (real_x >= expected_X || real_x <= -expected_X) {
             car_flag = 2;
-//            real_x = 0;
-
             clearCamFlags = 1;confirmButton = 0;carStart = 2;
             sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号2
             sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
-            carStart = 2;
+            carStart = 0;
+//            real_x = 0;
         }
     }
     else if (car_flag == 2 && threeWayIn == 0 && threeWaySum == 0)//正向行驶
     {
+        carFlagPre = 0;
         if(roundIslandBegin)
         {
             yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
@@ -180,7 +180,7 @@ void motor_conversion(void)
         }
 
     }
-    else if (car_flag == 2 && threeWayIn == 0 && threeWaySum == 1) {
+    else if (car_flag == 2  && threeWayIn == 0 && threeWaySum == 1) {
         if(roundIslandBegin)
         {
             yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
@@ -201,8 +201,14 @@ void motor_conversion(void)
 //        speed_conversion(0,dynamic_programming(-position_front,position_front_delta),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
 
     }
+    else if (carFlagPre == 1 && car_flag == 0) {//停下来给一次信号1
+        carStart = 1;
+        sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号2
+        carFlagPre = 0;
+    }
     else
     {
+
         clearError();clearFlags();
         speed_conversion(0,0,0);
     }

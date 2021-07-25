@@ -862,6 +862,9 @@ void foresight() {
     if (flagEnterThreeWay == 2) {
         accelerateRatio = 0;
     }
+    if (flagEnterThreeWay == 3) {
+        accelerateRatio = 7;
+    }
     if (flagEnterCrossroad == 3) {
         accelerateRatio = 9;
     }
@@ -896,7 +899,7 @@ void passParameter() {
 void detectCrossroad() {
     if (flagEnterCrossroad == 1) {
         if (exitCrossroadDelay == 0) {
-            exitCrossroadDelay = 40;
+            exitCrossroadDelay = 30;
         } else if (exitCrossroadDelay == 1) {
             ++iterElement;
             exitCrossroadDelay = 0;
@@ -1001,9 +1004,9 @@ void laneAnalyze(Mat outMat){
     } else {
         detectOutOfBounds(outMat);
     }
-    detectStartLine(outMat);
 
     if (flagEnterStartLine) {
+        detectStartLine(outMat);
         flagEnterOutbound = 0;
         if (flagEnterStartLine == -1) {
             cameraError = 0;
@@ -1083,7 +1086,7 @@ void laneAnalyze(Mat outMat){
                 detectCrossroad();
                 break;
             case '5':
-//                detectStartLine(outMat);
+                detectStartLine(outMat);
                 break;
             case '6':
                 delayForAWhile();
