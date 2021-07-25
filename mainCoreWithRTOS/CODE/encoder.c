@@ -17,13 +17,14 @@ void clearError(void){  //Çå¿ÕÎó²î
     yaw_w_pid.err = 0;
     yaw_w_pid.err_last = 0;
     yaw_w_pid.actual_val = 0;
+//    ThreeWayIntersectionFlag = 0;
+}
+void clearFlags(void){
     go_forward=0;go_backward=0;
     go_left=0;go_right=0;
     elementFlag = 0;
     roundIslandBegin = 0;
     ThreeWayIntersectionFlag = 0;
-
-//    ThreeWayIntersectionFlag = 0;
 }
 
 void encoder_init(void)

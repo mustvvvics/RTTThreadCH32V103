@@ -847,8 +847,14 @@ void foresight() {
     //  accelerateRatio = 10;
     // }
     accelerateRatio = 10;
-    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
+//    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
+//        accelerateRatio = 7;
+//    }
+    if (flagEnterThreeWay == 1) {
         accelerateRatio = 7;
+    }
+    if (flagEnterThreeWay == 2) {
+        accelerateRatio = 0;
     }
     if (flagEnterCrossroad == 3) {
         accelerateRatio = 9;

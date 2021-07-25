@@ -101,15 +101,27 @@ void speed_conversion(float Vx, float Vy,float Vz)
 //    real_x=-(-encoder_data[3] + encoder_data[2] - encoder_data[0] + encoder_data[1])/4;
 //    real_y=-(encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
 //}
+void speedPidConversion(void){
+    if ((expected_y * accelerate) / 10 == 40) {
+        yaw_pid.Kp = 11;yaw_pid.Kd = 0.005;
+    }
+    else if ((expected_y * accelerate) / 10 == 45) {
+        yaw_pid.Kp = 16.5;yaw_pid.Kd = 0.005;
+    }
+    else if ((expected_y * accelerate) / 10 == 50) {
+        yaw_pid.Kp = 22;yaw_pid.Kd = 0.005;
+    }
+    else {
+        yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
+    }
+}
 
-//
 void motor_conversion(void)
 {
-    if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 0 )//正向行驶
+    if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 0)//正向行驶
     {
         if(roundIslandBegin)
         {
-//            expected_y = 50;
             yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
             expected_omega = PID_Loc(0,-position_front,&yaw_pid);//环岛 P:8.0 D:0.005
         }
@@ -121,13 +133,20 @@ void motor_conversion(void)
 //        speed_conversion(0,dynamic_programming(-position_front,position_front_delta),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
         speed_conversion(0,(expected_y * accelerate) / 10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
     }
-    else if (car_flag == 1 && threeWayIn == 1) { //变形
-//        yaw_pid.Kp = 11;yaw_pid.Kd = 0.005;
-//        expected_omega = PID_Loc(0,-position_front,&yaw_pid);//P:11.0 D:0.05
-        expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
-        speed_conversion((-expected_y * accelerate) / 10,0,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+        //p22.0 d:0.005 sp:50   // p:16.5   d:0.005   sp=45    // p:11.0 d:0.005 sp:40
+    else if (car_flag == 1 && threeWayIn == 1) {
+        speedPidConversion();//分速度段PID
+        expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+        if (accelerate == 0) {
+//            speed_conversion(0, 0, 0);
+            clearError();
+        }
+        else {
+            speed_conversion((-expected_y * accelerate) / 10,0, PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11) );
+        }
+
     }
-    else if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 1 ) {//逆向行驶
+    else if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 1) {
         if(roundIslandBegin)
         {
             yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
@@ -137,13 +156,20 @@ void motor_conversion(void)
         {
             expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
         }
+        if (accelerate == 0) {
+//            speed_conversion(0, 0, 0);
+            clearError();
+        }
+        else {
+            speed_conversion(0,(-expected_y * accelerate) / 10 ,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+        }
                 //x,y,z轴的期望速度输入
 //        speed_conversion(0,dynamic_programming(-position_front,position_front_delta),PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
-        speed_conversion(0,(-expected_y * accelerate) / 10 ,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+
     }
     else
     {
-        clearError();
+        clearError();clearFlags();
         speed_conversion(0,0,0);
     }
 

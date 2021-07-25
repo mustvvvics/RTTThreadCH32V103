@@ -57,10 +57,10 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"CarDirection=%01d      ",drivingDirectionToCam);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turn_P=%04d        ",(int16)(yaw_pid.Kp*1000));
+        rt_sprintf(targetBuff,"Turn_P=%05d       ",(int16)(yaw_pid.Kp*1000));
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turn_D=%04d        ",(int16)(yaw_pid.Kd*1000));
+        rt_sprintf(targetBuff,"Turn_D=%05d       ",(int16)(yaw_pid.Kd*1000));
     }
     else if ((9 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"ServoMotor          ");

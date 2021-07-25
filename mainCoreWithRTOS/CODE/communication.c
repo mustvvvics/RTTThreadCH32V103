@@ -76,6 +76,10 @@ void data_analysis(uint8 *line)
 }
 void threeWayClearOtherThings(void){
     position_front_delta = 0;position_front = 0;expected_omega = 0;g_fGyroAngleSpeed_z = 0;
+    yaw_pid.LocSum = 0;yaw_pid.Ek = 0;yaw_pid.Ek1 = 0;
+    yaw_w_pid.target_val = 0;yaw_w_pid.err_next = 0;yaw_w_pid.err = 0;
+    yaw_w_pid.err_last = 0;yaw_w_pid.actual_val = 0;
+    speed_conversion(0,0,0);
 }
 /*
  * 三叉路口决策
@@ -98,7 +102,7 @@ void ThreeWayAnalyze(void){
         ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 1;
 
-        threeWayClearOtherThings();
+//        threeWayClearOtherThings();
 
       }
 
@@ -114,8 +118,8 @@ void ThreeWayAnalyze(void){
         threeWaySum = 1;                //进入一次三叉
 
 
+//        threeWayClearOtherThings();
 
-        threeWayClearOtherThings();
     }
     else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 1) { //第二次进
         pwm_duty(PWM1_CH1_A8, 672); //舵机向左
@@ -124,7 +128,8 @@ void ThreeWayAnalyze(void){
         ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 1;
 
-        threeWayClearOtherThings();
+//        threeWayClearOtherThings();
+
     }
 
     //第二次出三叉
@@ -137,8 +142,8 @@ void ThreeWayAnalyze(void){
         ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 0;
         threeWaySum = 0;
+//        threeWayClearOtherThings();
 
-        threeWayClearOtherThings();
     }
 }
 
