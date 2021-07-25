@@ -147,7 +147,7 @@ void motor_conversion(void)
             clearCamFlags = 1;confirmButton = 0;carStart = 2;
             sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号2
             sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
-
+            carStart = 2;
         }
     }
     else if (car_flag == 2 && threeWayIn == 0 && threeWaySum == 0)//正向行驶

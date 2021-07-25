@@ -563,7 +563,7 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 3;
-            exitThreewayDelay = 1000;
+            exitThreewayDelay = 200;
         }
         return;
     }
@@ -1151,11 +1151,11 @@ void computeError() {
     //printf("slope start at %d, end at %d\n", slopeRowStart, slopeRowEnd);
 
     // error limit in detecting threeway
-    if (flagEnterThreeWay) {
-        slope = regression(slopeRowStart, slopeRowEnd+3, laneCenter);
-    } else {
+//    if (flagEnterThreeWay == 3) {
+//        slope = regression(slopeRowStart, slopeRowEnd+3, laneCenter);
+//    } else {
         slope = regression(slopeRowStart, slopeRowEnd, laneCenter);
-    }
+//    }
 
     // error limit in detecting roundabout
     if (abs(flagEnterRoundabout) == 1) {
