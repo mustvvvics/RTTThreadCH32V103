@@ -79,6 +79,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         laneLocationRight[iterRow] = imgCol+globalCenterBias;
         return;
     }
+    BEEP_ON;
     pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
     if (flagEnterRoundabout == -2) { // left roundabout mdoe
         //left lane
@@ -163,70 +164,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
             }
         }
     }
-}
-
-void locateLaneByMeanSlide_and_adaptGarage(Mat outMat) {
-    accelerateRatio = 5;
-    if (drivingDirection == 0) { // left garage
-        laneCenterPrevious = imgCol/4;
-        pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
-        // left lane
-        for (iterCol = laneCenterPrevious - 5; iterCol > 3; iterCol-=2) {
-            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
-            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
-                laneLocationLeft[iterRow] = iterCol;
-                flagDetectLeft[iterRow] = laneFound;
-                break;
-            } else {
-                laneLocationLeft[iterRow] = iterCol/5;
-                flagDetectLeft[iterRow] = laneFound;
-            }
-        }
-
-        // right lane
-        for (iterCol = laneCenterPrevious + 5; iterCol < laneCenterBiased+5; iterCol+=2) {
-            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-            if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
-                laneLocationRight[iterRow] = iterCol;
-                flagDetectRight[iterRow] = laneFound;
-                break;
-            }
-            else {
-                laneLocationRight[iterRow] = iterCol*3/5;
-                flagDetectRight[iterRow] = laneFound;
-            }
-        }
-    } else { // right garage
-        laneCenterPrevious = imgCol*3/4;
-        pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
-
-        // right lane
-        for (iterCol = laneCenterPrevious + 5; iterCol < imgCol-4; iterCol+=2) {
-            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-            if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
-                laneLocationRight[iterRow] = iterCol;
-                flagDetectRight[iterRow] = laneFound;
-                break;
-            }
-            else {
-                laneLocationRight[iterRow] = imgCol*4/5;
-                flagDetectRight[iterRow] = laneFound;
-            }
-        }
-
-        // left lane
-        for (iterCol = laneCenterPrevious - 5; iterCol > laneCenterBiased-5; iterCol-=2) {
-            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
-            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
-                laneLocationLeft[iterRow] = iterCol;
-                flagDetectLeft[iterRow] = laneFound;
-                break;
-            } else {
-                laneLocationLeft[iterRow] = imgCol*2/5;
-                flagDetectLeft[iterRow] = laneFound;
-            }
-        }
-    }
+    BEEP_OFF;
 }
 
 // lane interpolation with predifined lane width and previous lane bias
@@ -801,14 +739,11 @@ void detectTriangleForThreeway(Mat outMat) {
 }
 
 void detectStartLine(Mat outMat) {
-    if (flagEnterStartLine == -1) {
-        if (exitStartlineCounter == 0) {
-            exitStartlineCounter = 20;
-        } else if (exitStartlineCounter == 1) {
-            iterElement = 0;
-            ++iterElement;
+    if (exitStartlineCounter) {
+        if (exitStartlineCounter == 1) {
             exitStartlineCounter = 0;
             flagEnterStartLine = 0;
+            iterElement = 0;
         } else {
             --exitStartlineCounter;
         }
@@ -832,15 +767,13 @@ void detectStartLine(Mat outMat) {
         return;
     }
 
-    if (flagEnterStartLine == 1) {
-        return;
-    }
-
-    if (--startLineTimes != 0) { // continue, another round
+    if (startLineTimes != 1) { // continue, another round
         flagEnterStartLine = -1;
-        return;
+        exitStartlineCounter = 30;
+        --startLineTimes;
     } else {
         flagEnterStartLine = 1;
+        exitStartlineCounter = 100;
     }
 }
 
@@ -930,6 +863,9 @@ void foresight() {
     }
     if (flagEnterCrossroad == 3) {
         accelerateRatio = 9;
+    }
+    if (flagEnterStartLine == 1) {
+        accelerateRatio = 5;
     }
 }
 
@@ -1031,18 +967,6 @@ void carRun() {
 }
 
 void laneAnalyze(Mat outMat){
-    if (beepTimer++ > 100) {
-        beepTimer = 0;
-    }
-    if (flagEnterStartLine) {
-        if (beepTimer % 10 == 5) {
-            BEEP_ON;
-        } else {
-            BEEP_OFF;
-        }
-    } else {
-        BEEP_OFF;
-    }
 
     missCounterBoth = 0;
     missCounterLeft = 0;
@@ -1055,7 +979,7 @@ void laneAnalyze(Mat outMat){
         flagEnterRoundabout = 0;
         flagEnterCrossroad = 0;
         flagEnterStartLine = 0;
-        startLineTimes = 0;
+        startLineTimes = 2;
     }
 
     if (steerStatusFromMain == 0) {
@@ -1070,17 +994,21 @@ void laneAnalyze(Mat outMat){
     detectStartLine(outMat);
 
     if (flagEnterStartLine) {
-        detectStartLine(outMat);
+        flagEnterOutbound = 0;
         if (flagEnterStartLine == -1) {
             cameraError = 0;
+            detectStartLine(outMat);
         } else {
-            locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
-            computeLaneCenter();
-            markSlopeStartCenter();
-            flagEnterOutbound = 0;
+            detectStartLine(outMat);
+            accelerateRatio = 9;
+            if (drivingDirection == 0) {
+                cameraError = 10;
+            } else {
+                cameraError = -10;
+            }
         }
-        foresight();
         passParameter();
+        foresight();
         return;
     }
 
@@ -1100,6 +1028,8 @@ void laneAnalyze(Mat outMat){
 
     for (iterRow = imgRow-4; iterRow != 255; --iterRow){
         if (abs(flagEnterRoundabout) == 2) {
+            locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
+        } else if (flagEnterStartLine == 1) {
             locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
         } else {
             locateLaneByMeanSlide(outMat);
@@ -1199,6 +1129,10 @@ int32 regression(uint8 slopeRowStart, uint8 slopeRowEnd, int32 *colArray) {
 
 // error composition: slope, front points jitter
 void computeError() {
+    if (flagEnterStartLine) {
+        return;
+    }
+
     if (flagEnterThreeWay==1 || flagEnterThreeWay == 2) {
         cameraError = 0;
         return;

@@ -190,5 +190,5 @@ uint8 threewayFeatureRightFound = 0;
 uint8 threewayFeatureNearestRow = 0;
 
 // start line
-uint8 startLineTimes = 1;
+uint8 startLineTimes = 2;
 uint8 exitStartlineCounter = 0;

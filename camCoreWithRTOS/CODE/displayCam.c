@@ -17,7 +17,7 @@ void show_speed(void)
         ips114_showstr(0, 2, txt);
         rt_sprintf(txt,"FgEntRound=%03d|FgEntThree=%03d", flagEnterRoundabout, flagEnterThreeWay);
         ips114_showstr(0, 3, txt);
-        rt_sprintf(txt,"FgEntCross=%03d|FgRoudFini=%03d",flagEnterCrossroad,gyroRoundFinishFlag);
+        rt_sprintf(txt,"FgEntCross=%03d|ESlineCoun=%03d",flagEnterCrossroad,exitStartlineCounter);
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"FgEnStartL=%03d|FgOutBound=%03d", flagEnterStartLine,flagEnterOutbound);
         ips114_showstr(0, 5, txt);
