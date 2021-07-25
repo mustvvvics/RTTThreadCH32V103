@@ -1,7 +1,7 @@
 #include "headfile.h"
 
 int16 encoder_data[4];
-
+int16 real_x = 0,real_y = 0;
 int16 ABS(int16 x){return x>0?x:-x;}
 
 void clearError(void){  //гЕ©унС╡Н

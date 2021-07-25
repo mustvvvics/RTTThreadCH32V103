@@ -52,7 +52,7 @@ void data_analysis(uint8 *line)
             sendMainFlashToCam = 0;
             break;
         case 1://三叉
-            if (car_flag == 1) {
+            if (car_flag == 2) {
                 ThreeWayIntersectionFlag = 1; //在一个周期内使得camera error = 0;
             }
             break;
@@ -60,11 +60,14 @@ void data_analysis(uint8 *line)
 
             break;
         case 3: //刹车
-            car_flag = 0;
+            if (car_flag == 2) {
+                car_flag = 0;
+            }
+
 //            sendFuzzyData();
             break;
         case 4:
-            if (car_flag == 1) {
+            if (car_flag == 2) {
                 roundIslandBegin = 1; //遇见环岛 陀螺仪开始积分
             }
             break;

@@ -129,7 +129,7 @@ int32 laneLocationShiftedLower = 0;
 int32 laneLocationShiftedUpper = 0;
 
 uint16 startlineJumpingPointNum = 0;
-uint16 startlineJumpingPointNumThres = 50;
+uint16 startlineJumpingPointNumThres = 80;
 int8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
@@ -175,7 +175,7 @@ uint8 iterElement = 0;
 uint8 delayCounter = 0;
 
 // threeway
-uint8 exitThreewayDelay = 0;
+uint16 exitThreewayDelay = 0;
 uint8 flagEnterThreeWay = 0;
 uint8 flagDetectedThreeWayFeature = 0;
 uint8 threewayWidthFeatureRow = 0;

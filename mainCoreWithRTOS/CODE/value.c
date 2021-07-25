@@ -7,6 +7,7 @@ int16 position_front_last,position_front_delta;//上一次偏差，偏差的变化率
 int16 expected_omega=0;
 int32 expected_y=50;//转个环岛试试28 53cm OMEGA速度 80    OMEGA 195 Y轴 90
 int16 speed_low=50;
+int16 expected_X = 5000;
 int16 manual_y=0; //遥控行驶
 int16 manual_z=0;
 //int32 dx=0,dy=0,dz=0,dist;//路径累计

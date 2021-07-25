@@ -79,7 +79,6 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         laneLocationRight[iterRow] = imgCol+globalCenterBias;
         return;
     }
-    BEEP_ON;
     pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
     if (flagEnterRoundabout == -2) { // left roundabout mdoe
         //left lane
@@ -164,7 +163,6 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
             }
         }
     }
-    BEEP_OFF;
 }
 
 // lane interpolation with predifined lane width and previous lane bias
@@ -565,7 +563,7 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 3;
-            exitThreewayDelay = 90;
+            exitThreewayDelay = 1000;
         }
         return;
     }
@@ -858,8 +856,11 @@ void foresight() {
     //  accelerateRatio = 10;
     // }
     accelerateRatio = 10;
-    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
+    if (flagEnterThreeWay == 1) {
         accelerateRatio = 7;
+    }
+    if (flagEnterThreeWay == 2) {
+        accelerateRatio = 0;
     }
     if (flagEnterCrossroad == 3) {
         accelerateRatio = 9;
@@ -972,7 +973,7 @@ void laneAnalyze(Mat outMat){
     missCounterLeft = 0;
     missCounterRight = 0;
 
-    if (carStart == 1) {
+    if (carStart == 2) {
         iterElement = 99;
         carStart = 0;
         flagEnterThreeWay = 0;
@@ -980,6 +981,9 @@ void laneAnalyze(Mat outMat){
         flagEnterCrossroad = 0;
         flagEnterStartLine = 0;
         startLineTimes = 2;
+        exitOutboundDelay = 0;
+        flagEnterOutbound = 0;
+        flagCameraElement = 0;
     }
 
     if (steerStatusFromMain == 0) {
@@ -990,7 +994,13 @@ void laneAnalyze(Mat outMat){
         globalCenterBias = -5;
     }
 
-    detectOutOfBounds(outMat);
+    if (carStart == 1) {
+        exitOutboundDelay = 0;
+        flagEnterOutbound = 0;
+        flagCameraElement = 0;
+    } else {
+        detectOutOfBounds(outMat);
+    }
     detectStartLine(outMat);
 
     if (flagEnterStartLine) {

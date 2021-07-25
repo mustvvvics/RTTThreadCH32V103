@@ -96,11 +96,15 @@ void speed_conversion(float Vx, float Vy,float Vz)
 //    encoder_data[1] = (int16)(-Vx + Vy);
 //}
 //
-//void conversion_speed(void)
-//{
+void conversion_speed(void)
+{
+    //整车编码器
 //    real_x=-(-encoder_data[3] + encoder_data[2] - encoder_data[0] + encoder_data[1])/4;
 //    real_y=-(encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
-//}
+    //路程计
+    real_x +=  -(-encoder_data[3] + encoder_data[2] - encoder_data[0] + encoder_data[1])/4;
+
+}
 void speedPidConversion(void){
     if ((expected_y * accelerate) / 10 == 40) {
         yaw_pid.Kp = 11;yaw_pid.Kd = 0.005;
@@ -133,8 +137,20 @@ void motor_conversion(void)
 //    }
 /**************************************************************************************************/
     //use this
+    if (car_flag == 1) {
+        speed_conversion(-expected_y, 0, 0);
+        conversion_speed();//编码器计数
+        if (real_x >= expected_X || real_x <= -expected_X) {
+            car_flag = 2;
+//            real_x = 0;
 
-    if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 0)//正向行驶
+            clearCamFlags = 1;confirmButton = 0;carStart = 2;
+            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号2
+            sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
+
+        }
+    }
+    else if (car_flag == 2 && threeWayIn == 0 && threeWaySum == 0)//正向行驶
     {
         if(roundIslandBegin)
         {
@@ -150,19 +166,21 @@ void motor_conversion(void)
         speed_conversion(0,(expected_y * accelerate) / 10,PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
     }
         //p22.0 d:0.005 sp:50   // p:16.5   d:0.005   sp=45    // p:11.0 d:0.005 sp:40
-    else if (car_flag == 1 && threeWayIn == 1) {
-        speedPidConversion();//分速度段PID
-        expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+    else if (car_flag == 2 && threeWayIn == 1) {
+//        speedPidConversion();//分速度段PID
+        yaw_pid.Kp = 22;yaw_pid.Kd = 0.005;
+
         if (accelerate == 0) {
             clearError();
             speed_conversion(0,0,0);
         }
         else {
+            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
             speed_conversion((-expected_y * accelerate) / 10,0, PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11) );
         }
 
     }
-    else if (car_flag == 1 && threeWayIn == 0 && threeWaySum == 1) {
+    else if (car_flag == 2 && threeWayIn == 0 && threeWaySum == 1) {
         if(roundIslandBegin)
         {
             yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;

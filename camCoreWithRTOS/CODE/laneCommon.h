@@ -190,7 +190,7 @@ extern int8 globalCenterBias;
 // threeway
 extern uint8 flagEnterThreeWay;
 extern uint8 flagDetectedThreeWayFeature;
-extern uint8 exitThreewayDelay;
+extern uint16 exitThreewayDelay;
 extern uint8 threewayDetectRow;
 extern uint8 threewayWidthFeatureRow;
 extern int32 threewayWidthFeatureRowCenterJitter;

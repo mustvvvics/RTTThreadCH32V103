@@ -5,7 +5,9 @@
 
 extern rt_thread_t tidDisplay;
 extern uint8 mainWriteFlashFlag;
-
+extern uint8 confirmButton;
+extern uint8 carStart;
+extern uint8 clearCamFlags;
 extern int32 elementTable; //ÔªËØË³Ðò±í
 extern uint8 elementTableLength;
 extern uint8 drivingDirectionToCam;

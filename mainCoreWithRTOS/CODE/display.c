@@ -25,7 +25,7 @@ uint8 fixCamRangeSharpCurveRow = 35;//+- 1
 /******************Else*************************************************/
 int8 fixCamGlobalCenterBias = -7;//+- 1
 //int32 fixCamOutboundAreaThres = unknown;//+- 2000
-uint16 fixCamStartlineJumpingPointNumThres = 100;//+- 10
+uint16 fixCamStartlineJumpingPointNumThres = 80;//+- 10
 /*
  * page 3 in cam display
  */
@@ -48,7 +48,7 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"FlashWrite             ");
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Cargo&Winner           ");
+        rt_sprintf(targetBuff,"Cargo&Winner    %d",carStart);
     }
     else if ((5 - menuY) == targetRow) {                //BLACK
         rt_sprintf(targetBuff,"CarSpeed=%04d          ",expected_y);
@@ -68,6 +68,9 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
     else if ((10 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"Servo=%04d             ",servoDuty);
     }
+    else if ((11 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"CarSpeeX=%04d          ",expected_X);
+    }
     else {
         rt_sprintf(targetBuff,"                       ");
     }
@@ -86,12 +89,14 @@ void assignValueFirst(void){
 //        sendParameterToCam(8,0xDF,0,1,0,0);//让从机写flash
         mainWriteFlashFlag = 1;
     }
-    if (confirmButton == 1 && (menuY + 3) == 4 && car_flag == 0) {
-        car_flag = 1;clearCamFlags = 1;confirmButton = 0;carStart = 1;mainWriteFlashFlag = 0;
-        sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号
-        sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
+    if (confirmButton == 1 && (menuY + 3) == 4) {
+        if (car_flag == 0) {
+            car_flag = 1;carStart = 1;clearCamFlags = 1;mainWriteFlashFlag = 0;
+            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号1
+            sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
+        }
     }
-    else if(confirmButton == 0 && (menuY + 3) == 4 && car_flag == 1){car_flag = 0;}
+    else if(confirmButton == 0 && (menuY + 3) == 4 && car_flag == 2){car_flag = 0;}
 
     if ((parameterAdjustButton == 4 || parameterAdjustButton == 1) && confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
@@ -110,6 +115,7 @@ void assignValueFirst(void){
             case 10:
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
+            case 11:expected_X = expected_X + 500 * signData;break;
             default:break;
         }
     }
@@ -345,7 +351,7 @@ void assignValueFourth(void){
 *Disaplay Menu
 */
 
-uint8 maxMenuRow = 10;//下滑选择限制
+uint8 maxMenuRow = 11;//下滑选择限制
 uint8 maxMenuPage = 3;//左右选择限制  total: 4 pages
 char txt1[32]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0}, //承载数组
                   txt5[32]={0},txt6[32]={0},txt7[32]={0};
