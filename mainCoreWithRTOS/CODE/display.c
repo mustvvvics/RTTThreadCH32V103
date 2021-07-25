@@ -25,51 +25,51 @@ uint8 fixCamRangeSharpCurveRow = 35;//+- 1
 /******************Else*************************************************/
 int8 fixCamGlobalCenterBias = -7;//+- 1
 //int32 fixCamOutboundAreaThres = unknown;//+- 2000
-uint16 fixCamStartlineJumpingPointNumThres = 50;//+- 10
+uint16 fixCamStartlineJumpingPointNumThres = 100;//+- 10
 /*
  * page 3 in cam display
  */
 /******************Basic************************************************/
-uint8 fixCamDetectDistance = 20;//+- 1 实际为float 2.0 +- 0.1
+uint8 fixCamDetectDistance = 17;//+- 1 实际为float 2.0 +- 0.1
 int32 fixCamPixelMeanThres = 100;//+- 10
 uint8 fixCamSlopeRowStart = 48;//+- 1
 uint8 fixCamSlopeRowEnd = 35;//+- 1
 /******************Roundabout*******************************************/
-int32 fixCamAreaDetectRoundaboutThresLeft = 400;//+- 10
-int32 fixCamAreaDetectRoundaboutThresRight = 400;//+- 10
+int32 fixCamAreaDetectRoundaboutThresLeft = 370;//+- 10
+int32 fixCamAreaDetectRoundaboutThresRight = 370;//+- 10
 uint8 fixCamRoundaboutDetectionStartRow = 20;//+- 1
-
+int32 fixCamOutboundAreaThres = 10000;//+- 1000
 /*
 *Pass variable data on the first page
 */
 void transfetFunctionFirst(int8 targetRow,char *targetBuff){
 
     if ((3 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"FlashWrite          ");
+        rt_sprintf(targetBuff,"FlashWrite             ");
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Cargo&Winner        ");
+        rt_sprintf(targetBuff,"Cargo&Winner           ");
     }
     else if ((5 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"CarSpeed=%04d       ",expected_y);
+        rt_sprintf(targetBuff,"CarSpeed=%04d          ",expected_y);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"CarDirection=%01d      ",drivingDirectionToCam);
+        rt_sprintf(targetBuff,"CarDirection=%01d         ",drivingDirectionToCam);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turn_P=%05d       ",(int16)(yaw_pid.Kp*1000));
+        rt_sprintf(targetBuff,"Turn_P=%05d          ",(int16)(yaw_pid.Kp*1000));
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turn_D=%05d       ",(int16)(yaw_pid.Kd*1000));
+        rt_sprintf(targetBuff,"Turn_D=%05d          ",(int16)(yaw_pid.Kd*1000));
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor          ");
+        rt_sprintf(targetBuff,"ServoMotor             ");
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Servo=%04d          ",servoDuty);
+        rt_sprintf(targetBuff,"Servo=%04d             ",servoDuty);
     }
     else {
-        rt_sprintf(targetBuff,"                     ");
+        rt_sprintf(targetBuff,"                       ");
     }
 }
 /*
@@ -121,31 +121,31 @@ void assignValueFirst(void){
 */
 void transfetFunctionSecond(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage1  "); //图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage1     "); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"clearCamFlags       ");
+        rt_sprintf(targetBuff,"clearCamFlags          ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"3WayFeatureRow=%03d  ",fixCamThreewayFeatureRow);
+        rt_sprintf(targetBuff,"3WayFeatureRow=%03d     ",fixCamThreewayFeatureRow);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"CRMissNumThres=%03d",fixCamDetectCrossroadMissingNumThres);
+        rt_sprintf(targetBuff,"CRMissNumThres=%03d     ",fixCamDetectCrossroadMissingNumThres);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RgSharpCurveRow=%02d  ",fixCamRangeSharpCurveRow);
+        rt_sprintf(targetBuff,"RgSharpCurveRow=%02d     ",fixCamRangeSharpCurveRow);
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"GlobCenterBias=%03d  ",fixCamGlobalCenterBias);
+        rt_sprintf(targetBuff,"GlobCenterBias=%03d     ",fixCamGlobalCenterBias);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SLJumpPointNum=%03d  ",fixCamStartlineJumpingPointNumThres);
+        rt_sprintf(targetBuff,"SLJumpPointNum=%03d     ",fixCamStartlineJumpingPointNumThres);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"                     ");
+        rt_sprintf(targetBuff,"OutboundAreaThres=%05d",fixCamOutboundAreaThres);
     }
     else {
-        rt_sprintf(targetBuff,"                     ");
+        rt_sprintf(targetBuff,"                        ");
     }
 }
 /*
@@ -181,6 +181,9 @@ void assignValueSecond(void){
             case 9:
                 fixCamStartlineJumpingPointNumThres = fixCamStartlineJumpingPointNumThres + 10 * signData;
                 sendParameterToCam(16,0xE7,0,0,fixCamStartlineJumpingPointNumThres,0);break;
+            case 10:
+                fixCamOutboundAreaThres = fixCamOutboundAreaThres + 1000 * signData;
+                sendParameterToCam(32,0xBB,0,0,0,fixCamOutboundAreaThres);break;
             default:break;
         }
     }
@@ -193,31 +196,31 @@ void assignValueSecond(void){
 */
 void transfetFunctionThird(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage2  "); //图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage2     "); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DetectDistance=%03d  ",fixCamDetectDistance);
+        rt_sprintf(targetBuff,"DetectDistance=%03d     ",fixCamDetectDistance);
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"PixelMeanThres=%03d  ",fixCamPixelMeanThres);
+        rt_sprintf(targetBuff,"PixelMeanThres=%03d     ",fixCamPixelMeanThres);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SlopeRowStart =%03d  ",fixCamSlopeRowStart);
+        rt_sprintf(targetBuff,"SlopeRowStart =%03d     ",fixCamSlopeRowStart);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SlopeRowEnd   =%03d  ",fixCamSlopeRowEnd );
+        rt_sprintf(targetBuff,"SlopeRowEnd   =%03d     ",fixCamSlopeRowEnd );
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DRAboutThrLeft=%03d  ",fixCamAreaDetectRoundaboutThresLeft);
+        rt_sprintf(targetBuff,"DRAboutThrLeft=%03d     ",fixCamAreaDetectRoundaboutThresLeft);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DRAboutThRight=%03d  ",fixCamAreaDetectRoundaboutThresRight);
+        rt_sprintf(targetBuff,"DRAboutThRight=%03d     ",fixCamAreaDetectRoundaboutThresRight);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RADeteStartRow=%03d  ",fixCamRoundaboutDetectionStartRow);
+        rt_sprintf(targetBuff,"RADeteStartRow=%03d     ",fixCamRoundaboutDetectionStartRow);
     }
     else {
-        rt_sprintf(targetBuff,"                     ");
+        rt_sprintf(targetBuff,"                        ");
     }
 }
 
@@ -274,38 +277,38 @@ void assignValueThird(void){
 */
 void transfetFunctionFourth(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ClearChoose         ");
+        rt_sprintf(targetBuff,"ClearChoose            ");
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RoundAbout  :a|1    ");
+        rt_sprintf(targetBuff,"RoundAbout  :a|1       ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ThreeWay    :b|2    ");
+        rt_sprintf(targetBuff,"ThreeWay    :b|2       ");
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"CrossRoad   :c|3    ");
+        rt_sprintf(targetBuff,"CrossRoad   :c|3       ");
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"AbruptSlope :d|4    ");
+        rt_sprintf(targetBuff,"AbruptSlope :d|4       ");
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Garage      :e|5    ");
+        rt_sprintf(targetBuff,"Garage      :e|5       ");
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Delay       :f|6    ");
+        rt_sprintf(targetBuff,"Delay       :f|6       ");
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SendElementTable    ");
+        rt_sprintf(targetBuff,"SendElementTable       ");
     }
     else {
-        rt_sprintf(targetBuff,"                    ");
+        rt_sprintf(targetBuff,"                      ");
     }
 }
 /*
  * Create a table related to the order of the elements
  */
 void createElementTable(uint8 element){
-    if (elementTableLength < 9 && elementTable < 2100000000) {
+    if (elementTableLength < 10 && elementTable < 2000000000) {
         elementTable = elementTable * 10 + element;
         elementTableLength = elementTableLength + 1;
     }
@@ -355,7 +358,7 @@ void disaplayMenu(void){
     }
     else {
         rt_sprintf(txt1,"carF=%01d|Fg=%02d  ",car_flag,elementFlag);
-        rt_sprintf(txt2,"Num=%02d|Order=%09d ",elementTableLength,elementTable);//显示传输元素队列 当menuX = 3 时候触发
+        rt_sprintf(txt2,"Num=%02d|<%010d     ",elementTableLength,elementTable);//显示传输元素队列 当menuX = 3 时候触发
     }
 /************************************************************************/
     if (menuY < 0) {menuY = 0;} //限制选择范围

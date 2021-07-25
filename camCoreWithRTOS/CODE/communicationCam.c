@@ -32,20 +32,8 @@ char* itoaChar(int32 num,char* str,uint8 radix)//value: 要转换的整数，string: 转
     char index[]="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//索引表
     uint32 unum;//存放要转换的整数的绝对值,转换的整数可能是负数
     int16 i=0,j,k;//i用来指示设置字符串相应位，转换之后i其实就是字符串的长度；转换后顺序是逆序的，有正负的情况，k用来指示调整顺序的开始位置;j用来指示调整顺序时的交换。
-
-    //获取要转换的整数的绝对值
-//    if(radix==10&&num<0)//要转换成十进制数并且是负数
-//    {
-//        unum=(unsigned)-num;//将num的绝对值赋给unum
-//        str[i++]='-';//在字符串最前面设置为'-'号，并且索引加1
-//    }
-//    else
-    if ( num >= 0) {
-        unum=num;//若是num为正，直接赋值给unum
-    }
-    else{
-        unum = 0;
-    }
+    if ( num >= 0) {unum=num;}//若是num为正，直接赋值给unum
+    else{unum = 0;}
     //转换部分，注意转换后是逆序的
     do
     {
@@ -67,7 +55,6 @@ char* itoaChar(int32 num,char* str,uint8 radix)//value: 要转换的整数，string: 转
         str[j]=str[i-1+k-j];//尾部赋值给头部
         str[i-1+k-j]=temp;//将临时变量的值(其实就是之前的头部值)赋给尾部
     }
-
     return str;//返回转换后的字符串
 
 }
@@ -142,7 +129,6 @@ void analysisFixParameter(uint8 *line){
         if (line[1] == 0xA0 && line[3] == 0xA8) { //int8
             if (line[5] == 1 ) {negativeNumber = -1;}else if (line[5] == 0) {negativeNumber = 1;}
             switch (line[4]) { //功能字选择
-//Eg:                case 0xE1: parameterTest = negativeNumber * line[6];break;
                 case 0xE1:turnPage = negativeNumber * line[6];break;
                 case 0xE6:globalCenterBias = negativeNumber * line[6];break;
                 default:
@@ -151,15 +137,12 @@ void analysisFixParameter(uint8 *line){
         }
         else if (line[1] == 0xA8 && line[4] == 0xA0) { //uint8
             switch (line[5]) {
-//Eg:                case 0xE2:parameterTest8 = line[6];break;
-
                 case 0xE2:
                     clearCamFlags = line[6];
                     if (clearCamFlags == 1) {
                         flagEnterRoundabout=0;flagEnterThreeWay=0;gyroRoundFinishFlag = 0;
                         clearCamFlags = 0;}
                     break;
-//                case 0xE3:threewayFeatureRow = line[6];break;
                 case 0xE4:detectCrossroadMissingNumThres = line[6];break;
                 case 0xE5:rangeSharpCurveRow = line[6];break;
                 case 0xE8:detectDistance = (line[6] / 10) + ((line[6] % 10) * 0.1) ;break; //实际为float
@@ -178,7 +161,6 @@ void analysisFixParameter(uint8 *line){
         }
         else if (line[2] == 0xA1 && line[3] == 0xA6) { //int16
             switch (line[4]) {
-//Eg:                case 0xE3:parameterTest16 = ((int16)line[5] << 8) | line[6];break;
                 case 0xE7: startlineJumpingPointNumThres = ((int16)line[5] << 8) | line[6];break;
                 default:
                     break;
@@ -186,31 +168,17 @@ void analysisFixParameter(uint8 *line){
         }
         else if (line[1] == 0xA3) {                    //int32
             switch (line[2]) {
-//Eg:                case 0xE4:parameterTest32 = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 case 0xE9:pixelMeanThres = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 case 0xEC:areaDetectRoundaboutThresLeft = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 case 0xED:areaDetectRoundaboutThresRight = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 case 0xDB:
                     elementTableFromMain = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];
-                    itoaChar(elementTableFromMain,elementQueue,10);//int to char
-                    break;
+                    itoaChar(elementTableFromMain,elementQueue,10);break;//int to char
+                case 0xBB:outboundAreaThres = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 default:
                     break;
             }
         }
     }
-
     else {return;}
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -83,7 +83,7 @@ int32 laneJitterRight = 9999;
 uint8 countJitterBreakRowLeft = 0;
 uint8 countJitterBreakRowRight = 0;
 
-int32 pixelMeanThres = 70;
+int32 pixelMeanThres = 100;
 int32 pixelMeanPrevious = 0;
 int32 pixelMean = 0;
 
@@ -130,7 +130,7 @@ int32 laneLocationShiftedUpper = 0;
 
 uint16 startlineJumpingPointNum = 0;
 uint16 startlineJumpingPointNumThres = 50;
-uint8 flagEnterStartLine = 0;
+int8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
 int32 outboundAreaSum = 0;
@@ -172,8 +172,7 @@ uint8 maxAvailableRow = 0;
 int32 laneWidthSlopeLeft = 0;
 int32 laneWidthSlopeRight = 0;
 uint8 iterElement = 0;
-uint16 delayCounter = 0;
-uint8 startLineCounter = 0;
+uint8 delayCounter = 0;
 
 // threeway
 uint8 exitThreewayDelay = 0;
@@ -189,3 +188,7 @@ uint16 threewayFeatureCenterPrevious = 0;
 uint8 threewayFeatureLeftFound = 0;
 uint8 threewayFeatureRightFound = 0;
 uint8 threewayFeatureNearestRow = 0;
+
+// start line
+uint8 startLineTimes = 1;
+uint8 exitStartlineCounter = 0;

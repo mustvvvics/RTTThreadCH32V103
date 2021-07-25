@@ -89,36 +89,24 @@ uint8 threeWaySum = 0;
 uint8 ThreeWayIntersectionFlagPre = 0; //检测上升沿使用
 uint8 steerStatus = 0;//0 朝向前  1 朝向左  2朝向后
 void ThreeWayAnalyze(void){
-
-//            ThreeWayIntersectionFlag = 0;//清标志  是由cam核清理
     if (ThreeWayIntersectionFlagPre == 1 && ThreeWayIntersectionFlag == 0) {//正常路段会发送flag = 0
         ThreeWayIntersectionFlagPre = 0; //还原上升沿触发
     }
     else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 0) {//第一次进入
         pwm_duty(PWM1_CH1_A8, 672); //舵机向左
-//        expected_y = 20;
         steerStatus = 1;
         sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
         ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 1;
-
-//        threeWayClearOtherThings();
-
       }
-
     //第一次出三叉
     else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 0) { //第一次出
-//        expected_y = 0;
-
         pwm_duty(PWM1_CH1_A8, 1000);     //第一次出转舵机向后
         steerStatus = 2;
         sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
         ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 0;               //先前进入三叉 此次是出去
         threeWaySum = 1;                //进入一次三叉
-
-
-//        threeWayClearOtherThings();
 
     }
     else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 0 && threeWaySum == 1) { //第二次进
@@ -127,23 +115,16 @@ void ThreeWayAnalyze(void){
         sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
         ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 1;
-
-//        threeWayClearOtherThings();
-
     }
 
     //第二次出三叉
     else if (ThreeWayIntersectionFlagPre == 0 && ThreeWayIntersectionFlag == 1 && threeWayIn == 1 && threeWaySum == 1){ //第二次出
-//        expected_y = 0;
-
         pwm_duty(PWM1_CH1_A8, 338); //舵机还原
         steerStatus = 0;
         sendParameterToCam(8,0xDA,0,steerStatus,0,0);//告知cam舵机状态
         ThreeWayIntersectionFlagPre = 1;//已完成上升沿
         threeWayIn = 0;
         threeWaySum = 0;
-//        threeWayClearOtherThings();
-
     }
 }
 

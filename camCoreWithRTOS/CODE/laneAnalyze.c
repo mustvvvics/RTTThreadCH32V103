@@ -5,13 +5,17 @@
 //uint8 gyroRoundFinishFlag = 0;
 //uint8 steerStatusFromMain = 0;
 //uint8 carStart = 0;
+//uint8 drivingDirection; // 1 -- right, 0 -- left
 //char *elementQueue = "***";
+//#define BEEP_ON 1;
+//#define BEEP_OFF 0;
 // **********************************************
 
 // *************** uncomment this ***************
  #include "headfile.h"
 // ***********************************************
 
+uint8 beepTimer = 0;
 
 int32 regression(uint8 slopeRowStart, uint8 slopeRowEnd, int32 *colArray);
 
@@ -156,6 +160,70 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
             } else {
                 laneLocationRight[iterRow] = imgCol/2 + laneWidth[iterRow]/2 + globalCenterBias;
                 flagDetectRight[iterRow] = laneFound;
+            }
+        }
+    }
+}
+
+void locateLaneByMeanSlide_and_adaptGarage(Mat outMat) {
+    accelerateRatio = 5;
+    if (drivingDirection == 0) { // left garage
+        laneCenterPrevious = imgCol/4;
+        pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
+        // left lane
+        for (iterCol = laneCenterPrevious - 5; iterCol > 3; iterCol-=2) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                laneLocationLeft[iterRow] = iterCol;
+                flagDetectLeft[iterRow] = laneFound;
+                break;
+            } else {
+                laneLocationLeft[iterRow] = iterCol/5;
+                flagDetectLeft[iterRow] = laneFound;
+            }
+        }
+
+        // right lane
+        for (iterCol = laneCenterPrevious + 5; iterCol < laneCenterBiased+5; iterCol+=2) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
+                laneLocationRight[iterRow] = iterCol;
+                flagDetectRight[iterRow] = laneFound;
+                break;
+            }
+            else {
+                laneLocationRight[iterRow] = iterCol*3/5;
+                flagDetectRight[iterRow] = laneFound;
+            }
+        }
+    } else { // right garage
+        laneCenterPrevious = imgCol*3/4;
+        pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
+
+        // right lane
+        for (iterCol = laneCenterPrevious + 5; iterCol < imgCol-4; iterCol+=2) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
+                laneLocationRight[iterRow] = iterCol;
+                flagDetectRight[iterRow] = laneFound;
+                break;
+            }
+            else {
+                laneLocationRight[iterRow] = imgCol*4/5;
+                flagDetectRight[iterRow] = laneFound;
+            }
+        }
+
+        // left lane
+        for (iterCol = laneCenterPrevious - 5; iterCol > laneCenterBiased-5; iterCol-=2) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                laneLocationLeft[iterRow] = iterCol;
+                flagDetectLeft[iterRow] = laneFound;
+                break;
+            } else {
+                laneLocationLeft[iterRow] = imgCol*2/5;
+                flagDetectLeft[iterRow] = laneFound;
             }
         }
     }
@@ -733,17 +801,24 @@ void detectTriangleForThreeway(Mat outMat) {
 }
 
 void detectStartLine(Mat outMat) {
-    static uint8 exitStartLine = 0;
-
-    if (exitStartLine > 0) {
-        --exitStartLine;
+    if (flagEnterStartLine == -1) {
+        if (exitStartlineCounter == 0) {
+            exitStartlineCounter = 20;
+        } else if (exitStartlineCounter == 1) {
+            iterElement = 0;
+            ++iterElement;
+            exitStartlineCounter = 0;
+            flagEnterStartLine = 0;
+        } else {
+            --exitStartlineCounter;
+        }
         return;
     }
 
     startlineJumpingPointNum = 0;
-    for (iterRow = 40; iterRow < imgRow; ++iterRow) {
+    for (iterRow = 20; iterRow < 40; ++iterRow) {
         pixelMeanPrevious = outMat[iterRow][imgCol/3] * 2;
-        for (iterCol = imgCol / 3; iterCol < imgCol * 2 / 3; iterCol += 2) {
+        for (iterCol = laneCenterBiased-5-laneWidth[iterRow]; iterCol < laneCenterBiased+5+laneWidth[iterRow]; iterCol += 2) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
             if (pixelMeanPrevious - pixelMean > pixelMeanThres || pixelMeanPrevious - pixelMean < -pixelMeanThres) {
                 ++startlineJumpingPointNum;
@@ -752,17 +827,20 @@ void detectStartLine(Mat outMat) {
         }
     }
 
-    if (startlineJumpingPointNum > startlineJumpingPointNumThres) {
-        if (startLineCounter == 0) {
-            exitStartLine = 100;
-            flagEnterStartLine = 1;
-            ++iterElement;
-        } else {
-            exitStartLine = 100;
-            flagEnterStartLine = 2;
-        }
-    } else {
+    if (startlineJumpingPointNum < startlineJumpingPointNumThres) {
         flagEnterStartLine = 0;
+        return;
+    }
+
+    if (flagEnterStartLine == 1) {
+        return;
+    }
+
+    if (--startLineTimes != 0) { // continue, another round
+        flagEnterStartLine = -1;
+        return;
+    } else {
+        flagEnterStartLine = 1;
     }
 }
 
@@ -847,14 +925,8 @@ void foresight() {
     //  accelerateRatio = 10;
     // }
     accelerateRatio = 10;
-//    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
-//        accelerateRatio = 7;
-//    }
-    if (flagEnterThreeWay == 1) {
+    if (flagEnterThreeWay == 1 || flagEnterThreeWay == 2) {
         accelerateRatio = 7;
-    }
-    if (flagEnterThreeWay == 2) {
-        accelerateRatio = 0;
     }
     if (flagEnterCrossroad == 3) {
         accelerateRatio = 9;
@@ -867,9 +939,9 @@ void passParameter() {
     // 4 -- roundabout
 
     flagCameraElement = 0;
-    if (flagEnterStartLine != 0) {
-        flagCameraElement = 3;
-    }
+    // if (flagEnterStartLine != 0) {
+    //  flagCameraElement = 3;
+    // }
     if (flagEnterRoundabout) {
         flagCameraElement = 4;
     }
@@ -959,6 +1031,19 @@ void carRun() {
 }
 
 void laneAnalyze(Mat outMat){
+    if (beepTimer++ > 100) {
+        beepTimer = 0;
+    }
+    if (flagEnterStartLine) {
+        if (beepTimer % 10 == 5) {
+            BEEP_ON;
+        } else {
+            BEEP_OFF;
+        }
+    } else {
+        BEEP_OFF;
+    }
+
     missCounterBoth = 0;
     missCounterLeft = 0;
     missCounterRight = 0;
@@ -966,10 +1051,11 @@ void laneAnalyze(Mat outMat){
     if (carStart == 1) {
         iterElement = 99;
         carStart = 0;
-        startLineCounter = 0;
         flagEnterThreeWay = 0;
         flagEnterRoundabout = 0;
         flagEnterCrossroad = 0;
+        flagEnterStartLine = 0;
+        startLineTimes = 0;
     }
 
     if (steerStatusFromMain == 0) {
@@ -981,12 +1067,27 @@ void laneAnalyze(Mat outMat){
     }
 
     detectOutOfBounds(outMat);
+    detectStartLine(outMat);
+
+    if (flagEnterStartLine) {
+        detectStartLine(outMat);
+        if (flagEnterStartLine == -1) {
+            cameraError = 0;
+        } else {
+            locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
+            computeLaneCenter();
+            markSlopeStartCenter();
+            flagEnterOutbound = 0;
+        }
+        foresight();
+        passParameter();
+        return;
+    }
 
     // threeway mode does not need full camera error
     if (flagEnterThreeWay == 1) {
-
-         detectLaneWidthForThreeway();
-//        detectTriangleForThreeway(outMat);
+        detectLaneWidthForThreeway();
+        // detectTriangleForThreeway(outMat);
         flagEnterOutbound = 0;
         foresight();
         passParameter();
@@ -1042,7 +1143,7 @@ void laneAnalyze(Mat outMat){
                 detectCrossroad();
                 break;
             case '5':
-                detectStartLine(outMat);
+//                detectStartLine(outMat);
                 break;
             case '6':
                 delayForAWhile();

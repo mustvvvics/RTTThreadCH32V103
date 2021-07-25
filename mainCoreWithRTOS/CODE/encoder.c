@@ -8,7 +8,6 @@ void clearError(void){  //Çå¿ÕÎó²î
     expected_omega = 0;
     position_front = 0;
     g_fGyroAngleSpeed_z = 0;
-    speed_conversion(0,0,0);
     yaw_pid.LocSum = 0;
     yaw_pid.Ek = 0;
     yaw_pid.Ek1 = 0;
@@ -17,7 +16,6 @@ void clearError(void){  //Çå¿ÕÎó²î
     yaw_w_pid.err = 0;
     yaw_w_pid.err_last = 0;
     yaw_w_pid.actual_val = 0;
-//    ThreeWayIntersectionFlag = 0;
 }
 void clearFlags(void){
     go_forward=0;go_backward=0;

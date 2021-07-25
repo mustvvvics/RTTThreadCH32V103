@@ -47,8 +47,9 @@ int main(void)
     if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
         itoaChar(elementTableFromMain,elementQueue,10);
     }
-    rt_thread_mdelay(1000);
-
+//    BEEP_ON;
+//    rt_thread_mdelay(1000);
+//    BEEP_OFF;
 //    esp8266Init();
 
     while(1)

@@ -10,7 +10,6 @@ void show_speed(void)
     if (turnPage == 0) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
-//        ips114_showstrGray(50,0, elementTableChar);
         rt_sprintf(txt,"Error   =%05d|Direction=%04d",cameraError,drivingDirection);
         ips114_showstr(0, 1, txt);
 
@@ -31,8 +30,7 @@ void show_speed(void)
     else if (turnPage == 1) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
-//        ips114_showstrGray(50,0, elementTableChar);
-        rt_sprintf(txt,"Error   =%05d|Time    =%05d",cameraError,timeControl);
+        rt_sprintf(txt,"PointNum=%05d|Time    =%05d",startlineJumpingPointNum,timeControl);
         ips114_showstr(0, 1, txt);
 
         rt_sprintf(txt,"outboSum=%05d|StStatus=%05d",outboundAreaSum,steerStatusFromMain);
@@ -46,13 +44,12 @@ void show_speed(void)
         ips114_showstr(0, 5, txt);
         rt_sprintf(txt,"jitterLef=%04d|jitterRig=%04d",laneJitterLeft,laneJitterRight);
         ips114_showstr(0, 6, txt);
-        rt_sprintf(txt,"                             ");
+        rt_sprintf(txt,"                              ");
         ips114_showstr(0, 7, txt);
     }
     else if (turnPage == 2) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
-//        ips114_showstrGray(50,0, elementTableChar);
         rt_sprintf(txt,"Error   =%05d|carStart=%05d",cameraError,carStart);
         ips114_showstr(0, 1, txt);
 
@@ -65,9 +62,8 @@ void show_speed(void)
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"AboutLeft=%04d|AboutRigh=%04d",areaDetectRoundaboutThresLeft,areaDetectRoundaboutThresRight);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"              |               ");
+        rt_sprintf(txt,"OBAThres=%05d|              ",outboundAreaThres);
         ips114_showstr(0, 6, txt);
-//        ips114_showstr(0, 6, elementTableChar);
         rt_sprintf(txt,"                             ");
         ips114_showstr(0, 7, txt);
     }
