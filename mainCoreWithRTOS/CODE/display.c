@@ -10,6 +10,8 @@
 
 int32 elementTable = 0;             //元素顺序表
 uint8 elementTableLength = 0;               //元素个数
+int32 elementTableA = 0;             //元素顺序表
+//uint8 elementTableLengthA = 0;               //元素个数
 uint8 drivingDirectionToCam = 1;            //行驶方向
 
 /*
@@ -165,7 +167,7 @@ void transfetFunctionSecond(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"GlobCenterBias=%03d              ",fixCamGlobalCenterBias);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SlJumpPointNumThres=%03d",fixCamStartlineJumpingPointNumThres);
+        rt_sprintf(targetBuff,"SLJumpPointNumThres=%03d",fixCamStartlineJumpingPointNumThres);
     }
     else if ((10 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"OutboundAreaThres=%05d         ",fixCamOutboundAreaThres);
@@ -335,16 +337,16 @@ void transfetFunctionFourth(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"CrossRoad   :c|3                ");
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Garage      :e|5                ");
+        rt_sprintf(targetBuff,"Garage      :e|4                ");
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Delay100    :f|6                ");
+        rt_sprintf(targetBuff,"Delay100    :f|5                ");
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Delay200    :g|7                ");
+        rt_sprintf(targetBuff,"Delay200    :g|6                ");
     }
     else if ((11 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Delay300    :h|8                ");
+        rt_sprintf(targetBuff,"Delay300    :h|7                ");
     }
     else if ((12 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"SendElementTable                ");
@@ -356,13 +358,18 @@ void transfetFunctionFourth(int8 targetRow,char *targetBuff){
 /*
  * Create a table related to the order of the elements
  */
+
 void createElementTable(uint8 element){
-    if (elementTableLength < 10 && elementTable < 2000000000) {
+    if (elementTableLength < 9 && elementTable < 2000000000) {
         elementTable = elementTable * 10 + element;
         elementTableLength = elementTableLength + 1;
     }
+    else if (elementTableLength < 18 && elementTableA < 2000000000) {
+        elementTableA = elementTableA * 10 + element;
+        elementTableLength = elementTableLength + 1;
+    }
     else {
-        elementTable = 0;elementTableLength = 0;
+        elementTable = 0;elementTableLength = 0;elementTableA = 0;
     }
 }
 
@@ -375,7 +382,7 @@ void createElementTable(uint8 element){
 void assignValueFourth(void){
     if (confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
-            case 3:elementTable = 0;elementTableLength = 0;break;
+            case 3:elementTable = 0;elementTableLength = 0;elementTableA = 0;break;
             case 4:
                 ChooseNumber = ChooseNumber + 1;
                 if (ChooseNumber > 3) {ChooseNumber = 0;}
@@ -392,6 +399,7 @@ void assignValueFourth(void){
             case 11:createElementTable(7);break;
             case 12:
                 sendParameterToCam(32,0xDB,0,0,0,elementTable); //告知顺序
+                sendParameterToCam(32,0xCC,0,0,0,elementTableA); //告知顺序
                 sendParameterToCam(8,0xDC,0,elementTableLength,0,0); //告知元素个数:长度
                 break;
             default:break;
@@ -413,11 +421,11 @@ void disaplayMenu(void){
 /***********************状态栏*******************************************/
     if (menuX < 3) {
         rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
-        rt_sprintf(txt2,"Vc=%03d|AC=%02d            ",Vc,accelerate);
+        rt_sprintf(txt2,"Vc=%03d|AC=%02d                  ",Vc,accelerate);
     }
     else {
         rt_sprintf(txt1,"carF=%01d|Fg=%02d  ",car_flag,elementFlag);
-        rt_sprintf(txt2,"Num=%02d|<%010d      ",elementTableLength,elementTable);//显示传输元素队列 当menuX = 3 时候触发
+        rt_sprintf(txt2,"N=%02d{%09d,%09d}",elementTableLength,elementTable,elementTableA);//显示传输元素队列 当menuX = 3 时候触发
     }
 /************************************************************************/
     if (menuY < 0) {menuY = 0;} //限制选择范围

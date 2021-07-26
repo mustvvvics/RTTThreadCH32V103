@@ -12,9 +12,14 @@ extern int16 encoder_left_front,encoder_left_rear;
 extern uint8 receiveMainBuff[receiveBuffLength];
 extern uint8 gyroRoundFinishFlag;
 extern uint8 steerStatusFromMain;
+
 extern int32 elementTableFromMain;
 extern uint8 elementTableLengthFromMain;
+extern int32 elementTableFromMain1;
+extern uint8 elementTableLengthFromMain1;
 extern char elementQueue[16];
+extern char elementQueue1[16];
+
 extern uint8 drivingDirection;
 extern uint8 carStart;
 extern uint8 camFlashWriteFlag;

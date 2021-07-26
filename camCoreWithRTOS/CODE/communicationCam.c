@@ -10,9 +10,14 @@ int16 slave_position=0;                         //传递误差
 /*
  * 1环岛     2三叉      3十字     4斜坡   5车库   6延时
  */
-int32 elementTableFromMain = 11325;         //元素顺序
-uint8 elementTableLengthFromMain = 5;       //元素个数
+
+int32 elementTableFromMain = 0;         //元素顺序
+uint8 elementTableLengthFromMain = 0;       //元素个数
+int32 elementTableFromMain1 = 0;         //元素顺序
+uint8 elementTableLengthFromMain1 = 0;       //元素个数
 char elementQueue[16] = {0};                //转成字符串
+char elementQueue1[16] = {0};                //转成字符串
+
 uint8 carStart = 0;                         //启动信号
 
 /*
@@ -186,6 +191,9 @@ void analysisFixParameter(uint8 *line){
                     elementTableFromMain = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];
                     itoaChar(elementTableFromMain,elementQueue,10);break;//int to char
                 case 0xBB:outboundAreaThres = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
+                case 0xCC:
+                    elementTableFromMain1 = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];
+                    itoaChar(elementTableFromMain1,elementQueue1,10);break;//int to char
                 default:
                     break;
             }
