@@ -124,9 +124,18 @@ void motor_conversion(void)
 {
     //for test
 /**************************************************************************************************/
-//    if (car_flag == 1) {
-//        speedPidConversion();//分速度段PID
-//        expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+//    if (car_flag == 1 || car_flag == 2) {
+//        car_flag = 2;
+////        speedPidConversion();//分速度段PID
+//
+//        if (carFlagPre == 0 && car_flag == 2) {
+//            clearCamFlags = 1;confirmButton = 0;carStart = 2;
+//            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号2
+//            sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
+//            carFlagPre = 1;
+//        }
+//        expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
+////        expected_omega = PID_Loc(0,-position_front,&yaw_pid);
 //        if (accelerate == 0) {
 //            clearError();
 //            speed_conversion(0,0,0);
@@ -134,6 +143,12 @@ void motor_conversion(void)
 //        else {
 //            speed_conversion((-expected_y * accelerate) / 10,0, PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11) );
 //        }
+//    }
+//    else {
+//        carStart = 0;
+//        carFlagPre = 0;
+//        clearError();clearFlags();
+//        speed_conversion(0,0,0);
 //    }
 /**************************************************************************************************/
     //use this
@@ -168,14 +183,15 @@ void motor_conversion(void)
         //p22.0 d:0.005 sp:50   // p:16.5   d:0.005   sp=45    // p:11.0 d:0.005 sp:40
     else if (car_flag == 2 && threeWayIn == 1) {
 //        speedPidConversion();//分速度段PID
-        yaw_pid.Kp = 22;yaw_pid.Kd = 0.005;
+        yaw_pid.Kp = 26;yaw_pid.Kd = 0.005;
 
         if (accelerate == 0) {
             clearError();
             speed_conversion(0,0,0);
         }
         else {
-            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+//            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+            expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
             speed_conversion((-expected_y * accelerate) / 10,0, PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11) );
         }
 

@@ -108,7 +108,7 @@ void assignValueFirst(void){
                 sendParameterToCam(8,0xDD,0,drivingDirectionToCam,0,0);break;
                 break;
             case 7:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
-            case 8:yaw_pid.Kd = yaw_pid.Kd + 0.1 * signData;break;
+            case 8:yaw_pid.Kd = yaw_pid.Kd + 0.001 * signData;break;
             case 9:
                 if (parameterAdjustButton == 1) {servoDuty = 1000;pwm_duty(PWM1_CH1_A8, servoDuty);}
                 else if (parameterAdjustButton == 4){servoDuty = 672;pwm_duty(PWM1_CH1_A8, servoDuty);};break;

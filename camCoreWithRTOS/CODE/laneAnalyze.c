@@ -563,7 +563,7 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 3;
-            exitThreewayDelay = 200;
+            exitThreewayDelay = 50;
         }
         return;
     }
@@ -581,7 +581,7 @@ void detectLaneWidthForThreeway() {
     if (flagEnterThreeWay == 1) {
         if (flagEnterOutbound) {
             flagEnterThreeWay = 2;
-            exitThreewayDelay = 15;
+            exitThreewayDelay = 10;
         }
         return;
     }
