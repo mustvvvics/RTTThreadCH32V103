@@ -771,7 +771,7 @@ void detectStartLine(Mat outMat) {
         --startLineTimes;
     } else {
         flagEnterStartLine = 1;
-        exitStartlineCounter = 100;
+        exitStartlineCounter = 50;
     }
 }
 
@@ -863,13 +863,13 @@ void foresight() {
         accelerateRatio = 0;
     }
     if (flagEnterThreeWay == 3) {
-        accelerateRatio = 7;
-    }
-    if (flagEnterCrossroad == 3) {
-        accelerateRatio = 9;
+        accelerateRatio = 8;
     }
     if (flagEnterStartLine == 1) {
-        accelerateRatio = 5;
+        accelerateRatio = 6;
+    }
+    if (flagEnterCrossroad) {
+        accelerateRatio = 13;
     }
 }
 
@@ -899,7 +899,7 @@ void passParameter() {
 void detectCrossroad() {
     if (flagEnterCrossroad == 1) {
         if (exitCrossroadDelay == 0) {
-            exitCrossroadDelay = 30;
+            exitCrossroadDelay = 20;
         } else if (exitCrossroadDelay == 1) {
             ++iterElement;
             exitCrossroadDelay = 0;
@@ -915,12 +915,20 @@ void detectCrossroad() {
     flagEnterCrossroad = 0;
     crossroadWidthSum = 0;
 
-    for (iterRow = detectCrossroadStartRow+10; iterRow > detectCrossroadEndRow+10; --iterRow) {
+    for (iterRow = detectCrossroadStartRow+8; iterRow > detectCrossroadEndRow+8; --iterRow) {
         crossroadWidthSum += laneWidthPresent[iterRow];
     }
 
-    if (crossroadWidthSum > 50000) {
+    if (crossroadWidthSum < 45000) {
+        return;
+    }
 
+    crossroadWidthSum = 0;
+    for (iterRow = 3; iterRow < 10; ++iterRow) {
+        crossroadWidthSum += laneWidthPresent[iterRow];
+    }
+
+    if (crossroadWidthSum < 20000) {
         flagEnterCrossroad = 1;
     }
 
@@ -1143,7 +1151,12 @@ int32 regression(uint8 slopeRowStart, uint8 slopeRowEnd, int32 *colArray) {
 // error composition: slope, front points jitter
 void computeError() {
     if (flagEnterStartLine) {
+        cameraError = 0;
         return;
+    }
+
+    if (flagEnterCrossroad) {
+        cameraError = 0;
     }
 
     if (flagEnterThreeWay==1 || flagEnterThreeWay == 2) {

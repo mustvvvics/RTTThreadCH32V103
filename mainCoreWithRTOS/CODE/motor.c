@@ -153,7 +153,12 @@ void motor_conversion(void)
 /**************************************************************************************************/
     //use this
     if (car_flag == 1) {
-        speed_conversion(-expected_y, 0, 0);
+        if (drivingDirectionToCam == 1) {
+            speed_conversion(-expected_y, 0, 0);
+        }
+        else {
+            speed_conversion(expected_y, 0, 0);
+        }
         conversion_speed();//编码器计数
         if (real_x >= expected_X || real_x <= -expected_X) {
             car_flag = 2;
@@ -169,7 +174,7 @@ void motor_conversion(void)
         carFlagPre = 0;
         if(roundIslandBegin)
         {
-            yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
+//            yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
             expected_omega = PID_Loc(0,-position_front,&yaw_pid);//环岛 P:8.0 D:0.005
         }
         else
@@ -183,7 +188,7 @@ void motor_conversion(void)
         //p22.0 d:0.005 sp:50   // p:16.5   d:0.005   sp=45    // p:11.0 d:0.005 sp:40
     else if (car_flag == 2 && threeWayIn == 1) {
 //        speedPidConversion();//分速度段PID
-        yaw_pid.Kp = 26;yaw_pid.Kd = 0.005;
+//        yaw_pid.Kp = 26;yaw_pid.Kd = 0.005;
 
         if (accelerate == 0) {
             clearError();
@@ -199,7 +204,7 @@ void motor_conversion(void)
     else if (car_flag == 2  && threeWayIn == 0 && threeWaySum == 1) {
         if(roundIslandBegin)
         {
-            yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
+//            yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;
             expected_omega = PID_Loc(0,-position_front,&yaw_pid);
         }
         else
