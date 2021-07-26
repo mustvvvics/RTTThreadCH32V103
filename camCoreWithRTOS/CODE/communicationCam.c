@@ -16,8 +16,9 @@ int32 elementTableFromMain = 0;         //元素顺序
 uint8 elementTableLengthFromMain = 0;       //元素个数
 int32 elementTableFromMain1 = 0;         //元素顺序
 uint8 elementTableLengthFromMain1 = 0;       //元素个数
-char elementQueue[16] = {0};                //转成字符串
-char elementQueue1[16] = {0};                //转成字符串
+char elementQueue[20] = {0};
+char elementQueue0[10] = {0};                //转成字符串
+char elementQueue1[10] = {0};                //转成字符串
 
 uint8 carStart = 0;                         //启动信号
 
@@ -62,7 +63,6 @@ char* itoaChar(int32 num,char* str,uint8 radix)//value: 要转换的整数，string: 转
         str[i-1+k-j]=temp;//将临时变量的值(其实就是之前的头部值)赋给尾部
     }
     return str;//返回转换后的字符串
-
 }
 
 void encoder_init(void)
@@ -143,6 +143,7 @@ void encoderCounterAnalysis(uint8 *line)
 uint8 steerStatusFromMain = 0;
 int8 negativeNumber = 0;
 uint8 camFlashWriteFlag = 0;
+
 void analysisFixParameter(uint8 *line){
     if (line[0] != 0xDE) { return ;} //不为修改参数的帧头直接返回
     else if (line[0] == 0xDE) {//帧尾帧头校验成功
@@ -193,11 +194,12 @@ void analysisFixParameter(uint8 *line){
                 case 0xED:areaDetectRoundaboutThresRight = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 case 0xDB:
                     elementTableFromMain = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];
-                    itoaChar(elementTableFromMain,elementQueue,10);break;//int to char
+                    itoaChar(elementTableFromMain,elementQueue0,10);break;//int to char
                 case 0xBB:outboundAreaThres = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];break;
                 case 0xCC:
                     elementTableFromMain1 = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];
                     itoaChar(elementTableFromMain1,elementQueue1,10);break;//int to char
+                    break;
                 default:
                     break;
             }

@@ -18,8 +18,9 @@ extern int32 elementTableFromMain;
 extern uint8 elementTableLengthFromMain;
 extern int32 elementTableFromMain1;
 extern uint8 elementTableLengthFromMain1;
-extern char elementQueue[16];
-extern char elementQueue1[16];
+extern char elementQueue[20];
+extern char elementQueue0[10];
+extern char elementQueue1[10];
 
 extern uint8 drivingDirection;
 extern uint8 carStart;
@@ -33,5 +34,6 @@ void gyroDataAnalysis(uint8 *line);
 void analysisFixParameter(uint8 *line);
 void encoderCounterAnalysis(uint8 *line);
 char* itoaChar(int32 num,char* str,uint8 radix);
+void connectChar(void);
 
 #endif /* CODE_COMMUNICATIONCAM_H_ */

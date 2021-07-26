@@ -19,6 +19,7 @@
 #include "headfile.h"
 
 rt_sem_t camera_sem;
+uint8 i = 0;
 
 int main(void)
 {
@@ -45,9 +46,10 @@ int main(void)
 
     flagCameraElement = 5;
     if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
-        itoaChar(elementTableFromMain,elementQueue,10);
+        itoaChar(elementTableFromMain,elementQueue0,10);
         itoaChar(elementTableFromMain1,elementQueue1,10);
     }
+
 //    BEEP_ON;
 //    rt_thread_mdelay(1000);
 //    BEEP_OFF;
@@ -64,6 +66,12 @@ int main(void)
         computeError();
         timet2 = rt_tick_get();
         timeControl = timet2 - timet1;
+
+        for (i = 0; i < 10; ++i) {
+            elementQueue[i] =  elementQueue0[i];
+            elementQueue[i+9] =  elementQueue1[i];
+        }
+        elementQueue[9] = elementQueue1[0];
 //        sendMessageData();
     }
 }

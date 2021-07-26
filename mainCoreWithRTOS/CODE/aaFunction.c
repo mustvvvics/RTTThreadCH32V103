@@ -104,6 +104,7 @@ void ThreeWayAnalyze(void){
 int32 encoder_x = 0,encoder_y = 0;                //里程计
 uint8 encoderCountYFlag = 0;
 uint8 encoderCountYFlagPre = 0;
+uint8 encoderCountYFlagMain = 0;
 void encoderCountX(void){
     encoder_x +=  -(-encoder_data[3] + encoder_data[2] - encoder_data[0] + encoder_data[1])/4;
 }
@@ -111,18 +112,29 @@ void encoderCountX(void){
  * 在元素之间积分  遇到元素置零  元素结束开始
  */
 void encoderCountY(void){ //use in isr
-    if (encoderCountYFlagPre == 0 && encoderCountYFlag == 1) { //上升沿
-        encoderCountYFlagPre = 1;
+    if (encoderCountYFlagMain == 0) {
+        if (encoderCountYFlagPre == 0 && encoderCountYFlag == 1) { //上升沿
+            encoderCountYFlagPre = 1;
+        }
+        else if (encoderCountYFlagPre == 1 && encoderCountYFlag == 0) {//下降沿
+            encoderCountYFlagPre = 0;
+        }
+        else if (encoderCountYFlagPre == 1 && encoderCountYFlag == 1) {//进入上升期 开始积分
+            encoder_y += -(encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
+            if (encoder_y > 2000000000 || encoder_y < -2000000000) {encoder_y = 0;} //限幅防止越界
+        }
+        else {//都为零时清空
+            encoder_y = 0;
+        }
     }
-    else if (encoderCountYFlagPre == 1 && encoderCountYFlag == 0) {//下降沿
-        encoderCountYFlagPre = 0;
-    }
-    else if (encoderCountYFlagPre == 1 && encoderCountYFlag == 1) {//进入上升期 开始积分
-        encoder_y += -(encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
-        if (encoder_y > 2000000000 || encoder_y < -2000000000) {encoder_y = 0;} //限幅防止越界
-    }
-    else {//都为零时清空
-        encoder_y = 0;
+    else {
+        if (encoderCountYFlagMain == 1) {
+            encoder_y += -(encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
+            if (encoder_y > 2000000000 || encoder_y < -2000000000) {encoder_y = 0;} //限幅防止越界
+        }
+        else {
+            encoder_y = 0;
+        }
     }
 }
 
@@ -148,10 +160,12 @@ void motor_conversion(void)
             encoderCountX();             //编码器计数
             if (encoder_x >= expected_X || encoder_x <= -expected_X) {
                 car_flag = 2;                                       //开始行驶
-                clearCamFlags = 1;confirmButton = 0;carStart = 2;   //清理;取消按键;发送信号2;
-                sendParameterToCam(8,0xAB,0,carStart,0,0);          //发送启动信号2
+                clearCamFlags = 1;confirmButton = 0;
+//                carStart = 2;   //清理;取消按键;发送信号2;
+//                sendParameterToCam(8,0xAB,0,carStart,0,0);          //发送启动信号2
                 sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);     //清空cam flag
-                carStart = 0;encoder_x = 0;                         //使得停下后可以再次启动
+//                carStart = 0;
+                encoder_x = 0;                         //使得停下后可以再次启动
             }
         }
     /************************************************************************************************************/

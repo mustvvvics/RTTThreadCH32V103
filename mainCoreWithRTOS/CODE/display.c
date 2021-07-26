@@ -1,10 +1,10 @@
 #include "headfile.h"
 /*******************************************************************************************************/
 //  ” µÁ”“ 113636225   ” µÁ◊Û 223636115
-#define    elementTable1            113535224
-#define    elementTableLength1      9
-#define    elementTable2            223535114
-#define    elementTableLength2      9
+#define    elementTable1            11353524
+#define    elementTableLength1      8
+#define    elementTable2            23535114
+#define    elementTableLength2      8
 #define    elementTable3            0
 #define    elementTableLength3      0
 
@@ -71,7 +71,7 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
         rt_sprintf(targetBuff,"CarDirection=%01d                 ",drivingDirectionToCam);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"encoderCountYFlag=%01d            ",encoderCountYFlag);
+        rt_sprintf(targetBuff,"encoderCountYFlag=%01d            ",encoderCountYFlagMain);
     }
     else if ((8 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"Turn_P=%05d                   ",(int16)(yaw_pid.Kp*1000));
@@ -130,9 +130,9 @@ void assignValueFirst(void){
                 else{drivingDirectionToCam = 1;}
                 sendParameterToCam(8,0xDD,0,drivingDirectionToCam,0,0);break;
             case 7:
-                encoderCountYFlag = encoderCountYFlag + 1 * signData;
-                if (encoderCountYFlag <= 0) {encoderCountYFlag = 0;}
-                else{encoderCountYFlag = 1;}break;
+                encoderCountYFlagMain = encoderCountYFlagMain + 1 * signData;
+                if (encoderCountYFlagMain <= 0) {encoderCountYFlagMain = 0;}
+                else{encoderCountYFlagMain = 1;}break;
             case 8:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
             case 9:yaw_pid.Kd = yaw_pid.Kd + 0.001 * signData;break;
             case 10:

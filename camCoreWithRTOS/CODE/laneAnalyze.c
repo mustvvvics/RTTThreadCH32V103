@@ -9,6 +9,8 @@
 //char *elementQueue = "***";
 //#define BEEP_ON 1;
 //#define BEEP_OFF 0;
+//uint8 encoderNumFlag = 0;
+//int32 encoderCounterNum = 0;
 // **********************************************
 
 // *************** uncomment this ***************
@@ -354,6 +356,7 @@ void detectRoundabout(Mat outMat) {
         if (exitRoundaboutDelay == 1) {
             flagEnterRoundabout = 0;
             ++iterElement;
+            encoderNumFlag = 0;
             exitRoundaboutDelay = 0;
         } else {
             --exitRoundaboutDelay;
@@ -369,7 +372,7 @@ void detectRoundabout(Mat outMat) {
     if (abs(flagEnterRoundabout) == 2) {
         if (gyroRoundFinishFlag == 1) {
             flagEnterRoundabout = 3;
-            exitRoundaboutDelay = 50;
+            exitRoundaboutDelay = 10;
             gyroRoundFinishFlag = 0;
         }
         return;
@@ -563,7 +566,12 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 3;
-            exitThreewayDelay = 50;
+            ++threewayDetectSequence;
+            if (threewayDetectSequence == 1) {
+                exitThreewayDelay = 100;
+            } else {
+                exitThreewayDelay = 10;
+            }
         }
         return;
     }
@@ -573,7 +581,11 @@ void detectLaneWidthForThreeway() {
             --exitThreewayDelay;
         } else {
             flagEnterThreeWay = 0;
-            ++iterElement;
+            if (threewayDetectSequence == 2) {
+                ++iterElement;
+                encoderNumFlag = 0;
+                threewayDetectSequence = 0;
+            }
         }
         return;
     }
@@ -742,6 +754,8 @@ void detectStartLine(Mat outMat) {
             exitStartlineCounter = 0;
             flagEnterStartLine = 0;
             iterElement = 0;
+            encoderNumFlag = 0;
+            BEEP_OFF;
         } else {
             --exitStartlineCounter;
         }
@@ -768,6 +782,7 @@ void detectStartLine(Mat outMat) {
     if (startLineTimes != 1) { // continue, another round
         flagEnterStartLine = -1;
         exitStartlineCounter = 30;
+        BEEP_ON;
         --startLineTimes;
     } else {
         flagEnterStartLine = 1;
@@ -778,7 +793,7 @@ void detectStartLine(Mat outMat) {
 void detectOutOfBounds(Mat outMat) {
     if (flagEnterOutbound == 1) {
         if (confirmOutboundDelay == 0) {
-            confirmOutboundDelay = 200;
+            confirmOutboundDelay = 100;
         } else if (confirmOutboundDelay == 1) {
             confirmOutboundDelay = 0;
             flagEnterOutbound = 0;
@@ -807,6 +822,7 @@ void detectOutOfBounds(Mat outMat) {
             exitOutboundDelay = 0;
             flagEnterOutbound = 0;
             ++iterElement;
+            encoderNumFlag = 0;
         } else {
             --exitOutboundDelay;
         }
@@ -871,6 +887,17 @@ void foresight() {
     if (flagEnterCrossroad) {
         accelerateRatio = 13;
     }
+    if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30) {
+        if (!flagEnterRoundabout && !flagEnterThreeWay && threewayDetectSequence != 1) {
+            if (cameraError < 3 && cameraError > -3) {
+                accelerateRatio = 16;
+            } else if (cameraError < 7 && cameraError > -7) {
+                accelerateRatio = 12;
+            } else {
+                accelerateRatio = 10;
+            }
+        }
+    }
 }
 
 void passParameter() {
@@ -902,6 +929,7 @@ void detectCrossroad() {
             exitCrossroadDelay = 20;
         } else if (exitCrossroadDelay == 1) {
             ++iterElement;
+            encoderNumFlag = 0;
             exitCrossroadDelay = 0;
             flagEnterCrossroad = 0;
         } else {
@@ -963,29 +991,109 @@ void markSlopeStartCenter() {
     }
 }
 
-void delayForAWhile() {
+void delayForALittleWhile() {
     if (delayCounter == 0) {
-        delayCounter = 40;
+        delayCounter = 100;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
+        encoderNumFlag = 0;
+    } else {
+        --delayCounter;
+    }
+}
+
+void delayForAMiddleWhile() {
+    if (delayCounter == 0) {
+        delayCounter = 200;
+    } else if (delayCounter == 1) {
+        delayCounter = 0;
+        ++iterElement;
+        encoderNumFlag = 0;
+    } else {
+        --delayCounter;
+    }
+}
+
+void delayForABigWhile() {
+    if (delayCounter == 0) {
+        delayCounter = 300;
+    } else if (delayCounter == 1) {
+        delayCounter = 0;
+        ++iterElement;
+        encoderNumFlag = 0;
     } else {
         --delayCounter;
     }
 }
 
 void carRun() {
-    iterElement = 0;
+    if (delayCounter == 0) {
+        delayCounter = 50;
+    }
+
+    if (delayCounter > 0) {
+        if (delayCounter == 1) {
+            iterElement = 0;
+            encoderNumFlag = 0;
+            delayCounter = 0;
+            encoderNumFlag = 1;
+        } else {
+            --delayCounter;
+            flagCameraElement = 0;
+            flagEnterOutbound = 0;
+            confirmOutboundDelay = 0;
+        }
+    }
+}
+
+void selectElementToExecute(Mat outMat) {
+    if (iterElement != 99) {
+        if (elementQueue[iterElement] != '\0') {
+//            encoderNumFlag = 1;
+//            if (encoderCounterNum >= encoderNumExitElement[iterElement]) {
+//                ++iterElement;
+//                encoderNumFlag = 0;
+//                return;
+//            }
+//            if (encoderCounterNum < encoderNumEnterElement[iterElement]) {
+//                return;
+//            }
+
+            switch (elementQueue[iterElement]) {
+                case '1':
+                    detectRoundabout(outMat);
+                    break;
+                case '2':
+                    detectLaneWidthForThreeway();
+                        //detectTriangleForThreeway(outMat);
+                    break;
+                case '3':
+                    detectCrossroad();
+                    break;
+                case '4':
+                    detectStartLine(outMat);
+                    break;
+                case '5':
+                    delayForALittleWhile();
+                    break;
+                case '6':
+                    delayForAMiddleWhile();
+                    break;
+                case '7':
+                    delayForABigWhile();
+                    break;
+            }
+        }
+    } else {
+        carRun();
+    }
 }
 
 void laneAnalyze(Mat outMat){
-
-    missCounterBoth = 0;
-    missCounterLeft = 0;
-    missCounterRight = 0;
-
-    if (carStart == 2) {
+    if (carStart == 1) {
         iterElement = 99;
+        encoderNumFlag = 0;
         carStart = 0;
         flagEnterThreeWay = 0;
         flagEnterRoundabout = 0;
@@ -995,6 +1103,8 @@ void laneAnalyze(Mat outMat){
         exitOutboundDelay = 0;
         flagEnterOutbound = 0;
         flagCameraElement = 0;
+        threewayDetectSequence = 0;
+        delayCounter = 0;
     }
 
     if (steerStatusFromMain == 0) {
@@ -1003,14 +1113,6 @@ void laneAnalyze(Mat outMat){
         globalCenterBias = -13;
     } else if (steerStatusFromMain == 2) {
         globalCenterBias = -5;
-    }
-
-    if (carStart == 1) {
-        exitOutboundDelay = 0;
-        flagEnterOutbound = 0;
-        flagCameraElement = 0;
-    } else {
-        detectOutOfBounds(outMat);
     }
 
     if (flagEnterStartLine) {
@@ -1033,6 +1135,8 @@ void laneAnalyze(Mat outMat){
         return;
     }
 
+    detectOutOfBounds(outMat);
+
     // threeway mode does not need full camera error
     if (flagEnterThreeWay == 1) {
         detectLaneWidthForThreeway();
@@ -1047,6 +1151,9 @@ void laneAnalyze(Mat outMat){
         flagEnterOutbound = 0;
     }
 
+    missCounterBoth = 0;
+    missCounterLeft = 0;
+    missCounterRight = 0;
     for (iterRow = imgRow-4; iterRow != 255; --iterRow){
         if (abs(flagEnterRoundabout) == 2) {
             locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
@@ -1069,41 +1176,10 @@ void laneAnalyze(Mat outMat){
         adaptSharpCurve();
     }
 
-    if (iterElement == 99) {
-        carRun();
-        markSlopeStartCenter();
-        return;
-    }
-
     // detectTriangleForThreeway(outMat);
     // detectRoundabout(outMat);
     // detectCrossroad();
-    if (elementQueue[iterElement] != '\0') {
-        switch (elementQueue[iterElement]) {
-            case '#':
-                carRun();
-                break;
-            case '1':
-                detectRoundabout(outMat);
-                break;
-            case '2':
-                detectLaneWidthForThreeway();
-                //detectTriangleForThreeway(outMat);
-                break;
-            case '3':
-                detectCrossroad();
-                break;
-            case '4':
-                detectStartLine(outMat);
-                break;
-            case '5':
-                delayForAWhile();
-                break;
-            default:
-                break;
-        }
-    }
-
+    selectElementToExecute(outMat);
 
     markSlopeStartCenter();
     passParameter();

@@ -10,6 +10,7 @@ extern int32 encoder_x,encoder_y;
 extern uint8 encoderCountYFlag;
 extern int32 roundIslandMax;
 extern uint8 testSideFlag;
+extern uint8 encoderCountYFlagMain;
 
 void clearError(void);
 void clearFlags(void);

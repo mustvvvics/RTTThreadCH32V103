@@ -92,8 +92,9 @@ void testSideAdvancementAbility(void){
     if (car_flag == 1 || car_flag == 2) {
         car_flag = 2;
         if (carFlagPre == 0 && car_flag == 2) {
-            clearCamFlags = 1;confirmButton = 0;carStart = 2;
-            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号2
+            clearCamFlags = 1;confirmButton = 0;
+//            carStart = 2;
+//            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号2
             sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
             carFlagPre = 1;
         }

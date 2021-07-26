@@ -2,7 +2,7 @@
 #define _laneCommon_h
 
 // **************** uncomment this ********************
-//#include "headfile.h"
+#include "headfile.h"
 // ****************************************************
 
 // ***************** comment this *********************
@@ -183,14 +183,14 @@ extern int32 laneWidthSlopeLeft;
 extern int32 laneWidthSlopeRight;
 
 extern uint8 iterElement;
-extern uint8 delayCounter;
+extern uint16 delayCounter;
 
 extern int8 globalCenterBias;
 
 // threeway
 extern uint8 flagEnterThreeWay;
 extern uint8 flagDetectedThreeWayFeature;
-extern uint16 exitThreewayDelay;
+extern uint8 exitThreewayDelay;
 extern uint8 threewayDetectRow;
 extern uint8 threewayWidthFeatureRow;
 extern int32 threewayWidthFeatureRowCenterJitter;
@@ -203,8 +203,12 @@ extern uint16 threewayFeatureCenterPrevious;
 extern uint8 threewayFeatureLeftFound;
 extern uint8 threewayFeatureRightFound;
 extern uint8 threewayFeatureNearestRow;
+extern uint8 threewayDetectSequence;
 
 // start line
 extern uint8 startLineTimes;
 extern uint8 exitStartlineCounter;
+
+extern int32 encoderNumEnterElement[20];
+extern int32 encoderNumExitElement[20];
 #endif

@@ -22,9 +22,11 @@ void show_speed(void)
         ips114_showstr(0, 5, txt);
         rt_sprintf(txt,"Num=%02d|Element   =%09d  ",elementTableLengthFromMain,elementTableFromMain);
         ips114_showstr(0, 6, txt);
-        rt_sprintf(txt,"EnFg=%01d|Element1 =%09d  ",encoderNumFlag,elementTableFromMain1);
+//        rt_sprintf(txt,"Num=%02d|Element   =%09d  ",elementTableLengthFromMain,elementTableFromMain1);
+//        ips114_showstr(0, 6, txt);
+        rt_sprintf(txt,"EnFg=%01d|",encoderNumFlag);
         ips114_showstr(0, 7, txt);
-
+        ips114_showstr(60, 7, elementQueue);
 
 
     }

@@ -3,6 +3,12 @@
 
 // laneAnalyze
 // lane location for each row
+
+
+int32 encoderNumEnterElement[20] = {0};
+int32 encoderNumExitElement[20] = {9999999};
+
+
 int32 laneLocationLeft[imgRow] = {0};
 int32 laneLocationRight[imgRow] = {0};
 
@@ -129,7 +135,7 @@ int32 laneLocationShiftedLower = 0;
 int32 laneLocationShiftedUpper = 0;
 
 uint16 startlineJumpingPointNum = 0;
-uint16 startlineJumpingPointNumThres = 80;
+uint16 startlineJumpingPointNumThres = 50;
 int8 flagEnterStartLine = 0;
 
 int32 outboundAreaBenchmark = 0;
@@ -172,10 +178,10 @@ uint8 maxAvailableRow = 0;
 int32 laneWidthSlopeLeft = 0;
 int32 laneWidthSlopeRight = 0;
 uint8 iterElement = 0;
-uint8 delayCounter = 0;
+uint16 delayCounter = 0;
 
 // threeway
-uint16 exitThreewayDelay = 0;
+uint8 exitThreewayDelay = 0;
 uint8 flagEnterThreeWay = 0;
 uint8 flagDetectedThreeWayFeature = 0;
 uint8 threewayWidthFeatureRow = 0;
@@ -188,7 +194,8 @@ uint16 threewayFeatureCenterPrevious = 0;
 uint8 threewayFeatureLeftFound = 0;
 uint8 threewayFeatureRightFound = 0;
 uint8 threewayFeatureNearestRow = 0;
+uint8 threewayDetectSequence = 0;
 
 // start line
-uint8 startLineTimes = 2;
+uint8 startLineTimes = 1;
 uint8 exitStartlineCounter = 0;
