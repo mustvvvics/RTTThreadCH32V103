@@ -5,6 +5,7 @@ int16 encoder_left_front,encoder_left_rear;     //前轮左右编码器数值
 uint8 receiveMainBuff[receiveBuffLength];      //接收主机数据buff
 
 uint8 gyroRoundFinishFlag = 0;                 //接收陀螺仪Flag
+uint8 encoderNumFlag = 0;
 int16 slave_position=0;                         //传递误差
 
 /*
@@ -109,7 +110,10 @@ void process_data(void)                         //根据协议处理要向主机发送的数据
     temp_buff[12] = 0xB4;
     temp_buff[13] = flagCameraElement;          //元素falg
 
-    temp_buff[14] = 0xEE;                       //帧尾
+    temp_buff[14] = 0xB5;
+    temp_buff[15] = encoderNumFlag;
+
+    temp_buff[16] = 0xEE;                       //帧尾
 }
 
 

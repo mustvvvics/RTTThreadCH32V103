@@ -40,6 +40,8 @@ void data_analysis(uint8 *line)
     if(line[7] == 0xB2)    position_front  = ((int16)line[8] << 8) | line[9];
     if(line[10] == 0xB3)   accelerate  = line[11];
     if(line[12] == 0xB4)   elementFlag  = line[13];
+    if (line[14] == 0xB5)  encoderCountYFlag = line[15];
+
 
     switch (elementFlag) {
         case 0://ÎÞÔªËØ

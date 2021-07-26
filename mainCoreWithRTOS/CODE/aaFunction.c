@@ -35,6 +35,7 @@ void roundIslandAnalyze(void){
     }
     else if (roundIslandBeginPre == 1 && roundIslandBegin == 1){
         total_z += g_fGyroAngleSpeed_z;
+        if (total_z > 2000000000 || total_z < -2000000000) {total_z = 0;}//限幅防止越界
         if (total_z > roundIslandMax || total_z < -roundIslandMax) {
             roundIslandBegin = 0;
             roundFinishFlag = 1;
@@ -102,6 +103,7 @@ void ThreeWayAnalyze(void){
 /*******************************************************************************************************/
 int32 encoder_x = 0,encoder_y = 0;                //里程计
 uint8 encoderCountYFlag = 0;
+uint8 encoderCountYFlagPre = 0;
 void encoderCountX(void){
     encoder_x +=  -(-encoder_data[3] + encoder_data[2] - encoder_data[0] + encoder_data[1])/4;
 }
@@ -109,10 +111,17 @@ void encoderCountX(void){
  * 在元素之间积分  遇到元素置零  元素结束开始
  */
 void encoderCountY(void){ //use in isr
-    if (encoderCountYFlag == 1) {
-        encoder_y += -(encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
+    if (encoderCountYFlagPre == 0 && encoderCountYFlag == 1) { //上升沿
+        encoderCountYFlagPre = 1;
     }
-    else {
+    else if (encoderCountYFlagPre == 1 && encoderCountYFlag == 0) {//下降沿
+        encoderCountYFlagPre = 0;
+    }
+    else if (encoderCountYFlagPre == 1 && encoderCountYFlag == 1) {//进入上升期 开始积分
+        encoder_y += -(encoder_data[3] + encoder_data[2] + encoder_data[1] + encoder_data[0])/4;
+        if (encoder_y > 2000000000 || encoder_y < -2000000000) {encoder_y = 0;} //限幅防止越界
+    }
+    else {//都为零时清空
         encoder_y = 0;
     }
 }
@@ -152,7 +161,7 @@ void motor_conversion(void)
             carFlagPre = 0;
             if(roundIslandBegin)                        //环岛PID
             {
-                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;   //全局可控
+//                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;   //全局可控
                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);//环岛 P:8.0 D:0.005
             }
             else
@@ -185,7 +194,7 @@ void motor_conversion(void)
         else if (car_flag == 2  && threeWayIn == 0 && threeWaySum == 1) {
             if(roundIslandBegin)                      //环岛PID
             {
-                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;  //全局可控
+//                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;  //全局可控
                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);
             }
             else

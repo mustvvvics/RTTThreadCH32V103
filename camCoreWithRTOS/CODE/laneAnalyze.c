@@ -1093,10 +1093,10 @@ void laneAnalyze(Mat outMat){
             case '3':
                 detectCrossroad();
                 break;
-            case '5':
+            case '4':
                 detectStartLine(outMat);
                 break;
-            case '6':
+            case '5':
                 delayForAWhile();
                 break;
             default:

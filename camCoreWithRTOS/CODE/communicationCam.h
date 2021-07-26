@@ -4,7 +4,7 @@
 
 #include "headfile.h"
 
-#define LINE_LEN                15              //发送数据长度
+#define LINE_LEN                17              //发送数据长度
 #define receiveBuffLength        8              //接收数据长度
 
 extern uint8 temp_buff[LINE_LEN];
@@ -12,6 +12,7 @@ extern int16 encoder_left_front,encoder_left_rear;
 extern uint8 receiveMainBuff[receiveBuffLength];
 extern uint8 gyroRoundFinishFlag;
 extern uint8 steerStatusFromMain;
+extern uint8 encoderNumFlag;
 
 extern int32 elementTableFromMain;
 extern uint8 elementTableLengthFromMain;
