@@ -46,6 +46,7 @@ int main(void)
     flagCameraElement = 5;
     if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
         itoaChar(elementTableFromMain,elementQueue,10);
+        itoaChar(elementTableFromMain1,elementQueue1,10);
     }
 //    BEEP_ON;
 //    rt_thread_mdelay(1000);

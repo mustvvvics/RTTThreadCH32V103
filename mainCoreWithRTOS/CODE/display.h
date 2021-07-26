@@ -10,6 +10,7 @@ extern uint8 carStart;
 extern uint8 clearCamFlags;
 extern int32 elementTable; //元素顺序表
 extern uint8 elementTableLength;
+extern int32 elementTableA; //元素顺序表
 extern uint8 drivingDirectionToCam;
 
 /******************Threewayroad*****************************************/

@@ -122,91 +122,94 @@ void encoderCountY(void){ //use in isr
  * 控制方式选择
  */
 /************************************************************************************************************/
+uint8 testSideFlag = 0;
 void motor_conversion(void)
 {
-//    testSideAdvancementAbility();   测试侧面行进能力
-    if (car_flag == 1) {
-        if (drivingDirectionToCam == 1) {           //向右出库
-            speed_conversion(-expected_y, 0, 0);
+    if (testSideFlag == 1) {testSideAdvancementAbility();}   //测试侧面行进能力
+    else {
+        if (car_flag == 1) {
+            if (drivingDirectionToCam == 1) {           //向右出库
+                speed_conversion(-expected_y, 0, 0);
+            }
+            else {
+                speed_conversion(expected_y, 0, 0);     //向左出库
+            }
+            encoderCountX();             //编码器计数
+            if (encoder_x >= expected_X || encoder_x <= -expected_X) {
+                car_flag = 2;                                       //开始行驶
+                clearCamFlags = 1;confirmButton = 0;carStart = 2;   //清理;取消按键;发送信号2;
+                sendParameterToCam(8,0xAB,0,carStart,0,0);          //发送启动信号2
+                sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);     //清空cam flag
+                carStart = 0;encoder_x = 0;                         //使得停下后可以再次启动
+            }
         }
-        else {
-            speed_conversion(expected_y, 0, 0);     //向左出库
-        }
-        encoderCountX();             //编码器计数
-        if (encoder_x >= expected_X || encoder_x <= -expected_X) {
-            car_flag = 2;                                       //开始行驶
-            clearCamFlags = 1;confirmButton = 0;carStart = 2;   //清理;取消按键;发送信号2;
-            sendParameterToCam(8,0xAB,0,carStart,0,0);          //发送启动信号2
-            sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);     //清空cam flag
-            carStart = 0;encoder_x = 0;                         //使得停下后可以再次启动
-        }
-    }
-/************************************************************************************************************/
-    //正向行驶
-    else if (car_flag == 2 && threeWayIn == 0 && threeWaySum == 0)
-    {
-        carFlagPre = 0;
-        if(roundIslandBegin == 1)                        //环岛PID
+    /************************************************************************************************************/
+        //正向行驶
+        else if (car_flag == 2 && threeWayIn == 0 && threeWaySum == 0)
         {
-//            yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;   //全局可控
-            expected_omega = PID_Loc(0,-position_front,&yaw_pid);//环岛 P:8.0 D:0.005
+            carFlagPre = 0;
+            if(roundIslandBegin)                        //环岛PID
+            {
+                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;   //全局可控
+                expected_omega = PID_Loc(0,-position_front,&yaw_pid);//环岛 P:8.0 D:0.005
+            }
+            else
+            {
+                expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
+            }
+            if (accelerate == 0) {clearError();speed_conversion(0,0,0);}    //转完舵机停一会
+            else {
+    //            speed_conversion(0,dynamic_programming(-position_front,position_front_delta), \           //带主核加速
+    //                    PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+                speed_conversion(0,(expected_y * accelerate) / 10,    \
+                        PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+            }
+
+        }
+    /************************************************************************************************************/
+        //进三叉行驶              //p22.0 d:0.005 sp:50   // p:16.5   d:0.005   sp=45    // p:11.0 d:0.005 sp:40
+        else if (car_flag == 2 && threeWayIn == 1) {
+    //        yaw_pid.Kp = 26;yaw_pid.Kd = 0.005;
+            if (accelerate == 0) {clearError();speed_conversion(0,0,0);}    //转完舵机停一会
+            else {
+    //            expected_omega = PID_Loc(0,-position_front,&yaw_pid);     //位置PID
+                expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
+                speed_conversion((-expected_y * accelerate) / 10, 0, \
+                        PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11) );
+            }
+        }
+    /************************************************************************************************************/
+        //退出三叉行驶
+        else if (car_flag == 2  && threeWayIn == 0 && threeWaySum == 1) {
+            if(roundIslandBegin)                      //环岛PID
+            {
+                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;  //全局可控
+                expected_omega = PID_Loc(0,-position_front,&yaw_pid);
+            }
+            else
+            {
+                expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
+            }
+            if (accelerate == 0) {clearError();speed_conversion(0,0,0);}         //转完舵机停一会
+            else {
+    //            speed_conversion(0,dynamic_programming(-position_front,position_front_delta), \            //带主核加速
+    //                    PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+                speed_conversion(0,(-expected_y * accelerate) / 10 , \
+                        PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
+            }
+
+
+        }
+    /************************************************************************************************************/
+        else if (carFlagPre == 1 && car_flag == 0) {//停下来给一次信号1
+            carStart = 1;
+            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号1
+            carFlagPre = 0;
         }
         else
         {
-            expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
+            clearError();clearFlags();
+            speed_conversion(0,0,0);
         }
-        if (accelerate == 0) {clearError();speed_conversion(0,0,0);}    //转完舵机停一会
-        else {
-//            speed_conversion(0,dynamic_programming(-position_front,position_front_delta), \           //带主核加速
-//                    PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
-            speed_conversion(0,(expected_y * accelerate) / 10,    \
-                    PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
-        }
-
-    }
-/************************************************************************************************************/
-    //进三叉行驶              //p22.0 d:0.005 sp:50   // p:16.5   d:0.005   sp=45    // p:11.0 d:0.005 sp:40
-    else if (car_flag == 2 && threeWayIn == 1) {
-//        yaw_pid.Kp = 26;yaw_pid.Kd = 0.005;
-        if (accelerate == 0) {clearError();speed_conversion(0,0,0);}    //转完舵机停一会
-        else {
-//            expected_omega = PID_Loc(0,-position_front,&yaw_pid);     //位置PID
-            expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
-            speed_conversion((-expected_y * accelerate) / 10, 0, \
-                    PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11) );
-        }
-    }
-/************************************************************************************************************/
-    //退出三叉行驶
-    else if (car_flag == 2  && threeWayIn == 0 && threeWaySum == 1) {
-        if(roundIslandBegin == 1)                      //环岛PID
-        {
-//            yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;  //全局可控
-            expected_omega = PID_Loc(0,-position_front,&yaw_pid);
-        }
-        else
-        {
-            expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
-        }
-        if (accelerate == 0) {clearError();speed_conversion(0,0,0);}         //转完舵机停一会
-        else {
-//            speed_conversion(0,dynamic_programming(-position_front,position_front_delta), \            //带主核加速
-//                    PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
-            speed_conversion(0,(-expected_y * accelerate) / 10 , \
-                    PID_Angle(expected_omega,g_fGyroAngleSpeed_z,&yaw_w_pid)+(expected_omega/11));
-        }
-
-
-    }
-/************************************************************************************************************/
-    else if (carFlagPre == 1 && car_flag == 0) {//停下来给一次信号1
-        carStart = 1;
-        sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号1
-        carFlagPre = 0;
-    }
-    else
-    {
-        clearError();clearFlags();
-        speed_conversion(0,0,0);
     }
 }

@@ -88,8 +88,8 @@ void EXTI2_IRQHandler(void)
             uart_flag = E_START;
             encoder_get();                  //主核编码器
         }
-//        position_front_delta = position_front - position_front_last; //计算偏差变化  用于主核控制的加速
-//        position_front_last = -position_front;
+        position_front_delta = position_front - position_front_last; //计算偏差变化  模糊pid
+        position_front_last = -position_front;
         ThreeWayAnalyze();                  //三叉解析
         roundIslandAnalyze();               //环岛通讯flag
         motor_conversion();                 //控制方式在最后

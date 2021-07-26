@@ -88,6 +88,12 @@ void transfetFunctionFirst(int8 targetRow,char *targetBuff){
     else if ((12 - menuY) == targetRow) {
         rt_sprintf(targetBuff,"CarSpeeX=%04d                  ",expected_X);
     }
+    else if ((13 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"roundIslandMax=%04d            ",roundIslandMax);
+    }
+    else if ((14 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"testSideFlag=%04d              ",testSideFlag);
+    }
     else {
         rt_sprintf(targetBuff,"                               ");
     }
@@ -123,12 +129,10 @@ void assignValueFirst(void){
                 if (drivingDirectionToCam <= 0) {drivingDirectionToCam = 0;}
                 else{drivingDirectionToCam = 1;}
                 sendParameterToCam(8,0xDD,0,drivingDirectionToCam,0,0);break;
-                break;
             case 7:
                 encoderCountYFlag = encoderCountYFlag + 1 * signData;
                 if (encoderCountYFlag <= 0) {encoderCountYFlag = 0;}
-                else{encoderCountYFlag = 1;}
-                break;
+                else{encoderCountYFlag = 1;}break;
             case 8:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
             case 9:yaw_pid.Kd = yaw_pid.Kd + 0.001 * signData;break;
             case 10:
@@ -138,6 +142,11 @@ void assignValueFirst(void){
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
             case 12:expected_X = expected_X + 500 * signData;break;
+            case 13:roundIslandMax = roundIslandMax + 1000 * signData;break;
+            case 14:
+                testSideFlag = testSideFlag + 1 * signData;
+                if (testSideFlag <= 0) {testSideFlag = 0;}
+                else{testSideFlag = 1;}break;
             default:break;
         }
     }

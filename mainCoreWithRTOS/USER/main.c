@@ -9,12 +9,12 @@ int main(void)
     motor_init();                           //电机初始化
     pwm_init(PWM1_CH1_A8, 50, 338);         //舵机初始化   默认在中位上       舵机 TIMER1  338向前; 672向左 ; 1000向后
 //    esp8266Init();                        //8266线程  使用串口2         <比赛关闭>
-    PID_Init();                             //PID参数初始化
+
     timer_EncoderCounter_init();            //里程计发送定时器初始化
     timer_pitAdc_init();                    //初始化ADC电压采集  使用了一个定时器 <比赛关闭>
 
     mainFlashRead();                        //读flash
-
+    PID_Init();                             //PID参数初始化
     //串口3初始化
     uart_init(UART_3, 921600, UART3_TX_B10, UART3_RX_B11);      //串口3初始化 波特率115200
     //开串口3中断

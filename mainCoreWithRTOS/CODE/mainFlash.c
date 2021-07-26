@@ -5,7 +5,7 @@
  *  FLASH_PAGE_0-FLASH_PAGE_3
  *  len 1-256
  */
-#define buffMax 16
+#define buffMax 17
 
 uint32 write_buff[buffMax] = {0};//flash
 uint32 read_buff[buffMax] = {0};
@@ -32,7 +32,8 @@ void mainFlashRead(void){
         fixCamGlobalCenterBias = read_buff[12];
         fixCamStartlineJumpingPointNumThres = read_buff[13];
         fixCamOutboundAreaThres = read_buff[14];
-        expected_y = read_buff[15];
+        elementTableA = read_buff[15];
+        expected_y = read_buff[16];
     }
     else {
         expected_y = 50;
@@ -56,6 +57,7 @@ void sendFlashDataToCam(void){
     sendParameterToCam(0,0xE6,fixCamGlobalCenterBias,0,0,0);
     sendParameterToCam(16,0xE7,0,0,fixCamStartlineJumpingPointNumThres,0);
     sendParameterToCam(32,0xBB,0,0,0,fixCamOutboundAreaThres);
+    sendParameterToCam(32,0xCC,0,0,0,elementTableA); //告知顺序
 
     sendParameterToCam(8,0xDF,0,1,0,0);//让从机接受主机数据
 }
@@ -82,7 +84,8 @@ void mainFlashWrite(void){
     write_buff[12] = fixCamGlobalCenterBias;
     write_buff[13] = fixCamStartlineJumpingPointNumThres;
     write_buff[14] = fixCamOutboundAreaThres;
-    write_buff[15] = expected_y;
+    write_buff[15] = elementTableA;
+    write_buff[16] = expected_y;
     flash_page_program(FLASH_SECTION_15, FLASH_PAGE_0, write_buff, buffMax);
 
 }
