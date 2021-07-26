@@ -5,9 +5,10 @@
  *  FLASH_PAGE_0-FLASH_PAGE_3
  *  len 1-256
  */
-uint16 buffMax = 15;
-uint32 write_buff[15] = {0};//flash
-uint32 read_buff[15] = {0};
+#define buffMax 16
+
+uint32 write_buff[buffMax] = {0};//flash
+uint32 read_buff[buffMax] = {0};
 
 uint8 flashCheck = 0;
 
@@ -30,17 +31,11 @@ void mainFlashRead(void){
         fixCamRangeSharpCurveRow = read_buff[11];
         fixCamGlobalCenterBias = read_buff[12];
         fixCamStartlineJumpingPointNumThres = read_buff[13];
-        expected_y = read_buff[14];
+        fixCamOutboundAreaThres = read_buff[14];
+        expected_y = read_buff[15];
     }
     else {
         expected_y = 50;
-        elementTableLength = 9;elementTable = 113636225;
-//        elementTableLength = 8;elementTable = 22363115;    //
-//        drivingDirectionToCam = 1;fixCamDetectDistance = 17;fixCamPixelMeanThres = 100;
-//        fixCamSlopeRowStart=48;fixCamSlopeRowEnd=35;
-//        fixCamAreaDetectRoundaboutThresLeft = 370;fixCamAreaDetectRoundaboutThresRight = 370;
-//        fixCamRoundaboutDetectionStartRow = 20;fixCamGlobalCenterBias = -7;
-//        fixCamStartlineJumpingPointNumThres = 50;
     }
 
 }
@@ -60,6 +55,7 @@ void sendFlashDataToCam(void){
     sendParameterToCam(8,0xE5,0,fixCamRangeSharpCurveRow,0,0);
     sendParameterToCam(0,0xE6,fixCamGlobalCenterBias,0,0,0);
     sendParameterToCam(16,0xE7,0,0,fixCamStartlineJumpingPointNumThres,0);
+    sendParameterToCam(32,0xBB,0,0,0,fixCamOutboundAreaThres);
 
     sendParameterToCam(8,0xDF,0,1,0,0);//让从机接受主机数据
 }
@@ -85,8 +81,8 @@ void mainFlashWrite(void){
     write_buff[11] = fixCamRangeSharpCurveRow;
     write_buff[12] = fixCamGlobalCenterBias;
     write_buff[13] = fixCamStartlineJumpingPointNumThres;
-
-    write_buff[14] = expected_y;
+    write_buff[14] = fixCamOutboundAreaThres;
+    write_buff[15] = expected_y;
     flash_page_program(FLASH_SECTION_15, FLASH_PAGE_0, write_buff, buffMax);
 
 }

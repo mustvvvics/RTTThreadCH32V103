@@ -17,12 +17,13 @@
 #define MOTOR2_B   PWM4_CH2_B7      //定义2电机PWM引脚
 
 
-
 void motor_init(void);
 void motor1_ctl(int32 speed1_power);
 void motor2_ctl(int32 speed2_power);
 void motor3_ctl(int32 speed3_power);
 void motor4_ctl(int32 speed4_power);
+
 void speed_conversion(float Vx, float Vy, float Vz);
-void motor_conversion(void);
+void testSideAdvancementAbility(void);
+
 #endif

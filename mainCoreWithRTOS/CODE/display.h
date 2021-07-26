@@ -22,7 +22,7 @@ extern uint8 fixCamRangeSharpCurveRow;//+- 1
 //int32 fixCamBigCurveThres = unknown;
 /******************Else*************************************************/
 extern int8 fixCamGlobalCenterBias;//+- 1
-//int32 fixCamOutboundAreaThres = unknown;//+- 2000
+extern int32 fixCamOutboundAreaThres;//+- 2000
 extern uint16 fixCamStartlineJumpingPointNumThres;//+- 10
 /*
  * page 3 in cam display

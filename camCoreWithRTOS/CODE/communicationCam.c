@@ -116,7 +116,18 @@ void gyroDataAnalysis(uint8 *line)
     }
     else {return;}
 }
-
+/*
+ * 编码器积分
+ */
+int32 encoderCounterNum;
+void encoderCounterAnalysis(uint8 *line)
+{
+    if (line[0] != 0xCE) {return;}
+    else if(line[0] == 0xCE && line[1] == 0xC6 && line[2] == 0xC9){ //条件筛选
+        encoderCounterNum = (line[3]<<24)|(line[4]<<16)|(line[5]<<8)| line[6];
+    }
+    else {return;}
+}
 /*
  * 分析修改数据
  */

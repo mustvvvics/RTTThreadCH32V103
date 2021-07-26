@@ -12,16 +12,13 @@
 
 extern vuint8  uart_flag;                   //接收数据标志位
 extern uint8   temp_buff[LINE_LEN];         //主机用于接收数据的BUFF
-extern uint8 threeWayIn;
-extern uint8 threeWaySum;
-extern int16 threeWayOutAngle;
-extern int8 ThreeWayDirection;
-extern uint8 sendMainFlashToCam;
+extern uint8 sendMainFlashToCam;            //发送flash标志
 
-void ThreeWayAnalyze(void);
 void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);
-void roundIslandAnalyze(void);
-void send_to_cam(void);
+void send_to_cam(void);                 //发送陀螺仪flag
+//主机向从机发送数据函数
 void sendParameterToCam(uint8 parameterBit,uint8 featuresWord,int8 parameterData_0,uint8 parameterData8,int16 parameterData16,int32 parameterData32);
+void sendEncoderCounterNum(void);
+
 #endif /* CODE_COMMUNICATION_H_ */

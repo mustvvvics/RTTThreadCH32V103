@@ -5,7 +5,7 @@ uint16_t temp_ADC_Value;//暂存在DMA从ADC通道转移来的数值
 float vbat_ad;//电池电压采样
 
 char txt[32];
-int16 Vc;
+int16 Vc = 0;
 int16 VcPreviously = 0;
 int16 VcDifference;
 void getAdc(void){
@@ -15,9 +15,7 @@ void getAdc(void){
     for(i=1;i<10;i++){  //FIFO 操作
         adc[i-1]=adc[i];
     }
-
     adc[9]=adc_convert(ADC_IN9_B1,ADC_12BIT);;//将新的数据放置到 数据的最后面
-
     sum=0;
     for(i=0;i<10;i++){
         sum+=adc[i];
@@ -32,5 +30,43 @@ void getAdc(void){
             ips114_clear(RED);
         }
     }
+}
 
+void timer1_pitAdc_entry(void *parameter)
+{
+    getAdc();
+}
+rt_timer_t timerAdc;
+
+void timer_pitAdc_init(void)
+{
+
+    adc_init(ADC_IN9_B1); //初始化ADC引脚
+
+    //创建一个定时器 周期运行
+    timerAdc = rt_timer_create("timerAdc", timer1_pitAdc_entry, RT_NULL, 2000, RT_TIMER_FLAG_PERIODIC);
+
+    //启动定时器
+    if(RT_NULL != timerAdc)
+    {
+        rt_timer_start(timerAdc);
+    }
+}
+
+void timer1_EncoderCounter_entry(void *parameter)
+{
+    sendEncoderCounterNum();//发送里程计数据
+}
+rt_timer_t timerEncoderCounter;
+
+void timer_EncoderCounter_init(void)
+{
+    //创建一个定时器 周期运行
+    timerEncoderCounter = rt_timer_create("timerEncoderCounter", timer1_EncoderCounter_entry, RT_NULL, 4, RT_TIMER_FLAG_PERIODIC);
+
+    //启动定时器
+    if(RT_NULL != timerEncoderCounter)
+    {
+        rt_timer_start(timerEncoderCounter);
+    }
 }

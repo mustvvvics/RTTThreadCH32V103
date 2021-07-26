@@ -78,35 +78,52 @@ void EXTI1_IRQHandler(void)
 void EXTI2_IRQHandler(void)
 {
     rt_interrupt_enter();    //进入中断
-/*
- * 计时器:计算运行时间
- */
-//    timet1 = rt_tick_get();
-//    timeControl = timet1 - timet2;
-//    timet2 = timet1;
-
     if(SET == EXTI_GetITStatus(EXTI_Line2))
     {
 
-        while (uart_flag != E_OK);                          //等待接收数据
+        while (uart_flag != E_OK);          //等待接收数据
         {
             AngleZ_Get();
-            data_analysis(temp_buff);                       //数据解析 图像核编码器  偏差数据
+            data_analysis(temp_buff);       //数据解析 图像核编码器  偏差数据
             uart_flag = E_START;
-            encoder_get();                                  //主核编码器
+            encoder_get();                  //主核编码器
         }
-        //计算偏差变化
-        position_front_delta = position_front - position_front_last;
-        position_front_last = -position_front;
-        ThreeWayAnalyze();  //三叉解析
-        roundIslandAnalyze();//环岛通讯flag
-        motor_conversion();//控制在最后，时序问题
+//        position_front_delta = position_front - position_front_last; //计算偏差变化  用于主核控制的加速
+//        position_front_last = -position_front;
+        ThreeWayAnalyze();                  //三叉解析
+        roundIslandAnalyze();               //环岛通讯flag
+        motor_conversion();                 //控制方式在最后
+        encoderCountY();                    //里程计
+
+        //输出PWM  ADRC模型+速度环
+        motor1_pwm=PID_Speed(Left_front,-encoder_data[3],&motor1_pid)+(Left_front*37+419);
+        motor2_pwm=PID_Speed(Right_front,-encoder_data[2],&motor2_pid)+(Right_front*38+198);
+        motor3_pwm=PID_Speed(Right_rear,-encoder_data[0],&motor3_pid)+(Right_rear*41+287);
+        motor4_pwm=PID_Speed(Left_rear,-encoder_data[1],&motor4_pid)+(Left_rear*40+379);
+
+        //限幅输出
+        if(motor1_pwm>limit_pwm)motor1_pwm=limit_pwm;
+        if(motor1_pwm<-limit_pwm)motor1_pwm=-limit_pwm;
+
+        if(motor2_pwm>limit_pwm)motor2_pwm=limit_pwm;
+        if(motor2_pwm<-limit_pwm)motor2_pwm=-limit_pwm;
+
+        if(motor3_pwm>limit_pwm)motor3_pwm=limit_pwm;
+        if(motor3_pwm<-limit_pwm)motor3_pwm=-limit_pwm;
+
+        if(motor4_pwm>limit_pwm)motor4_pwm=limit_pwm;
+        if(motor4_pwm<-limit_pwm)motor4_pwm=-limit_pwm;
+
+        motor1_ctl(motor1_pwm);
+        motor2_ctl(motor2_pwm);
+        motor3_ctl(motor3_pwm);
+        motor4_ctl(motor4_pwm);
 
         EXTI_ClearITPendingBit(EXTI_Line2);
     }
     rt_interrupt_leave();    //退出中断
 }
-
+/************************************************************************************************/
 void EXTI3_IRQHandler(void)
 {
     rt_interrupt_enter();   //进入中断

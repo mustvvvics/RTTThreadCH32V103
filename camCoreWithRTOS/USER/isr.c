@@ -326,6 +326,7 @@ void USART3_IRQHandler(void)
             return;
         }
         else if (receiveMainBuff[num-1]==  0xEE){ //判断帧尾
+            encoderCounterAnalysis(receiveMainBuff);//里程计
             gyroDataAnalysis(receiveMainBuff);//接收陀螺仪FLAG
             analysisFixParameter(receiveMainBuff);//接收主机修改数据
             num = 0;

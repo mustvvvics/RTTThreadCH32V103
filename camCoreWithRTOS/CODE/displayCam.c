@@ -10,10 +10,9 @@ void show_speed(void)
     if (turnPage == 0) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
-        rt_sprintf(txt,"Error   =%05d|Direction=%04d",cameraError,drivingDirection);
+        rt_sprintf(txt,"Error   =%05d|encoder=%06d",cameraError,encoderCounterNum);
         ips114_showstr(0, 1, txt);
-
-        rt_sprintf(txt,"FgCElement=%03d|Accelerate=%03d",flagCameraElement,accelerateRatio);
+        rt_sprintf(txt,"FgCElement=%03d|Direction=%04d",flagCameraElement,drivingDirection);
         ips114_showstr(0, 2, txt);
         rt_sprintf(txt,"FgEntRound=%03d|FgEntThree=%03d", flagEnterRoundabout, flagEnterThreeWay);
         ips114_showstr(0, 3, txt);
@@ -21,48 +20,49 @@ void show_speed(void)
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"FgEnStartL=%03d|FgOutBound=%03d", flagEnterStartLine,flagEnterOutbound);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"iterElemen=%03d|delayCoun=%04d",iterElement,delayCounter);
+        rt_sprintf(txt,"Num=%02d|Element   =%10d ",elementTableLengthFromMain,elementTableFromMain);
         ips114_showstr(0, 6, txt);
-        rt_sprintf(txt,"Num=%02d|ElementTable=%09d ",elementTableLengthFromMain,elementTableFromMain);
+        rt_sprintf(txt,"Num=%02d|Element   =%10d ",elementTableLengthFromMain,elementTableFromMain);
         ips114_showstr(0, 7, txt);
+
+
+
     }
 /************************************************************************************/
     else if (turnPage == 1) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
-        rt_sprintf(txt,"PointNum=%05d|Time    =%05d",startlineJumpingPointNum,timeControl);
+        rt_sprintf(txt,"PointNum=%05d|outboSum=%05d",startlineJumpingPointNum,outboundAreaSum);
         ips114_showstr(0, 1, txt);
-
-        rt_sprintf(txt,"outboSum=%05d|StStatus=%05d",outboundAreaSum,steerStatusFromMain);
+        rt_sprintf(txt,"areaRaLf=%05d|areaRaRi=%05d",areaDetectRoundaboutLeft,areaDetectRoundaboutRight);
         ips114_showstr(0, 2, txt);
-        rt_sprintf(txt,"areaRoLf=%05d|areaRoRi=%05d",areaDetectRoundaboutLeft,areaDetectRoundaboutRight);
-        ips114_showstr(0, 3, txt);
-
-        rt_sprintf(txt,"DCRMissNum=%03d|SpCurveRow=%03d",detectCrossroadMissingNumThres,rangeSharpCurveRow);
-        ips114_showstr(0, 4, txt);
-        rt_sprintf(txt,"CenterBias=%03d|JpPointNum=%03d",globalCenterBias,startlineJumpingPointNumThres);
-        ips114_showstr(0, 5, txt);
         rt_sprintf(txt,"jitterLef=%04d|jitterRig=%04d",laneJitterLeft,laneJitterRight);
+        ips114_showstr(0, 3, txt);
+        rt_sprintf(txt,"iterElemen=%03d|delayCoun=%04d",iterElement,delayCounter);
+        ips114_showstr(0, 4, txt);
+/***************************************变量****************************************************/
+        rt_sprintf(txt,"DCRMissNum=%03d|SpCurveRow=%03d",detectCrossroadMissingNumThres,rangeSharpCurveRow);
+        ips114_showstr(0, 5, txt);
+        rt_sprintf(txt,"CenterBias=%03d|JpPointNum=%03d",globalCenterBias,startlineJumpingPointNumThres);
         ips114_showstr(0, 6, txt);
-        rt_sprintf(txt,"                              ");
+        rt_sprintf(txt,"outboundAreaThres=%05d        ",outboundAreaThres);
         ips114_showstr(0, 7, txt);
     }
     else if (turnPage == 2) {
         rt_sprintf(txt,"CQUPT         |Page         %01d",turnPage);
         ips114_showstrGray(0, 0, txt);
-        rt_sprintf(txt,"Error   =%05d|carStart=%05d",cameraError,carStart);
+        rt_sprintf(txt,"Error   =%05d|time   =%05d",cameraError,timeControl);
         ips114_showstr(0, 1, txt);
-
-        rt_sprintf(txt,"RAStartRow=%03d|              ",roundaboutDetectionStartRow);
-        ips114_showstr(0, 2, txt);
+        /***************************************变量****************************************************/
         rt_sprintf(txt,"DtDistance=%03d|pixelMeanT=%03d",(int16)(detectDistance * 10),pixelMeanThres);
-        ips114_showstr(0, 3, txt);
-
+        ips114_showstr(0, 2, txt);
         rt_sprintf(txt,"SpRowStart=%03d|SlopRowEnd=%03d",slopeRowStart,slopeRowEnd);
-        ips114_showstr(0, 4, txt);
+        ips114_showstr(0, 3, txt);
         rt_sprintf(txt,"AboutLeft=%04d|AboutRigh=%04d",areaDetectRoundaboutThresLeft,areaDetectRoundaboutThresRight);
+        ips114_showstr(0, 4, txt);
+        rt_sprintf(txt,"RAStartRow=%03d|              ",roundaboutDetectionStartRow);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"OBAThres=%05d|              ",outboundAreaThres);
+        rt_sprintf(txt,"                             ");
         ips114_showstr(0, 6, txt);
         rt_sprintf(txt,"                             ");
         ips114_showstr(0, 7, txt);

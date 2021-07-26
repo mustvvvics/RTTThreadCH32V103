@@ -3,9 +3,8 @@
 
 #include "headfile.h"
 
-extern float vbat_ad;
-
-void getAdc();
 extern int16 Vc;
+void timer_pitAdc_init(void);
+void timer_EncoderCounter_init(void);
 
 #endif

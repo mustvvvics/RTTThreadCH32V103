@@ -4,10 +4,7 @@
 #include "headfile.h"
 
 extern int16 encoder_data[4];
-extern int16 real_x,real_y;
 void encoder_init(void);
 void encoder_get(void);
-void clearError(void);
-void clearFlags(void);
 
 #endif

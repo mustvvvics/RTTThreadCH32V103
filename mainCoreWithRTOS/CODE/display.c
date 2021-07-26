@@ -1,19 +1,21 @@
 #include "headfile.h"
+/*******************************************************************************************************/
+//  邮电右 113636225   邮电左 223636115
+#define    elementTable1            113636225
+#define    elementTableLength1      9
+#define    elementTable2            223636115
+#define    elementTableLength2      9
+#define    elementTable3            0
+#define    elementTableLength3      0
 
-int8 menuX = 0;      //菜单左右
-int8 menuY = 0;      //菜单上下
-uint8 parameterAdjustButton = 0;//左右参数调整响应
-uint8 confirmButton = 0;//确认按键
-uint32 servoDuty = 0;
-int32 elementTable = 0; //元素顺序表
-uint8 elementTableLength = 0;
-uint8 drivingDirectionToCam = 1;
-uint8 carStart = 0;
+int32 elementTable = 0;             //元素顺序表
+uint8 elementTableLength = 0;               //元素个数
+uint8 drivingDirectionToCam = 1;            //行驶方向
+
 /*
  * page 2 in cam display
  */
-int8 turnpage = 0;
-uint8 clearCamFlags = 0;
+
 /******************Threewayroad*****************************************/
 uint8 fixCamThreewayFeatureRow = 20;// +- 1
 /******************Crossroad********************************************/
@@ -24,7 +26,7 @@ uint8 fixCamRangeSharpCurveRow = 35;//+- 1
 //int32 fixCamBigCurveThres = unknown;
 /******************Else*************************************************/
 int8 fixCamGlobalCenterBias = -7;//+- 1
-//int32 fixCamOutboundAreaThres = unknown;//+- 2000
+int32 fixCamOutboundAreaThres = 10000;//+- 1000
 uint16 fixCamStartlineJumpingPointNumThres = 80;//+- 10
 /*
  * page 3 in cam display
@@ -38,60 +40,73 @@ uint8 fixCamSlopeRowEnd = 35;//+- 1
 int32 fixCamAreaDetectRoundaboutThresLeft = 370;//+- 10
 int32 fixCamAreaDetectRoundaboutThresRight = 370;//+- 10
 uint8 fixCamRoundaboutDetectionStartRow = 20;//+- 1
-int32 fixCamOutboundAreaThres = 10000;//+- 1000
+/*******************************************************************************************************/
+/*
+ * 菜单使用
+ */
+int8 menuX = 0,menuY = 0;       //菜单左右  菜单上下
+uint8 parameterAdjustButton = 0;//左右参数调整响应
+uint8 confirmButton = 0;        //确认按键
+uint32 servoDuty = 0;           //舵机调参使用
+uint8 carStart = 0;             //启动信号
+int8 turnpage = 0;              //翻页
+uint8 clearCamFlags = 0;        //清理图像核flag
 /*
 *Pass variable data on the first page
 */
 void transfetFunctionFirst(int8 targetRow,char *targetBuff){
 
     if ((3 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"FlashWrite             ");
+        rt_sprintf(targetBuff,"FlashWrite                     ");
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Cargo&Winner    %d",carStart);
+        rt_sprintf(targetBuff,"Cargo&Winner                   ");
     }
     else if ((5 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"CarSpeed=%04d          ",expected_y);
+        rt_sprintf(targetBuff,"CarSpeed=%04d                 ",expected_y);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"CarDirection=%01d         ",drivingDirectionToCam);
+        rt_sprintf(targetBuff,"CarDirection=%01d                 ",drivingDirectionToCam);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turn_P=%05d          ",(int16)(yaw_pid.Kp*1000));
+        rt_sprintf(targetBuff,"encoderCountYFlag=%01d            ",encoderCountYFlag);
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Turn_D=%05d          ",(int16)(yaw_pid.Kd*1000));
+        rt_sprintf(targetBuff,"Turn_P=%05d                   ",(int16)(yaw_pid.Kp*1000));
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ServoMotor             ");
+        rt_sprintf(targetBuff,"Turn_D=%05d                   ",(int16)(yaw_pid.Kd*1000));
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Servo=%04d             ",servoDuty);
+        rt_sprintf(targetBuff,"ServoMotor                      ");
     }
     else if ((11 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"CarSpeeX=%04d          ",expected_X);
+        rt_sprintf(targetBuff,"ServoChange=%04d               ",servoDuty);
+    }
+    else if ((12 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"CarSpeeX=%04d                  ",expected_X);
     }
     else {
-        rt_sprintf(targetBuff,"                       ");
+        rt_sprintf(targetBuff,"                               ");
     }
 }
+
 /*
-*Assign value to data
+*Assign value to data  信号量触发 都只响应一次
 */
-uint8 mainWriteFlashFlag = 0;
+
 void assignValueFirst(void){
     int8 signData;
     if (parameterAdjustButton == 4 && confirmButton == 1) {signData = 1; }//increase
     if (parameterAdjustButton == 1 && confirmButton == 1) {signData = -1;} //decrease
 
-    if (confirmButton == 1 && (menuY + 3) == 3 && mainWriteFlashFlag == 0) {
+    if (confirmButton == 1 && (menuY + 3) == 3) {
         mainFlashWrite();
-//        sendParameterToCam(8,0xDF,0,1,0,0);//让从机写flash
-        mainWriteFlashFlag = 1;
     }
+
     if (confirmButton == 1 && (menuY + 3) == 4) {
         if (car_flag == 0) {
-            car_flag = 1;carStart = 1;clearCamFlags = 1;mainWriteFlashFlag = 0;
+            car_flag = 1;carStart = 1;clearCamFlags = 1;
             sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号1
             sendParameterToCam(8,0xE2,0,clearCamFlags,0,0);//清空
         }
@@ -107,15 +122,20 @@ void assignValueFirst(void){
                 else{drivingDirectionToCam = 1;}
                 sendParameterToCam(8,0xDD,0,drivingDirectionToCam,0,0);break;
                 break;
-            case 7:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
-            case 8:yaw_pid.Kd = yaw_pid.Kd + 0.001 * signData;break;
-            case 9:
+            case 7:
+                encoderCountYFlag = encoderCountYFlag + 1 * signData;
+                if (encoderCountYFlag <= 0) {encoderCountYFlag = 0;}
+                else{encoderCountYFlag = 1;}
+                break;
+            case 8:yaw_pid.Kp = yaw_pid.Kp + 0.5 * signData;break;
+            case 9:yaw_pid.Kd = yaw_pid.Kd + 0.001 * signData;break;
+            case 10:
                 if (parameterAdjustButton == 1) {servoDuty = 1000;pwm_duty(PWM1_CH1_A8, servoDuty);}
                 else if (parameterAdjustButton == 4){servoDuty = 672;pwm_duty(PWM1_CH1_A8, servoDuty);};break;
-            case 10:
+            case 11:
                 servoDuty = servoDuty + 1 * signData;
                 pwm_duty(PWM1_CH1_A8, servoDuty);break;
-            case 11:expected_X = expected_X + 500 * signData;break;
+            case 12:expected_X = expected_X + 500 * signData;break;
             default:break;
         }
     }
@@ -126,32 +146,38 @@ void assignValueFirst(void){
 *Pass variable data on the second page
 */
 void transfetFunctionSecond(int8 targetRow,char *targetBuff){
-    if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage1     "); //图像核翻页
+    if ((3 - menuY) == targetRow) {                                 //BLACK
+        rt_sprintf(targetBuff,"ImageFlippingPage1              "); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"clearCamFlags          ");
+        rt_sprintf(targetBuff,"clearCamFlags                   ");
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"3WayFeatureRow=%03d     ",fixCamThreewayFeatureRow);
+        rt_sprintf(targetBuff,"ThreewayFeatureRow=%03d          ",fixCamThreewayFeatureRow);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"CRMissNumThres=%03d     ",fixCamDetectCrossroadMissingNumThres);
+        rt_sprintf(targetBuff,"DCrossroadMissNumThres=%03d",fixCamDetectCrossroadMissingNumThres);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RgSharpCurveRow=%02d     ",fixCamRangeSharpCurveRow);
+        rt_sprintf(targetBuff,"RangeSharpCurveRow=%02d           ",fixCamRangeSharpCurveRow);
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"GlobCenterBias=%03d     ",fixCamGlobalCenterBias);
+        rt_sprintf(targetBuff,"GlobCenterBias=%03d              ",fixCamGlobalCenterBias);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SLJumpPointNum=%03d     ",fixCamStartlineJumpingPointNumThres);
+        rt_sprintf(targetBuff,"SlJumpPointNumThres=%03d",fixCamStartlineJumpingPointNumThres);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"OutboundAreaThres=%05d",fixCamOutboundAreaThres);
+        rt_sprintf(targetBuff,"OutboundAreaThres=%05d         ",fixCamOutboundAreaThres);
+    }
+    else if ((11 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                                 ");
+    }
+    else if ((12 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                                 ");
     }
     else {
-        rt_sprintf(targetBuff,"                        ");
+        rt_sprintf(targetBuff,"                                 ");
     }
 }
 /*
@@ -190,6 +216,8 @@ void assignValueSecond(void){
             case 10:
                 fixCamOutboundAreaThres = fixCamOutboundAreaThres + 1000 * signData;
                 sendParameterToCam(32,0xBB,0,0,0,fixCamOutboundAreaThres);break;
+            case 11:break;
+            case 12:break;
             default:break;
         }
     }
@@ -202,31 +230,37 @@ void assignValueSecond(void){
 */
 void transfetFunctionThird(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ImageFlippingPage2     "); //图像核翻页
+        rt_sprintf(targetBuff,"ImageFlippingPage2              "); //图像核翻页
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DetectDistance=%03d     ",fixCamDetectDistance);
+        rt_sprintf(targetBuff,"DetectDistance=%03d              ",fixCamDetectDistance);
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"PixelMeanThres=%03d     ",fixCamPixelMeanThres);
+        rt_sprintf(targetBuff,"PixelMeanThres=%03d              ",fixCamPixelMeanThres);
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SlopeRowStart =%03d     ",fixCamSlopeRowStart);
+        rt_sprintf(targetBuff,"SlopeRowStart =%03d              ",fixCamSlopeRowStart);
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SlopeRowEnd   =%03d     ",fixCamSlopeRowEnd );
+        rt_sprintf(targetBuff,"SlopeRowEnd   =%03d              ",fixCamSlopeRowEnd );
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DRAboutThrLeft=%03d     ",fixCamAreaDetectRoundaboutThresLeft);
+        rt_sprintf(targetBuff,"ADRoundaboutThresLeft=%03d",fixCamAreaDetectRoundaboutThresLeft);
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"DRAboutThRight=%03d     ",fixCamAreaDetectRoundaboutThresRight);
+        rt_sprintf(targetBuff,"DRAboutThRight=%03d              ",fixCamAreaDetectRoundaboutThresRight);
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RADeteStartRow=%03d     ",fixCamRoundaboutDetectionStartRow);
+        rt_sprintf(targetBuff,"RADetectionStartRow=%03d ",fixCamRoundaboutDetectionStartRow);
+    }
+    else if ((11 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                                 ");
+    }
+    else if ((12 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"                                 ");
     }
     else {
-        rt_sprintf(targetBuff,"                        ");
+        rt_sprintf(targetBuff,"                                 ");
     }
 }
 
@@ -266,6 +300,8 @@ void assignValueThird(void){
             case 10:
                 fixCamRoundaboutDetectionStartRow = fixCamRoundaboutDetectionStartRow + 1 * signData;
                 sendParameterToCam(8,0xAA,0,fixCamRoundaboutDetectionStartRow,0,0);break;
+            case 11:break;
+            case 12:break;
             default:break;
             /*
              * Eg;sendParameterToCam(0,0xE1,abc,0,0,0);break;
@@ -281,33 +317,40 @@ void assignValueThird(void){
 /*
 *Pass variable data on the Fourth page
 */
+uint8 ChooseNumber = 0;
 void transfetFunctionFourth(int8 targetRow,char *targetBuff){
     if ((3 - menuY) == targetRow) {                //BLACK
-        rt_sprintf(targetBuff,"ClearChoose            ");
+        rt_sprintf(targetBuff,"ClearChoose                     ");
     }
     else if ((4 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"RoundAbout  :a|1       ");
+        rt_sprintf(targetBuff,"ChooseNumber=%01d                  ",ChooseNumber);
     }
     else if ((5 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"ThreeWay    :b|2       ");
+        rt_sprintf(targetBuff,"RoundAbout  :a|1                ");
     }
     else if ((6 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"CrossRoad   :c|3       ");
+        rt_sprintf(targetBuff,"ThreeWay    :b|2                ");
     }
     else if ((7 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"AbruptSlope :d|4       ");
+        rt_sprintf(targetBuff,"CrossRoad   :c|3                ");
     }
     else if ((8 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Garage      :e|5       ");
+        rt_sprintf(targetBuff,"Garage      :e|5                ");
     }
     else if ((9 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"Delay       :f|6       ");
+        rt_sprintf(targetBuff,"Delay100    :f|6                ");
     }
     else if ((10 - menuY) == targetRow) {
-        rt_sprintf(targetBuff,"SendElementTable       ");
+        rt_sprintf(targetBuff,"Delay200    :g|7                ");
+    }
+    else if ((11 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"Delay300    :h|8                ");
+    }
+    else if ((12 - menuY) == targetRow) {
+        rt_sprintf(targetBuff,"SendElementTable                ");
     }
     else {
-        rt_sprintf(targetBuff,"                      ");
+        rt_sprintf(targetBuff,"                                 ");
     }
 }
 /*
@@ -326,18 +369,28 @@ void createElementTable(uint8 element){
 /*
  * Assign value to data on the Fourth page
  */
+//#define    elementTable1            113636225
+//#define    elementTableLength1      9
 
 void assignValueFourth(void){
     if (confirmButton == 1) { //按下确认键才响应修改
         switch (menuY + 3) {
             case 3:elementTable = 0;elementTableLength = 0;break;
-            case 4:createElementTable(1);break;
-            case 5:createElementTable(2);break;
-            case 6:createElementTable(3);break;
-            case 7:createElementTable(4);break;
-            case 8:createElementTable(5);break;
-            case 9:createElementTable(6);break;
-            case 10:
+            case 4:
+                ChooseNumber = ChooseNumber + 1;
+                if (ChooseNumber > 3) {ChooseNumber = 0;}
+                if (ChooseNumber == 1) {elementTable = elementTable1;elementTableLength = elementTableLength1;}
+                else if (ChooseNumber == 2) {elementTable = elementTable2;elementTableLength = elementTableLength2;}
+                else if (ChooseNumber == 3) {elementTable = elementTable3;elementTableLength = elementTableLength3;}
+                else{return;}break;
+            case 5:createElementTable(1);break;
+            case 6:createElementTable(2);break;
+            case 7:createElementTable(3);break;
+            case 8:createElementTable(4);break;
+            case 9:createElementTable(5);break;
+            case 10:createElementTable(6);break;
+            case 11:createElementTable(7);break;
+            case 12:
                 sendParameterToCam(32,0xDB,0,0,0,elementTable); //告知顺序
                 sendParameterToCam(8,0xDC,0,elementTableLength,0,0); //告知元素个数:长度
                 break;
@@ -351,20 +404,20 @@ void assignValueFourth(void){
 *Disaplay Menu
 */
 
-uint8 maxMenuRow = 11;//下滑选择限制
+uint8 maxMenuRow = 12;//下滑选择限制 最下面是多少就是多少
 uint8 maxMenuPage = 3;//左右选择限制  total: 4 pages
-char txt1[32]={0},txt2[32]={0},txt3[32]={0},txt4[32]={0}, //承载数组
-                  txt5[32]={0},txt6[32]={0},txt7[32]={0};
+char txt1[39]={0},txt2[39]={0},txt3[39]={0},txt4[39]={0}, //承载数组
+                  txt5[39]={0},txt6[39]={0},txt7[39]={0};
 void disaplayMenu(void){
 
 /***********************状态栏*******************************************/
     if (menuX < 3) {
         rt_sprintf(txt1,"carF=%01d|Fg=%02d",car_flag,elementFlag);
-        rt_sprintf(txt2,"Vc=%03d|AC=%02d           ",Vc,accelerate);
+        rt_sprintf(txt2,"Vc=%03d|AC=%02d            ",Vc,accelerate);
     }
     else {
         rt_sprintf(txt1,"carF=%01d|Fg=%02d  ",car_flag,elementFlag);
-        rt_sprintf(txt2,"Num=%02d|<%010d     ",elementTableLength,elementTable);//显示传输元素队列 当menuX = 3 时候触发
+        rt_sprintf(txt2,"Num=%02d|<%010d      ",elementTableLength,elementTable);//显示传输元素队列 当menuX = 3 时候触发
     }
 /************************************************************************/
     if (menuY < 0) {menuY = 0;} //限制选择范围
@@ -426,7 +479,7 @@ void disaplayMenu(void){
 char txtcqupt[32]={0};
 void display_entry(void *parameter)
 {
-    rt_sprintf(txtcqupt,"CQUPT                              ");
+    rt_sprintf(txtcqupt,"CQUPT                               ");
     ips114_showstrGRAY(0,0,txtcqupt);
     while(1)
     {

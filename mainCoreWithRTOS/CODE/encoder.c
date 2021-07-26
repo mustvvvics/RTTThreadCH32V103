@@ -1,29 +1,8 @@
 #include "headfile.h"
 
 int16 encoder_data[4];
-int16 real_x = 0,real_y = 0;
-int16 ABS(int16 x){return x>0?x:-x;}
 
-void clearError(void){  //Çå¿ÕÎó²î
-    expected_omega = 0;
-    position_front = 0;
-    g_fGyroAngleSpeed_z = 0;
-    yaw_pid.LocSum = 0;
-    yaw_pid.Ek = 0;
-    yaw_pid.Ek1 = 0;
-    yaw_w_pid.target_val = 0;
-    yaw_w_pid.err_next = 0;
-    yaw_w_pid.err = 0;
-    yaw_w_pid.err_last = 0;
-    yaw_w_pid.actual_val = 0;
-}
-void clearFlags(void){
-    go_forward=0;go_backward=0;
-    go_left=0;go_right=0;
-    elementFlag = 0;
-    roundIslandBegin = 0;
-    ThreeWayIntersectionFlag = 0;
-}
+int16 ABS(int16 x){return x>0?x:-x;}
 
 void encoder_init(void)
 {
