@@ -1,9 +1,9 @@
 #include "headfile.h"
 /*******************************************************************************************************/
 //  邮电右 113636225   邮电左 223636115
-#define    elementTable1            113636225
+#define    elementTable1            113535224
 #define    elementTableLength1      9
-#define    elementTable2            223636115
+#define    elementTable2            223535114
 #define    elementTableLength2      9
 #define    elementTable3            0
 #define    elementTableLength3      0
@@ -385,8 +385,6 @@ void createElementTable(uint8 element){
 /*
  * Assign value to data on the Fourth page
  */
-//#define    elementTable1            113636225
-//#define    elementTableLength1      9
 
 void assignValueFourth(void){
     if (confirmButton == 1) { //按下确认键才响应修改

@@ -8,7 +8,7 @@ extern uint8 threeWaySum;
 extern int8 ThreeWayDirection;
 extern int32 encoder_x,encoder_y;
 extern uint8 encoderCountYFlag;
-extern uint32 roundIslandMax;
+extern int32 roundIslandMax;
 extern uint8 testSideFlag;
 
 void clearError(void);

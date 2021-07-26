@@ -23,7 +23,7 @@ void clearFlags(void){
  */
 /************************************************************************************************************/
 uint8 roundIslandBeginPre = 0;
-uint32 roundIslandMax = 80000;          //出环岛最大积分
+int32 roundIslandMax = 80000;          //出环岛最大积分
 void roundIslandAnalyze(void){
 
     if (roundIslandBeginPre == 0 && roundIslandBegin == 1) {
@@ -125,7 +125,9 @@ void encoderCountY(void){ //use in isr
 uint8 testSideFlag = 0;
 void motor_conversion(void)
 {
-    if (testSideFlag == 1) {testSideAdvancementAbility();}   //测试侧面行进能力
+    if (testSideFlag == 1) {
+        testSideAdvancementAbility();
+    }   //测试侧面行进能力
     else {
         if (car_flag == 1) {
             if (drivingDirectionToCam == 1) {           //向右出库
@@ -201,11 +203,11 @@ void motor_conversion(void)
 
         }
     /************************************************************************************************************/
-        else if (carFlagPre == 1 && car_flag == 0) {//停下来给一次信号1
-            carStart = 1;
-            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号1
-            carFlagPre = 0;
-        }
+//        else if (carFlagPre == 1 && car_flag == 0) {//停下来给一次信号1
+//            carStart = 1;
+//            sendParameterToCam(8,0xAB,0,carStart,0,0);//启动信号1
+//            carFlagPre = 0;
+//        }
         else
         {
             clearError();clearFlags();
