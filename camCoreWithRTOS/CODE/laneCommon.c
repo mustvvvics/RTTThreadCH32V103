@@ -205,7 +205,7 @@ uint8 threewayFeatureNearestRow = 0;
 uint8 threewayDetectSequence = 0;
 
 // start line
-uint8 startLineTimes = 4;
+uint8 startLineTimes = 2;
 uint8 exitStartlineCounter = 0;
 
 // detectCrossroadScanLine

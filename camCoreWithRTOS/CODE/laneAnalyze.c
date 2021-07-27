@@ -896,7 +896,7 @@ void foresight() {
         if (countJitterBreakRowLeft < 15 && countJitterBreakRowRight < 15 && abs(cameraError) < 2) {
             slopeRowEnd = 30;
             slopeRowStart = 40;
-            accelerateRatio = 15;
+            accelerateRatio = 16;
         }
         if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30 && abs(cameraError) < 5) {
             slopeRowEnd = 35;
