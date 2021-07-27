@@ -5,11 +5,9 @@
 // lane location for each row
 
 
-//int32 encoderNumEnterElement[20] = {0};
-//int32 encoderNumExitElement[20] = {9999999};
-
-int32 encoderNumEnterElement[20] = {45000};
+int32 encoderNumEnterElement[20] = {0};
 int32 encoderNumExitElement[20] = {9999999};
+
 
 int32 laneLocationLeft[imgRow] = {0};
 int32 laneLocationRight[imgRow] = {0};
@@ -49,6 +47,14 @@ int32 laneWidth[imgRow] = {
     68, 68, 70, 72, 74, 76, 76, 80, 80, 80,
     84, 86, 86, 88, 88, 90, 92, 94, 96, 98,
 };
+
+// int32 laneWidth[imgRow] = {
+//  33, 35, 35, 37, 37, 39, 41, 41, 43, 43,
+//  47, 47, 51, 51, 51, 55, 55, 55, 57, 59,
+//  61, 63, 63, 63, 67, 67, 67, 71, 73, 73,
+//  75, 77, 77, 79, 81, 83, 85, 85, 87, 87,
+//  91, 91, 93, 95, 97, 99, 99, 101, 101, 103
+// };
 
 // sharp curve
 uint8 sharpCurveRow = 0;
@@ -199,5 +205,20 @@ uint8 threewayFeatureNearestRow = 0;
 uint8 threewayDetectSequence = 0;
 
 // start line
-uint8 startLineTimes = 2;
+uint8 startLineTimes = 1;
 uint8 exitStartlineCounter = 0;
+
+// detectCrossroadScanLine
+uint8 detectCrossroadStartRowScanLine = 20;
+uint8 detectCrossroadLaneWidth = 0;
+uint8 detectCrossroadLaneLeft = 0;
+uint8 detectCrossroadLaneRight = 0;
+uint8 detectCrossroadHeight[5] = {0};
+uint8 detectCrossroadMaxHeight = 0;
+uint8 detectCrossroadMaxHeightCol = 0;
+float crossroadMaxAvilRow = 0;
+float crossroadMaxAvilRowCol = 0;
+float crossroadDesRow = 0;
+float crossroadDesRowCol = 0;
+float crossroadSlope = 0;
+float currentCenter = 0;

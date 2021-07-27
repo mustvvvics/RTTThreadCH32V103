@@ -20,11 +20,11 @@ void show_speed(void)
         ips114_showstr(0, 4, txt);
         rt_sprintf(txt,"FgEnStartL=%03d|FgOutBound=%03d", flagEnterStartLine,flagEnterOutbound);
         ips114_showstr(0, 5, txt);
-        rt_sprintf(txt,"Num=%02d|Element   =%09d  ",elementTableLengthFromMain,elementTableFromMain);
+        rt_sprintf(txt,"SlopeLeft =%03d|SlopeRight=%03d", laneWidthSlopeLeft,laneWidthSlopeRight);
         ips114_showstr(0, 6, txt);
 //        rt_sprintf(txt,"Num=%02d|Element   =%09d  ",elementTableLengthFromMain,elementTableFromMain1);
 //        ips114_showstr(0, 6, txt);
-        rt_sprintf(txt,"EnFg=%01d|",encoderNumFlag);
+        rt_sprintf(txt,"Num=%02d|",elementTableLengthFromMain);
         ips114_showstr(0, 7, txt);
         ips114_showstr(60, 7, elementQueue);
 

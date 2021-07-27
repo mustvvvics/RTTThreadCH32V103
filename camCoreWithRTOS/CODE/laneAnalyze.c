@@ -15,6 +15,7 @@
 // modified encoderNumEnterElement
 // commented encoder function code
 // todo: decrease threeway 2 stage triger time
+// todo: the threeway trigger slope could be set higher in the real one
 // **********************************************
 
 // *************** uncomment this ***************
@@ -604,6 +605,7 @@ void detectLaneWidthForThreeway() {
     iterRow = imgRow;
     maxAvailableRow = 50;
     threewayWidthFeatureRow = 50;
+    laneWidthSlopeLeft = laneWidthSlopeRight = 0;
 
     while (laneWidthPresent[--iterRow] < 7777) {
         maxAvailableRow = iterRow;
@@ -615,7 +617,7 @@ void detectLaneWidthForThreeway() {
         laneWidthSlopeRight = regression(imgRow-1, maxAvailableRow, laneWidthRight);
     }
 
-    if (laneWidthSlopeLeft > 8 && laneWidthSlopeRight < -8) {
+    if (laneWidthSlopeLeft > 20 && laneWidthSlopeRight < -20) {
         flagEnterThreeWay = 1;
     }
 
@@ -784,13 +786,13 @@ void detectStartLine(Mat outMat) {
     }
 
     if (startLineTimes != 1) { // continue, another round
-        flagEnterStartLine = 1;
+        flagEnterStartLine = -1;
         exitStartlineCounter = 70;
         BEEP_ON;
         --startLineTimes;
     } else {
         flagEnterStartLine = 1;
-        exitStartlineCounter = 50;
+        exitStartlineCounter = 40;
     }
 }
 
@@ -821,7 +823,7 @@ void detectOutOfBounds(Mat outMat) {
 
     if (flagEnterOutbound == 2) {
         if (exitOutboundDelay == 0 && exitOutboundDelay != 1) {
-            exitOutboundDelay = 200;
+            exitOutboundDelay = 100;
         } else if (exitOutboundDelay == 1) {
             exitOutboundDelay = 0;
             flagEnterOutbound = 0;
@@ -845,8 +847,8 @@ void detectOutOfBounds(Mat outMat) {
     }
 
     outboundAreaSum = 0;
-    if (flagEnterThreeWay == 1) {
-        for (iterRow = imgRow-1; iterRow > rangeDetectOutBound; --iterRow) {
+    if (flagEnterThreeWay == 1) { // three-way road mode
+        for (iterRow = imgRow-1+3; iterRow > rangeDetectOutBound+3; --iterRow) {
             for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
                 outboundAreaSum += outMat[iterRow][iterCol];
             }
@@ -855,7 +857,7 @@ void detectOutOfBounds(Mat outMat) {
         if (outboundAreaBenchmark - outboundAreaSum > outboundAreaThres) {
             flagEnterOutbound = 1; // suspect to be out of bounds
         }
-    } else {
+    } else { // regular mode
         for (iterRow = imgRow-1; iterRow > rangeDetectOutBound; --iterRow) {
             for (iterCol = 69; iterCol < imgCol-71; ++iterCol) {
                 outboundAreaSum += outMat[iterRow][iterCol];
@@ -869,18 +871,12 @@ void detectOutOfBounds(Mat outMat) {
 }
 
 void foresight() {
-    // if (countJitterBreakRowLeft < rangeCountJitter + 3 && \
-    //      countJitterBreakRowRight < rangeCountJitter + 3) {
-    //  accelerateRatio = 12;
-    // } else {
-    //  accelerateRatio = 10;
-    // }
     accelerateRatio = 10;
     if (flagEnterThreeWay == 1) {
         accelerateRatio = 7;
     }
     if (flagEnterThreeWay == 2) {
-        accelerateRatio = 0;
+        accelerateRatio = 6; // when set to 0, it'll stop the car when rotating the camera
     }
 //    if (flagEnterThreeWay == 3 && ) {
 //        accelerateRatio = 8;
@@ -891,19 +887,19 @@ void foresight() {
     if (flagEnterCrossroad) {
         accelerateRatio = 13;
     }
-    if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30) {
-        if (!flagEnterRoundabout && !flagEnterThreeWay && threewayDetectSequence != 1 && !flagEnterStartLine) {
-            if (cameraError < 3 && cameraError > -3) {
-                accelerateRatio = 16;
-            } else if (cameraError < 7 && cameraError > -7) {
-                accelerateRatio = 12;
-            } else if (abs(cameraError) > 15) {
-                accelerateRatio = 7;
-            } else {
-                accelerateRatio = 10;
-            }
-        }
-    }
+//    if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30) {
+//        if (!flagEnterRoundabout && !flagEnterThreeWay && threewayDetectSequence != 1 && !flagEnterStartLine) {
+//            if (cameraError < 3 && cameraError > -3) {
+//                accelerateRatio = 16;
+//            } else if (cameraError < 7 && cameraError > -7) {
+//                accelerateRatio = 12;
+//            } else if (abs(cameraError) > 15) {
+//                accelerateRatio = 7;
+//            } else {
+//                accelerateRatio = 10;
+//            }
+//        }
+//    }
 }
 
 void passParameter() {
@@ -990,6 +986,123 @@ void detectCrossroad() {
     // }
 }
 
+void detectCrossroadScanLine(Mat outMat) {
+    if (flagEnterCrossroad == 1) {
+        if (exitCrossroadDelay == 0) {
+            exitCrossroadDelay = 20;
+        } else if (exitCrossroadDelay == 1) {
+            ++iterElement;
+            encoderNumFlag = 0;
+            exitCrossroadDelay = 0;
+            flagEnterCrossroad = 0;
+        } else {
+            --exitCrossroadDelay;
+        }
+        return;
+    }
+
+    detectCrossroadLaneWidth = 0;
+    detectCrossroadLaneLeft = 0;
+    detectCrossroadLaneRight = imgCol;
+
+    // find long white H line first
+    for (iterRow=detectCrossroadStartRowScanLine-3; \
+            iterRow<detectCrossroadStartRowScanLine+3; ++iterRow) {
+        pixelMeanPrevious = outMat[iterRow][laneCenterBiased];
+        // left
+        for (iterCol = laneCenterBiased; iterCol > 3; --iterCol) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                detectCrossroadLaneLeft = iterCol;
+                break;
+            }
+        }
+        // right
+        for (iterCol = laneCenterBiased; iterCol < imgCol-4; ++iterCol) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                detectCrossroadLaneRight = iterCol;
+                break;
+            }
+        }
+        detectCrossroadLaneWidth = detectCrossroadLaneRight - detectCrossroadLaneLeft;
+        if (detectCrossroadLaneWidth < 1.4 * laneWidth[iterRow]) {
+            //printf("exit because width condition is not satisfied\n");
+            return;
+        }
+
+
+    }
+
+    //printf("\n\n");
+    for (iterCol = laneCenterBiased - 40; iterCol <= laneCenterBiased + 40; iterCol += 20) {
+        pixelMeanPrevious = 2 * outMat[detectCrossroadStartRow][iterCol];
+        for (iterRow = detectCrossroadStartRow; iterRow > 0; --iterRow) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow-1][iterCol];
+            //printf("col: %d, row: %d, pixelMean: %d, pixelMeanPrevious: %d\n", iterCol, iterRow, pixelMean, pixelMeanPrevious);
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                detectCrossroadHeight[(iterCol-laneCenterBiased)/20+2] = iterRow;
+                break;
+            } else {
+                detectCrossroadHeight[(iterCol-laneCenterBiased)/20+2] = iterRow;
+            }
+        }
+    }
+
+    detectCrossroadMaxHeight = detectCrossroadHeight[2];
+    detectCrossroadMaxHeightCol = laneCenterBiased;
+
+    if (detectCrossroadHeight[1] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[1];
+        detectCrossroadMaxHeightCol = laneCenterBiased-20;
+    }
+    if (detectCrossroadHeight[3] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[3];
+        detectCrossroadMaxHeightCol = laneCenterBiased+20;
+    }
+    if (detectCrossroadHeight[0] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[0];
+        detectCrossroadMaxHeightCol = laneCenterBiased-40;
+    }
+    if (detectCrossroadHeight[4] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[4];
+        detectCrossroadMaxHeightCol = laneCenterBiased+40;
+    }
+
+    for (iterRow=0; iterRow<5; ++iterRow) {
+        //printf("%d!!!!!!!!!!!!!!!!!\n", detectCrossroadHeight[iterRow]);
+    }
+
+    //printf("detectCrossroadMaxHeight: %d, detectCrossroadMaxHeightCol: %d\n", detectCrossroadMaxHeight, detectCrossroadMaxHeightCol);
+
+    if (detectCrossroadMaxHeight < 7) {
+        flagEnterCrossroad = 1;
+    }
+}
+
+void adaptCrossroad() {
+    crossroadMaxAvilRow = max(countJitterBreakRowLeft, countJitterBreakRowRight);
+    crossroadMaxAvilRowCol = laneCenter[(uint8)crossroadMaxAvilRow];
+    crossroadDesRow = detectCrossroadMaxHeight;
+    crossroadDesRowCol = detectCrossroadMaxHeightCol;
+    crossroadSlope = (crossroadMaxAvilRowCol - crossroadDesRowCol) / (crossroadMaxAvilRow - crossroadDesRow);
+    currentCenter = laneCenter[(uint8)crossroadMaxAvilRow];
+
+    //printf("\n");
+    //printf("crossroadMaxAvilRow: %f\n", crossroadMaxAvilRow);
+    //printf("crossroadMaxAvilRowCol: %f\n", crossroadMaxAvilRowCol);
+    //printf("crossroadDesRow: %f\n", crossroadDesRow);
+    //printf("crossroadDesRowCol: %f\n", crossroadDesRowCol);
+    //printf("crossroadSloep: %f\n", crossroadSlope);
+    //printf("\n");
+
+    for (iterRow = (uint8)crossroadMaxAvilRow-1; iterRow > (uint8)crossroadDesRow; --iterRow) {
+        currentCenter = currentCenter - crossroadSlope;
+        //printf("row:%d, current center: %f\n", iterRow, currentCenter);
+        laneCenter[iterRow] = (int32)currentCenter;
+    }
+}
+
 void markSlopeStartCenter() {
     // add a strightline to help compute lane slope
     for (iterRow=imgRow-1; iterRow > slopeRowStart-2; --iterRow) {
@@ -999,7 +1112,7 @@ void markSlopeStartCenter() {
 
 void delayForALittleWhile() {
     if (delayCounter == 0) {
-        delayCounter = 100;
+        delayCounter = 10;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
@@ -1011,7 +1124,7 @@ void delayForALittleWhile() {
 
 void delayForAMiddleWhile() {
     if (delayCounter == 0) {
-        delayCounter = 200;
+        delayCounter = 50;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
@@ -1023,7 +1136,7 @@ void delayForAMiddleWhile() {
 
 void delayForABigWhile() {
     if (delayCounter == 0) {
-        delayCounter = 300;
+        delayCounter = 100;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
@@ -1056,15 +1169,15 @@ void carRun() {
 void selectElementToExecute(Mat outMat) {
     if (iterElement != 99) {
         if (elementQueue[iterElement] != '\0') {
-//            encoderNumFlag = 1;
-//            if (encoderCounterNum >= encoderNumExitElement[iterElement]) {
-//                ++iterElement;
-//                encoderNumFlag = 0;
-//                return;
-//            }
-//            if (encoderCounterNum < encoderNumEnterElement[iterElement]) {
-//                return;
-//            }
+            // encoderNumFlag = 1;
+            // if (encoderCounterNum >= encoderNumExitElement[iterElement]) {
+            //  ++iterElement;
+            //  encoderNumFlag = 0;
+            //  return;
+            // }
+            // if (encoderCounterNum < encoderNumEnterElement[iterElement]) {
+            //  return;
+            // }
 
             switch (elementQueue[iterElement]) {
                 case '1':
@@ -1075,7 +1188,8 @@ void selectElementToExecute(Mat outMat) {
                         //detectTriangleForThreeway(outMat);
                     break;
                 case '3':
-                    detectCrossroad();
+                    //detectCrossroad();
+                    detectCrossroadScanLine(outMat);
                     break;
                 case '4':
                     detectStartLine(outMat);
@@ -1121,6 +1235,8 @@ void laneAnalyze(Mat outMat){
         globalCenterBias = -5;
     }
 
+    detectOutOfBounds(outMat);
+
     if (flagEnterStartLine) {
         detectStartLine(outMat);
         flagEnterOutbound = 0;
@@ -1141,8 +1257,6 @@ void laneAnalyze(Mat outMat){
         foresight();
         return;
     }
-
-    detectOutOfBounds(outMat);
 
     // threeway mode does not need full camera error
     if (flagEnterThreeWay == 1) {
@@ -1186,8 +1300,16 @@ void laneAnalyze(Mat outMat){
     // detectTriangleForThreeway(outMat);
     // detectRoundabout(outMat);
     // detectCrossroad();
-    detectStartLine(outMat);
+    // detectStartLine(outMat);
+    // detectLaneWidthForThreeway(outMat);
+    // detectCrossroadScanLine(outMat);
+    // detectLaneWidthForThreeway();
+
     selectElementToExecute(outMat);
+    if (flagEnterCrossroad) {
+        //printf("crossroad on!!!!!!!!!\n");
+        adaptCrossroad();
+    }
 
     markSlopeStartCenter();
     passParameter();
@@ -1238,9 +1360,9 @@ void computeError() {
         return;
     }
 
-    if (flagEnterCrossroad) {
-        cameraError = 0;
-    }
+    // if (flagEnterCrossroad) {
+    //  cameraError = 0;
+    // }
 
     if (flagEnterThreeWay==1 || flagEnterThreeWay == 2) {
         cameraError = 0;
@@ -1248,13 +1370,7 @@ void computeError() {
     }
 
     //printf("slope start at %d, end at %d\n", slopeRowStart, slopeRowEnd);
-
-    // error limit in detecting threeway
-//    if (flagEnterThreeWay == 3) {
-//        slope = regression(slopeRowStart, slopeRowEnd+3, laneCenter);
-//    } else {
-        slope = regression(slopeRowStart, slopeRowEnd, laneCenter);
-//    }
+    slope = regression(slopeRowStart, slopeRowEnd, laneCenter);
 
     // error limit in detecting roundabout
     if (abs(flagEnterRoundabout) == 1) {
