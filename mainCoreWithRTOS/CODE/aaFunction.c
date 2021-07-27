@@ -216,6 +216,7 @@ void motor_conversion(void)
             }
             else
             {
+
                 expected_omega = Fuzzy((position_front),(position_front_delta)); //模糊PID
             }
             if (accelerate == 0) {clearError();speed_conversion(0,0,0);}         //转完舵机停一会

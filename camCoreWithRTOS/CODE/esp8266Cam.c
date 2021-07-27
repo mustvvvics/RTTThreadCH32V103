@@ -154,7 +154,7 @@ void sendMessageData(void) {                //发送数据曲线进行分析
     char txtA[64] = "ext:000";
 //    rt_sprintf(txtA,"ThreeFeaN:%d",detectThreewayFeatureNum );
 //    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
-//
+//flagEnterStartLine
 //    rt_sprintf(txtA,"flagEnt:%d",flagEnterRoundabout );
 //    uart_putstr(UART_1,txtA);uart_putstr(UART_1,message0);
 //

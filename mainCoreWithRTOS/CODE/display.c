@@ -2,8 +2,8 @@
 /*******************************************************************************************************/
 //  邮电右 113636225   邮电左 223636115
 //  1 环岛   2 三叉    3十字  4入库   5延时  6延时  7延时
-#define    elementTable1            353214
-#define    elementTableLength1      5
+#define    elementTable1            2114
+#define    elementTableLength1      4
 #define    elementTable2            0
 #define    elementTableLength2      0
 #define    elementTable3            0

@@ -211,6 +211,7 @@ extern uint8 exitStartlineCounter;
 
 extern int32 encoderNumEnterElement[20];
 extern int32 encoderNumExitElement[20];
+extern uint8 encoderElementNum;
 
 // detectCrossroadScanLine
 extern uint8 detectCrossroadStartRowScanLine;

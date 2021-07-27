@@ -20,7 +20,8 @@
 
 rt_sem_t camera_sem;
 uint8 i = 0;
-
+//8266test
+char txtA[32];
 int main(void)
 {
     camera_sem = rt_sem_create("camera", 0, RT_IPC_FLAG_FIFO);
@@ -43,7 +44,7 @@ int main(void)
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 
-//    esp8266Init();                                        //wifi 调试
+    esp8266Init();                                        //wifi 调试
 
     flagCameraElement = 5;
     if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
@@ -75,9 +76,9 @@ int main(void)
         elementQueue[9] = elementQueue1[0];
 
 /**********************************8266***********************************/
-        if (CameraShow_flag == 1) {
-            sendMessage();//发送赛道信息
-            CameraShow_flag = 0;
-        }
+
+        rt_sprintf(txtA,"%d\n",iterElement );
+        uart_putstr(UART_1,txtA);
+
     }
 }

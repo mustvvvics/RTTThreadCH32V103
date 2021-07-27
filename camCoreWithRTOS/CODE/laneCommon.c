@@ -4,8 +4,8 @@
 // laneAnalyze
 // lane location for each row
 
-
-int32 encoderNumEnterElement[20] = {0};
+uint8 encoderElementNum = 1;
+int32 encoderNumEnterElement[20] = {120000};
 int32 encoderNumExitElement[20] = {9999999};
 
 
@@ -205,7 +205,7 @@ uint8 threewayFeatureNearestRow = 0;
 uint8 threewayDetectSequence = 0;
 
 // start line
-uint8 startLineTimes = 1;
+uint8 startLineTimes = 2;
 uint8 exitStartlineCounter = 0;
 
 // detectCrossroadScanLine

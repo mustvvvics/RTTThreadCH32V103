@@ -26,15 +26,15 @@ uint8 beepTimer = 0;
 int32 regression(uint8 slopeRowStart, uint8 slopeRowEnd, int32 *colArray);
 
 void locateLaneByMeanSlide(Mat outMat) {
-    //printf("\nlaneCenterPrevious: %d\n", laneCenterPrevious);
+    ////printf("\nlaneCenterPrevious: %d\n", laneCenterPrevious);
     pixelMeanPrevious = 2 * outMat[iterRow][laneCenterPrevious];
-    //printf("pixelMeanPre: %d\n", pixelMeanPrevious);
+    ////printf("pixelMeanPre: %d\n", pixelMeanPrevious);
 
     // left lane
-    //printf("left start %d\n", iterRow);
+    ////printf("left start %d\n", iterRow);
     for (iterCol = laneCenterPrevious - 5; iterCol > laneCenterPrevious - laneWidth[iterRow] / 2 * detectDistance && iterCol > 2; iterCol-=2) {
         pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
-        //printf("%3d\t", pixelMean);
+        ////printf("%3d\t", pixelMean);
         if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
             laneLocationLeft[iterRow] = iterCol;
             flagDetectLeft[iterRow] = laneFound;
@@ -46,10 +46,10 @@ void locateLaneByMeanSlide(Mat outMat) {
     }
 
     // right lane
-    //printf("\nright start %d\n", iterRow);
+    ////printf("\nright start %d\n", iterRow);
     for (iterCol = laneCenterPrevious + 5; iterCol < laneCenterPrevious + laneWidth[iterRow] / 2 * detectDistance && iterCol < imgCol - 3; iterCol+=2) {
         pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-        //printf("%3d\t", pixelMean);
+        ////printf("%3d\t", pixelMean);
         if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
             laneLocationRight[iterRow] = iterCol;
             flagDetectRight[iterRow] = laneFound;
@@ -70,7 +70,7 @@ void locateLaneByMeanSlide(Mat outMat) {
     if (!flagDetectLeft[iterRow] && !flagDetectRight[iterRow]) {
         missCounterBoth += 1;
     }
-    //printf("c: %d\n", laneCenter[iterRow]);
+    ////printf("c: %d\n", laneCenter[iterRow]);
 }
 
 void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
@@ -90,7 +90,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         //left lane
         for (iterCol = laneCenterPrevious; iterCol > 2; iterCol-=2) { // modified >1 to >2
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
-            //printf("%3d\t", pixelMean);
+            ////printf("%3d\t", pixelMean);
             if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
                 laneLocationLeft[iterRow] = iterCol;
                 flagDetectLeft[iterRow] = laneFound;
@@ -102,10 +102,10 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         }
 
         // right lane
-        //printf("\nright start %d\n", iterRow);
+        ////printf("\nright start %d\n", iterRow);
         for (iterCol = laneCenterPrevious; iterCol < imgCol*3/5; iterCol+=2) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-            //printf("%3d\t", pixelMean);
+            ////printf("%3d\t", pixelMean);
             if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
                 laneLocationRight[iterRow] = iterCol;
                 flagDetectRight[iterRow] = laneFound;
@@ -119,7 +119,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         // right lane
         for (iterCol = laneCenterPrevious; iterCol < imgCol-3; iterCol+=2) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-            //printf("%3d\t", pixelMean);
+            ////printf("%3d\t", pixelMean);
             if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
                 laneLocationRight[iterRow] = iterCol;
                 flagDetectRight[iterRow] = laneFound;
@@ -133,7 +133,7 @@ void locateLaneByMeanSlide_and_adaptRoundaboutLane(Mat outMat) {
         //left lane
         for (iterCol = laneCenterPrevious; iterCol > imgCol*2/5; iterCol-=2) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
-            //printf("%3d\t", pixelMean);
+            ////printf("%3d\t", pixelMean);
             if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol < laneLocationRight[iterRow]) {
                 laneLocationLeft[iterRow] = iterCol;
                 flagDetectLeft[iterRow] = laneFound;
@@ -285,7 +285,7 @@ void detectSharpCurve() {
     sharpCurveRow = 0;
     curveError = 0;
 
-    //printf("%d, %d\n", countJitterBreakRowLeft, countJitterBreakRowRight);
+    ////printf("%d, %d\n", countJitterBreakRowLeft, countJitterBreakRowRight);
     if (laneJitterLeft == 9999 && laneJitterRight == 9999) {
         return;
     }
@@ -326,7 +326,7 @@ void recomputeLaneCenter(uint8 laneStartRecompute, uint8 laneStopRecompute) {
 void adaptSharpCurve() {
     // referArray -- full lane
     // destiArray -- incomplete lane
-    //printf("sharpCurveStatus: %d\n", sharpCurveStatus);
+    ////printf("sharpCurveStatus: %d\n", sharpCurveStatus);
     if (sharpCurveStatus > 0) {
         referArray = laneLocationRight;
         destiArray = laneLocationLeft;
@@ -339,9 +339,9 @@ void adaptSharpCurve() {
     }
 
     for (iterRow=imgRow-5; iterRow > sharpCurveRow; --iterRow) {
-        //printf("flag: %d\n", flagDetectDesti[iterRow]);
+        ////printf("flag: %d\n", flagDetectDesti[iterRow]);
         if (!flagDetectDesti[iterRow]) {
-            //printf("adapted to %d\n", iterRow);
+            ////printf("adapted to %d\n", iterRow);
             destiArray[iterRow] = destiArray[iterRow+1] + \
                                     (referArray[iterRow+1] - referArray[iterRow]) * sharpCurveStatus;
         }
@@ -521,11 +521,11 @@ void getLaneWidth() {
     // get laneWidth
     for (iterRow = 0; iterRow < imgRow; ++iterRow) {
         if (iterRow % 10 == 0) {
-            //printf("\n");
+            ////printf("\n");
         }
-        //printf("%d, ", laneLocationRight[iterRow] - laneLocationLeft[iterRow]);
+        ////printf("%d, ", laneLocationRight[iterRow] - laneLocationLeft[iterRow]);
     }
-    //printf("\n");
+    ////printf("\n");
 }
 
 void detectLaneWidth(Mat outMat) {
@@ -534,7 +534,7 @@ void detectLaneWidth(Mat outMat) {
         pixelMeanPrevious = 2 * outMat[iterRow][laneCenterBiased];
         if (pixelMeanNear - pixelMeanPrevious > pixelMeanPrevious * 0.7) {
             laneWidthPresent[iterRow] = 9999;
-            // //printf("row:%02d, laneWidth:%04d (predefined: %03d), laneCenter: %02d\n", iterRow, laneWidthPresent[iterRow], laneWidth[iterRow], laneWidthCenter[iterRow]);
+            // ////printf("row:%02d, laneWidth:%04d (predefined: %03d), laneCenter: %02d\n", iterRow, laneWidthPresent[iterRow], laneWidth[iterRow], laneWidthCenter[iterRow]);
             continue;
         }
         laneWidthLeft[iterRow] = laneWidthRight[iterRow] = 8888;
@@ -542,7 +542,7 @@ void detectLaneWidth(Mat outMat) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
             if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
                 laneWidthLeft[iterRow] = iterCol;
-                // //printf("laneWidthLeft in row %d is %d\n", iterRow, laneWidthLeft[iterRow]);
+                // ////printf("laneWidthLeft in row %d is %d\n", iterRow, laneWidthLeft[iterRow]);
                 break;
             }
         }
@@ -550,7 +550,7 @@ void detectLaneWidth(Mat outMat) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
             if (pixelMeanPrevious - pixelMean > pixelMeanThres && iterCol > laneLocationLeft[iterRow]) {
                 laneWidthRight[iterRow] = iterCol;
-                // //printf("laneWidthRight in row %d is %d\n", iterRow, laneWidthRight[iterRow]);
+                // ////printf("laneWidthRight in row %d is %d\n", iterRow, laneWidthRight[iterRow]);
                 break;
             }
         }
@@ -560,7 +560,7 @@ void detectLaneWidth(Mat outMat) {
             laneWidthPresent[iterRow] = laneWidthRight[iterRow] - laneWidthLeft[iterRow];
             laneWidthCenter[iterRow] = (laneWidthRight[iterRow] + laneWidthLeft[iterRow]) / 2;
         }
-        //printf("row:%02d, laneWidth:%04d (predefined: %03d), laneCenter: %02d\n", iterRow, laneWidthPresent[iterRow], laneWidth[iterRow], laneWidthCenter[iterRow]);
+        ////printf("row:%02d, laneWidth:%04d (predefined: %03d), laneCenter: %02d\n", iterRow, laneWidthPresent[iterRow], laneWidth[iterRow], laneWidthCenter[iterRow]);
     }
 }
 
@@ -615,13 +615,13 @@ void detectLaneWidthForThreeway() {
         laneWidthSlopeRight = regression(imgRow-1, maxAvailableRow, laneWidthRight);
     }
 
-    if (laneWidthSlopeLeft > 8 && laneWidthSlopeRight < -8) {
+    if (laneWidthSlopeLeft > 15 && laneWidthSlopeRight < -15) {
         flagEnterThreeWay = 1;
     }
 
-    //printf("threewayWidthFeatureRow: %d\n", threewayWidthFeatureRow);
-    //printf("width slope left: %d\n", laneWidthSlopeLeft);
-    //printf("width slope right: %d\n", laneWidthSlopeRight);
+    ////printf("threewayWidthFeatureRow: %d\n", threewayWidthFeatureRow);
+    ////printf("width slope left: %d\n", laneWidthSlopeLeft);
+    ////printf("width slope right: %d\n", laneWidthSlopeRight);
 }
 
 void detectTriangleForThreeway(Mat outMat) {
@@ -655,7 +655,7 @@ void detectTriangleForThreeway(Mat outMat) {
     pixelMeanPrevious = 2 * outMat[imgRow-2][laneCenterBiased];
     pixelMean = 2 * outMat[threewayFeatureStartRow][laneCenterBiased];
     if (pixelMeanPrevious - pixelMean < pixelMeanThres) {
-        //printf("nononono, white: %d, black: %d\n", pixelMeanPrevious, pixelMean);
+        ////printf("nononono, white: %d, black: %d\n", pixelMeanPrevious, pixelMean);
         return;
     }
 
@@ -665,13 +665,13 @@ void detectTriangleForThreeway(Mat outMat) {
         threewayFeatureLeftFound = threewayFeatureRightFound = 0;
         threewayFeatureWidth[iterRow-threewayFeatureStartRow] = 255;
         threewayFeatureCenter[iterRow-threewayFeatureStartRow] = 255;
-        //printf("\nrow %d, pixelMeanPrevious: %d\n", iterRow, pixelMeanPrevious);
+        ////printf("\nrow %d, pixelMeanPrevious: %d\n", iterRow, pixelMeanPrevious);
 
         for (iterCol = threewayFeatureCenterPrevious - 1; iterCol > 3; --iterCol) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
-            //printf("L%d:(%d)\t", iterCol, pixelMean);
+            ////printf("L%d:(%d)\t", iterCol, pixelMean);
             if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
-                //printf("\nfound a left: %d\n", iterCol);
+                ////printf("\nfound a left: %d\n", iterCol);
                 threewayFeatureLeft[iterRow-threewayFeatureStartRow] = iterCol;
                 threewayFeatureLeftFound = 1;
                 break;
@@ -679,15 +679,15 @@ void detectTriangleForThreeway(Mat outMat) {
         }
 
         if (threewayFeatureLeftFound != 1) {
-            //printf("\nnot found a left, row: %d\n", iterRow);
+            ////printf("\nnot found a left, row: %d\n", iterRow);
             break;
         }
 
         for (iterCol = threewayFeatureCenterPrevious + 1; iterCol < imgCol-4; ++iterCol) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
-            //printf("R%d:(%d)\t", iterCol, pixelMean);
+            ////printf("R%d:(%d)\t", iterCol, pixelMean);
             if (pixelMean - pixelMeanPrevious > pixelMeanThres) {
-                //printf("\nfound a right: %d\n", iterCol);
+                ////printf("\nfound a right: %d\n", iterCol);
                 threewayFeatureRight[iterRow-threewayFeatureStartRow] = iterCol;
                 threewayFeatureRightFound = 1;
                 break;
@@ -695,7 +695,7 @@ void detectTriangleForThreeway(Mat outMat) {
         }
 
         if (threewayFeatureRightFound != 1) {
-            //printf("not found a right, row: %d\n", iterRow);
+            ////printf("not found a right, row: %d\n", iterRow);
             break;
         }
         threewayFeatureNearestRow = iterRow;
@@ -707,34 +707,34 @@ void detectTriangleForThreeway(Mat outMat) {
         pixelMeanPrevious = 2 * outMat[iterRow][threewayFeatureCenterPrevious];
     }
 
-    //printf("nearest row: %d\n", threewayFeatureNearestRow);
+    ////printf("nearest row: %d\n", threewayFeatureNearestRow);
     for (iterRow = threewayFeatureStartRow; iterRow < threewayFeatureStartRow + 20; ++iterRow) {
-        //printf("iterRow: %d, threewayFeatureWidth: %d, threewayFeatureCenter: %d\n", iterRow, threewayFeatureWidth[iterRow-threewayFeatureStartRow], threewayFeatureCenter[iterRow-threewayFeatureStartRow]);
+        ////printf("iterRow: %d, threewayFeatureWidth: %d, threewayFeatureCenter: %d\n", iterRow, threewayFeatureWidth[iterRow-threewayFeatureStartRow], threewayFeatureCenter[iterRow-threewayFeatureStartRow]);
     }
 
     if (threewayFeatureNearestRow < threewayFeatureStartRow + 6) {
-        //printf("not enough!\n");
+        ////printf("not enough!\n");
         return;
     }
 
     for (iterRow = threewayFeatureNearestRow-2; iterRow > threewayFeatureNearestRow - 5; --iterRow) {
-        //printf("row: %d\n", iterRow);
+        ////printf("row: %d\n", iterRow);
         if (threewayFeatureWidth[iterRow-threewayFeatureStartRow] * laneWidth[49] / laneWidth[iterRow-threewayFeatureStartRow] < \
                 threewayFeatureWidth[iterRow+1-threewayFeatureStartRow] * laneWidth[iterRow-threewayFeatureStartRow] / laneWidth[iterRow-threewayFeatureStartRow]) {
-            //printf("shape error, row: %d, iterRow: %d, iterRow+1: %d\n", iterRow, threewayFeatureWidth[iterRow-threewayFeatureStartRow], threewayFeatureWidth[iterRow+1-threewayFeatureStartRow]);
+            ////printf("shape error, row: %d, iterRow: %d, iterRow+1: %d\n", iterRow, threewayFeatureWidth[iterRow-threewayFeatureStartRow], threewayFeatureWidth[iterRow+1-threewayFeatureStartRow]);
             return;
         }
     }
 
-    //printf("laneWidth: %d\n", laneWidthPresent[threewayFeatureNearestRow]);
+    ////printf("laneWidth: %d\n", laneWidthPresent[threewayFeatureNearestRow]);
     if (laneWidthPresent[threewayFeatureNearestRow] < laneWidth[iterRow] * 1.5) {
-        //printf("white line not enough!\n");
+        ////printf("white line not enough!\n");
         return;
     }
 
     if (laneWidthCenter[threewayFeatureNearestRow] != 0) {
         if (abs(laneWidthCenter[threewayFeatureNearestRow] - laneCenterBiased) > 20) {
-            //printf("width not center, laneWidthCenter: %d\n", laneWidthCenter[threewayFeatureNearestRow]);
+            ////printf("width not center, laneWidthCenter: %d\n", laneWidthCenter[threewayFeatureNearestRow]);
             return;
         }
     }
@@ -745,7 +745,7 @@ void detectTriangleForThreeway(Mat outMat) {
         }
 
         if (abs(laneWidthCenter[iterRow] - laneCenterBiased) < 30) {
-            //printf("you won threeway!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+            ////printf("you won threeway!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
             flagEnterThreeWay = 1;
             return;
         }
@@ -785,12 +785,13 @@ void detectStartLine(Mat outMat) {
 
     if (startLineTimes != 1) { // continue, another round
         flagEnterStartLine = -1;
-        exitStartlineCounter = 70;
+        exitStartlineCounter = 20;
         BEEP_ON;
         --startLineTimes;
     } else {
+        BEEP_ON;
         flagEnterStartLine = 1;
-        exitStartlineCounter = 50;
+        exitStartlineCounter = 30;
     }
 }
 
@@ -891,21 +892,21 @@ void foresight() {
 
     slopeRowEnd = 35;
     slopeRowStart = 48;
-//    if (!flagEnterRoundabout && !flagEnterThreeWay && !flagEnterStartLine && !flagEnterOutbound && !flagEnterCrossroad) {
-//        if (countJitterBreakRowLeft < 15 && countJitterBreakRowRight < 15 && abs(cameraError) < 2) {
-//            slopeRowEnd = 30;
-//            slopeRowStart = 40;
-//            accelerateRatio = 15;
-//        }
-//        if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30 && abs(cameraError) < 5) {
-//            slopeRowEnd = 35;
-//            slopeRowStart = 45;
-//            accelerateRatio = 12;
-//        }
-//        if (abs(cameraError) > 15) {
-//            accelerateRatio = 7;
-//        }
-//    }
+    if (!flagEnterRoundabout && !flagEnterThreeWay && !flagEnterStartLine && !flagEnterOutbound && !flagEnterCrossroad) {
+        if (countJitterBreakRowLeft < 15 && countJitterBreakRowRight < 15 && abs(cameraError) < 2) {
+            slopeRowEnd = 30;
+            slopeRowStart = 40;
+            accelerateRatio = 15;
+        }
+        if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30 && abs(cameraError) < 5) {
+            slopeRowEnd = 35;
+            slopeRowStart = 45;
+            accelerateRatio = 12;
+        }
+        if (abs(cameraError) > 15) {
+            accelerateRatio = 7;
+        }
+    }
 
     if (flagEnterCrossroad) {
         slopeRowEnd = 30;
@@ -977,7 +978,7 @@ void detectCrossroad() {
     flagEnterCrossroad = 0;
     crossroadWidthSum = 0;
 
-    for (iterRow = detectCrossroadStartRow+8; iterRow > detectCrossroadEndRow+8; --iterRow) {
+    for (iterRow = detectCrossroadStartRow+10; iterRow > detectCrossroadEndRow+10; --iterRow) {
         crossroadWidthSum += laneWidthPresent[iterRow];
     }
 
@@ -990,7 +991,7 @@ void detectCrossroad() {
         crossroadWidthSum += laneWidthPresent[iterRow];
     }
 
-    if (crossroadWidthSum < 20000) {
+    if (crossroadWidthSum < 9000) {
         flagEnterCrossroad = 1;
     }
 
@@ -1040,7 +1041,7 @@ void detectCrossroadScanLine(Mat outMat) {
     // find long white H line first
     for (iterRow=detectCrossroadStartRowScanLine-3; \
             iterRow<detectCrossroadStartRowScanLine+3; ++iterRow) {
-        printf("seraching in row: %d\n", iterRow);
+        //printf("seraching in row: %d\n", iterRow);
         pixelMeanPrevious = outMat[iterRow][laneCenterBiased];
         // left
         for (iterCol = laneCenterBiased; iterCol > 3; --iterCol) {
@@ -1060,18 +1061,18 @@ void detectCrossroadScanLine(Mat outMat) {
         }
         detectCrossroadLaneWidth = detectCrossroadLaneRight - detectCrossroadLaneLeft;
         if (detectCrossroadLaneWidth < 1.5 * laneWidth[iterRow]) {
-            printf("exit because width condition is not satisfied, width: %d, laneWidth:%d\n", detectCrossroadLaneWidth, laneWidth[iterRow]);
+            //printf("exit because width condition is not satisfied, width: %d, laneWidth:%d\n", detectCrossroadLaneWidth, laneWidth[iterRow]);
             return;
         }
-        printf("ok, width: %d, laneWidth:%d\n", detectCrossroadLaneWidth, laneWidth[iterRow]);
+        //printf("ok, width: %d, laneWidth:%d\n", detectCrossroadLaneWidth, laneWidth[iterRow]);
     }
 
-    printf("\n\n");
+    //printf("\n\n");
     for (iterCol = laneCenterBiased - 40; iterCol <= laneCenterBiased + 40; iterCol += 20) {
         pixelMeanPrevious = 2 * outMat[detectCrossroadStartRow][iterCol];
         for (iterRow = detectCrossroadStartRow; iterRow > 0; --iterRow) {
             pixelMean = outMat[iterRow][iterCol] + outMat[iterRow-1][iterCol];
-            printf("col: %d, row: %d, pixelMean: %d, pixelMeanPrevious: %d\n", iterCol, iterRow, pixelMean, pixelMeanPrevious);
+            //printf("col: %d, row: %d, pixelMean: %d, pixelMeanPrevious: %d\n", iterCol, iterRow, pixelMean, pixelMeanPrevious);
             if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
                 detectCrossroadHeight[(iterCol-laneCenterBiased)/20+2] = iterRow;
                 break;
@@ -1079,7 +1080,7 @@ void detectCrossroadScanLine(Mat outMat) {
                 detectCrossroadHeight[(iterCol-laneCenterBiased)/20+2] = iterRow;
             }
         }
-        printf("\n");
+        //printf("\n");
     }
 
     detectCrossroadMaxHeight = detectCrossroadHeight[2];
@@ -1103,10 +1104,10 @@ void detectCrossroadScanLine(Mat outMat) {
     }
 
     for (iterRow=0; iterRow<5; ++iterRow) {
-        printf("%d!!!!!!!!!!!!!!!!!\n", detectCrossroadHeight[iterRow]);
+        //printf("%d!!!!!!!!!!!!!!!!!\n", detectCrossroadHeight[iterRow]);
     }
 
-    printf("detectCrossroadMaxHeight: %d, detectCrossroadMaxHeightCol: %d\n", detectCrossroadMaxHeight, detectCrossroadMaxHeightCol);
+    //printf("detectCrossroadMaxHeight: %d, detectCrossroadMaxHeightCol: %d\n", detectCrossroadMaxHeight, detectCrossroadMaxHeightCol);
 
     if (detectCrossroadMaxHeight < 7) {
         flagEnterCrossroad = 1;
@@ -1133,17 +1134,17 @@ void adaptCrossroad() {
     crossroadSlope = (crossroadMaxAvilRowCol - crossroadDesRowCol) / (crossroadMaxAvilRow - crossroadDesRow);
     currentCenter = laneCenter[(uint8)crossroadMaxAvilRow];
 
-    printf("\n");
-    printf("crossroadMaxAvilRow: %f\n", crossroadMaxAvilRow);
-    printf("crossroadMaxAvilRowCol: %f\n", crossroadMaxAvilRowCol);
-    printf("crossroadDesRow: %f\n", crossroadDesRow);
-    printf("crossroadDesRowCol: %f\n", crossroadDesRowCol);
-    printf("crossroadSloep: %f\n", crossroadSlope);
-    printf("\n");
+    //printf("\n");
+    //printf("crossroadMaxAvilRow: %f\n", crossroadMaxAvilRow);
+    //printf("crossroadMaxAvilRowCol: %f\n", crossroadMaxAvilRowCol);
+    //printf("crossroadDesRow: %f\n", crossroadDesRow);
+    //printf("crossroadDesRowCol: %f\n", crossroadDesRowCol);
+    //printf("crossroadSloep: %f\n", crossroadSlope);
+    //printf("\n");
 
     for (iterRow = (uint8)crossroadMaxAvilRow-1; iterRow > (uint8)crossroadDesRow; --iterRow) {
         currentCenter = currentCenter - crossroadSlope;
-        printf("row:%d, current center: %f\n", iterRow, currentCenter);
+        //printf("row:%d, current center: %f\n", iterRow, currentCenter);
         laneCenter[iterRow] = (int32)currentCenter;
     }
 }
@@ -1214,15 +1215,15 @@ void carRun() {
 void selectElementToExecute(Mat outMat) {
     if (iterElement != 99) {
         if (elementQueue[iterElement] != '\0') {
-//            encoderNumFlag = 1;
-//            if (encoderCounterNum >= encoderNumExitElement[iterElement]) {
-//                ++iterElement;
-//                encoderNumFlag = 0;
-//                return;
-//            }
-//            if (encoderCounterNum < encoderNumEnterElement[iterElement]) {
-//                return;
-//            }
+            encoderNumFlag = 1;
+            if (abs(encoderCounterNum) >= encoderNumExitElement[iterElement] && iterElement < encoderElementNum) {
+                ++iterElement;
+                encoderNumFlag = 0;
+                return;
+            }
+            if (abs(encoderCounterNum) < encoderNumEnterElement[iterElement] && iterElement < encoderElementNum) {
+                return;
+            }
 
             switch (elementQueue[iterElement]) {
                 case '1':
@@ -1282,20 +1283,18 @@ void laneAnalyze(Mat outMat){
 
     detectOutOfBounds(outMat);
     if (flagEnterStartLine) {
-        detectStartLine(outMat);
+//        detectStartLine(outMat);
         flagEnterOutbound = 0;
         if (flagEnterStartLine == -1) {
             cameraError = 0;
             detectStartLine(outMat);
         } else {
-            BEEP_ON;
             detectStartLine(outMat);
             if (drivingDirection == 0) {
                 cameraError = 10;
             } else {
                 cameraError = -10;
             }
-            BEEP_OFF;
         }
         passParameter();
         foresight();
@@ -1322,8 +1321,6 @@ void laneAnalyze(Mat outMat){
     for (iterRow = imgRow-4; iterRow != 255; --iterRow){
         if (abs(flagEnterRoundabout) == 2) {
             locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
-        } else if (flagEnterStartLine == 1) {
-            locateLaneByMeanSlide_and_adaptRoundaboutLane(outMat);
         } else {
             locateLaneByMeanSlide(outMat);
         }
@@ -1344,27 +1341,28 @@ void laneAnalyze(Mat outMat){
     // detectTriangleForThreeway(outMat);
     // detectRoundabout(outMat);
     // detectCrossroad();
-    detectCrossroadScanLine(outMat);
+//    detectCrossroadScanLine(outMat);
+//    detectCrossroad();
     selectElementToExecute(outMat);
 
     markSlopeStartCenter();
     passParameter();
 
-    //printf("flagEnterRoundabout: %d\n", flagEnterRoundabout);
-    //printf("flagEnterThreeWay: %d\n", flagEnterThreeWay);
-    //printf("flagEnterThreeWay: %d\n", flagEnterThreeWay);
-    //printf("laneJitterLeft: %d\n", laneJitterLeft);
-    //printf("laneJitterRight: %d\n\n", laneJitterRight);
-    //printf("sharpCurveStatus: %d\n", sharpCurveStatus);
-    //printf("sharpCurveRow: %d\n", sharpCurveRow);
-    //printf("roundaboutPhase: %d\n", roundaboutPhase);
-    //printf("startlineJumpingPointNum: %d\n", startlineJumpingPointNum);
-    //printf("outboundAreaBenchmark: %d\n", outboundAreaBenchmark);
-    //printf("area roundabout left: %d\n", areaDetectRoundaboutLeft);
-    //printf("roundabout start row %d, end row %d\n", missingLaneLowerLeft, missingLaneUpperLeft);
-    //printf("area roundabout right: %d\n", areaDetectRoundaboutRight);
-    //printf("roundabout start row %d, end row %d\n", missingLaneLowerRight, missingLaneUpperRight);
-    //printf("\n");
+    ////printf("flagEnterRoundabout: %d\n", flagEnterRoundabout);
+    ////printf("flagEnterThreeWay: %d\n", flagEnterThreeWay);
+    ////printf("flagEnterThreeWay: %d\n", flagEnterThreeWay);
+    ////printf("laneJitterLeft: %d\n", laneJitterLeft);
+    ////printf("laneJitterRight: %d\n\n", laneJitterRight);
+    ////printf("sharpCurveStatus: %d\n", sharpCurveStatus);
+    ////printf("sharpCurveRow: %d\n", sharpCurveRow);
+    ////printf("roundaboutPhase: %d\n", roundaboutPhase);
+    ////printf("startlineJumpingPointNum: %d\n", startlineJumpingPointNum);
+    ////printf("outboundAreaBenchmark: %d\n", outboundAreaBenchmark);
+    ////printf("area roundabout left: %d\n", areaDetectRoundaboutLeft);
+    ////printf("roundabout start row %d, end row %d\n", missingLaneLowerLeft, missingLaneUpperLeft);
+    ////printf("area roundabout right: %d\n", areaDetectRoundaboutRight);
+    ////printf("roundabout start row %d, end row %d\n", missingLaneLowerRight, missingLaneUpperRight);
+    ////printf("\n");
 
     // getLaneWidth();
 }
@@ -1374,7 +1372,7 @@ int32 regression(uint8 slopeRowStart, uint8 slopeRowEnd, int32 *colArray) {
     sumNum = 0;
     sumDen = 0;
     numRegRow = slopeRowStart - slopeRowEnd;
-    //printf("numRegRow: %d\n", numRegRow);
+    ////printf("numRegRow: %d\n", numRegRow);
     for (iterRow = slopeRowStart; iterRow > slopeRowEnd; --iterRow){
         sumLaneCenter += colArray[iterRow];
     }
@@ -1386,7 +1384,7 @@ int32 regression(uint8 slopeRowStart, uint8 slopeRowEnd, int32 *colArray) {
         sumNum += (colArray[iterRow] - averLaneCenter) * (iterRow - averRowIndex);
         sumDen += (iterRow - averRowIndex) * (iterRow - averRowIndex);
     }
-    //printf("sumDen: %d\tsumNum: %d\n", sumDen, sumNum);
+    ////printf("sumDen: %d\tsumNum: %d\n", sumDen, sumNum);
     return (sumDen == 0) ? 0 : (sumNum * 10 / sumDen);
 }
 
@@ -1396,16 +1394,16 @@ void computeError() {
         return;
     }
 
-    if (flagEnterCrossroad) {
-        cameraError = 0;
-    }
+//    if (flagEnterCrossroad) {
+//        cameraError = 0;
+//    }
 
     if (flagEnterThreeWay==1 || flagEnterThreeWay == 2) {
         cameraError = 0;
         return;
     }
 
-    //printf("slope start at %d, end at %d\n", slopeRowStart, slopeRowEnd);
+    ////printf("slope start at %d, end at %d\n", slopeRowStart, slopeRowEnd);
 
     // error limit in detecting threeway
 //    if (flagEnterThreeWay == 3) {
