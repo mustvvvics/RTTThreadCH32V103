@@ -881,13 +881,13 @@ void foresight() {
         accelerateRatio = 7;
     }
     if (flagEnterThreeWay == 2) {
-        accelerateRatio = 5;
+        accelerateRatio = 4;
     }
 //    if (flagEnterThreeWay == 3 && ) {
 //        accelerateRatio = 8;
 //    }
     if (flagEnterStartLine == 1) {
-        accelerateRatio = 6;
+        accelerateRatio = 5;
     }
 
     slopeRowEnd = 35;
