@@ -11,6 +11,10 @@
 //#define BEEP_OFF 0;
 //uint8 encoderNumFlag = 0;
 //int32 encoderCounterNum = 0;
+
+// modified encoderNumEnterElement
+// commented encoder function code
+// todo: decrease threeway 2 stage triger time
 // **********************************************
 
 // *************** uncomment this ***************
@@ -780,8 +784,8 @@ void detectStartLine(Mat outMat) {
     }
 
     if (startLineTimes != 1) { // continue, another round
-        flagEnterStartLine = -1;
-        exitStartlineCounter = 30;
+        flagEnterStartLine = 1;
+        exitStartlineCounter = 70;
         BEEP_ON;
         --startLineTimes;
     } else {
@@ -878,9 +882,9 @@ void foresight() {
     if (flagEnterThreeWay == 2) {
         accelerateRatio = 0;
     }
-    if (flagEnterThreeWay == 3) {
-        accelerateRatio = 8;
-    }
+//    if (flagEnterThreeWay == 3 && ) {
+//        accelerateRatio = 8;
+//    }
     if (flagEnterStartLine == 1) {
         accelerateRatio = 6;
     }
@@ -888,11 +892,13 @@ void foresight() {
         accelerateRatio = 13;
     }
     if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30) {
-        if (!flagEnterRoundabout && !flagEnterThreeWay && threewayDetectSequence != 1) {
+        if (!flagEnterRoundabout && !flagEnterThreeWay && threewayDetectSequence != 1 && !flagEnterStartLine) {
             if (cameraError < 3 && cameraError > -3) {
                 accelerateRatio = 16;
             } else if (cameraError < 7 && cameraError > -7) {
                 accelerateRatio = 12;
+            } else if (abs(cameraError) > 15) {
+                accelerateRatio = 7;
             } else {
                 accelerateRatio = 10;
             }
@@ -1122,13 +1128,14 @@ void laneAnalyze(Mat outMat){
             cameraError = 0;
             detectStartLine(outMat);
         } else {
+            BEEP_ON;
             detectStartLine(outMat);
-            accelerateRatio = 9;
             if (drivingDirection == 0) {
                 cameraError = 10;
             } else {
                 cameraError = -10;
             }
+            BEEP_OFF;
         }
         passParameter();
         foresight();
@@ -1179,6 +1186,7 @@ void laneAnalyze(Mat outMat){
     // detectTriangleForThreeway(outMat);
     // detectRoundabout(outMat);
     // detectCrossroad();
+    detectStartLine(outMat);
     selectElementToExecute(outMat);
 
     markSlopeStartCenter();
@@ -1227,7 +1235,6 @@ int32 regression(uint8 slopeRowStart, uint8 slopeRowEnd, int32 *colArray) {
 // error composition: slope, front points jitter
 void computeError() {
     if (flagEnterStartLine) {
-        cameraError = 0;
         return;
     }
 

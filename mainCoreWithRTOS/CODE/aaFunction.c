@@ -175,6 +175,7 @@ void motor_conversion(void)
             carFlagPre = 0;
             if(roundIslandBegin)                        //环岛PID
             {
+                expected_y = 50;
 //                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;   //全局可控
                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);//环岛 P:8.0 D:0.005
             }
@@ -208,6 +209,7 @@ void motor_conversion(void)
         else if (car_flag == 2  && threeWayIn == 0 && threeWaySum == 1) {
             if(roundIslandBegin)                      //环岛PID
             {
+                expected_y = 50;
 //                yaw_pid.Kp = 8;yaw_pid.Kd = 0.005;  //全局可控
                 expected_omega = PID_Loc(0,-position_front,&yaw_pid);
             }

@@ -43,6 +43,7 @@ int main(void)
     gpio_init(B12, GPO, 0, GPIO_PIN_CONFIG);                 //同步引脚初始化 time_pit
     gpio_init(B15, GPO, 1, GPIO_PIN_CONFIG);
 
+    esp8266Init();
 
     flagCameraElement = 5;
     if (flagCameraElement == 5 && camFlashWriteFlag == 1) {
@@ -66,12 +67,17 @@ int main(void)
         computeError();
         timet2 = rt_tick_get();
         timeControl = timet2 - timet1;
-
+/**********************************连接char***********************************/
         for (i = 0; i < 10; ++i) {
             elementQueue[i] =  elementQueue0[i];
             elementQueue[i+9] =  elementQueue1[i];
         }
         elementQueue[9] = elementQueue1[0];
-//        sendMessageData();
+
+/**********************************8266***********************************/
+        if (CameraShow_flag == 1) {
+            sendMessage();//发送赛道信息
+            CameraShow_flag = 0;
+        }
     }
 }

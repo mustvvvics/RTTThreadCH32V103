@@ -12,7 +12,7 @@ void show_speed(void)
         ips114_showstrGray(0, 0, txt);
         rt_sprintf(txt,"Error   =%05d|encoder=%06d",cameraError,encoderCounterNum);
         ips114_showstr(0, 1, txt);
-        rt_sprintf(txt,"FgCElement=%03d|Direction=%04d",flagCameraElement,drivingDirection);
+        rt_sprintf(txt,"FgCElement=%03d|delayCount=%03d",flagCameraElement,delayCounter);
         ips114_showstr(0, 2, txt);
         rt_sprintf(txt,"FgEntRound=%03d|FgEntThree=%03d", flagEnterRoundabout, flagEnterThreeWay);
         ips114_showstr(0, 3, txt);
