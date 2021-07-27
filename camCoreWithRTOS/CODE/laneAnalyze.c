@@ -784,7 +784,7 @@ void detectStartLine(Mat outMat) {
     }
 
     if (startLineTimes != 1) { // continue, another round
-        flagEnterStartLine = 1;
+        flagEnterStartLine = -1;
         exitStartlineCounter = 70;
         BEEP_ON;
         --startLineTimes;
@@ -880,7 +880,7 @@ void foresight() {
         accelerateRatio = 7;
     }
     if (flagEnterThreeWay == 2) {
-        accelerateRatio = 0;
+        accelerateRatio = 5;
     }
 //    if (flagEnterThreeWay == 3 && ) {
 //        accelerateRatio = 8;
@@ -888,26 +888,50 @@ void foresight() {
     if (flagEnterStartLine == 1) {
         accelerateRatio = 6;
     }
+
+    slopeRowEnd = 35;
+    slopeRowStart = 48;
+//    if (!flagEnterRoundabout && !flagEnterThreeWay && !flagEnterStartLine && !flagEnterOutbound && !flagEnterCrossroad) {
+//        if (countJitterBreakRowLeft < 15 && countJitterBreakRowRight < 15 && abs(cameraError) < 2) {
+//            slopeRowEnd = 30;
+//            slopeRowStart = 40;
+//            accelerateRatio = 15;
+//        }
+//        if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30 && abs(cameraError) < 5) {
+//            slopeRowEnd = 35;
+//            slopeRowStart = 45;
+//            accelerateRatio = 12;
+//        }
+//        if (abs(cameraError) > 15) {
+//            accelerateRatio = 7;
+//        }
+//    }
+
     if (flagEnterCrossroad) {
+        slopeRowEnd = 30;
+        slopeRowStart = 48;
         accelerateRatio = 13;
     }
-    if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30) {
-        slopeRowEnd = 35;
-        slopeRowStart = 48;
-        if (!flagEnterRoundabout && !flagEnterThreeWay && threewayDetectSequence != 1 && !flagEnterStartLine) {
-            if (cameraError < 3 && cameraError > -3) {
-                slopeRowEnd = 30;
-                slopeRowStart = 35;
-                accelerateRatio = 14;
-            } else if (cameraError < 7 && cameraError > -7) {
-                accelerateRatio = 12;
-            } else if (abs(cameraError) > 15) {
-                accelerateRatio = 7;
-            } else {
-                accelerateRatio = 10;
-            }
-        }
-    }
+
+    // if (countJitterBreakRowLeft < 30 && countJitterBreakRowRight < 30) {
+    //     slopeRowEnd = 35;
+    //     slopeRowStart = 48;
+    //     if (!flagEnterRoundabout && !flagEnterThreeWay && threewayDetectSequence != 1 && !flagEnterStartLine) {
+    //         if (cameraError < 2 && cameraError > -2) {
+    //             slopeRowEnd = 30;
+    //             slopeRowStart = 35;
+    //             accelerateRatio = 14;
+    //         } else if (cameraError < 7 && cameraError > -7) {
+    //             slopeRowEnd = 30;
+    //             slopeRowStart = 35;
+    //             accelerateRatio = 12;
+    //         } else if (abs(cameraError) > 15) {
+    //             accelerateRatio = 7;
+    //         } else {
+    //             accelerateRatio = 10;
+    //         }
+    //     }
+    // }
 }
 
 void passParameter() {
@@ -994,6 +1018,136 @@ void detectCrossroad() {
     // }
 }
 
+void detectCrossroadScanLine(Mat outMat) {
+    if (flagEnterCrossroad == 1) {
+        if (exitCrossroadDelay == 0) {
+            exitCrossroadDelay = 30;
+        } else if (exitCrossroadDelay == 1) {
+            ++iterElement;
+            encoderNumFlag = 0;
+            exitCrossroadDelay = 0;
+            flagEnterCrossroad = 0;
+        } else {
+            --exitCrossroadDelay;
+        }
+        return;
+    }
+
+    detectCrossroadLaneWidth = 0;
+    detectCrossroadLaneLeft = 0;
+    detectCrossroadLaneRight = imgCol;
+
+    // find long white H line first
+    for (iterRow=detectCrossroadStartRowScanLine-3; \
+            iterRow<detectCrossroadStartRowScanLine+3; ++iterRow) {
+        printf("seraching in row: %d\n", iterRow);
+        pixelMeanPrevious = outMat[iterRow][laneCenterBiased];
+        // left
+        for (iterCol = laneCenterBiased; iterCol > 3; --iterCol) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol-1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                detectCrossroadLaneLeft = iterCol;
+                break;
+            }
+        }
+        // right
+        for (iterCol = laneCenterBiased; iterCol < imgCol-4; ++iterCol) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow][iterCol+1];
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                detectCrossroadLaneRight = iterCol;
+                break;
+            }
+        }
+        detectCrossroadLaneWidth = detectCrossroadLaneRight - detectCrossroadLaneLeft;
+        if (detectCrossroadLaneWidth < 1.5 * laneWidth[iterRow]) {
+            printf("exit because width condition is not satisfied, width: %d, laneWidth:%d\n", detectCrossroadLaneWidth, laneWidth[iterRow]);
+            return;
+        }
+        printf("ok, width: %d, laneWidth:%d\n", detectCrossroadLaneWidth, laneWidth[iterRow]);
+    }
+
+    printf("\n\n");
+    for (iterCol = laneCenterBiased - 40; iterCol <= laneCenterBiased + 40; iterCol += 20) {
+        pixelMeanPrevious = 2 * outMat[detectCrossroadStartRow][iterCol];
+        for (iterRow = detectCrossroadStartRow; iterRow > 0; --iterRow) {
+            pixelMean = outMat[iterRow][iterCol] + outMat[iterRow-1][iterCol];
+            printf("col: %d, row: %d, pixelMean: %d, pixelMeanPrevious: %d\n", iterCol, iterRow, pixelMean, pixelMeanPrevious);
+            if (pixelMeanPrevious - pixelMean > pixelMeanThres) {
+                detectCrossroadHeight[(iterCol-laneCenterBiased)/20+2] = iterRow;
+                break;
+            } else {
+                detectCrossroadHeight[(iterCol-laneCenterBiased)/20+2] = iterRow;
+            }
+        }
+        printf("\n");
+    }
+
+    detectCrossroadMaxHeight = detectCrossroadHeight[2];
+    detectCrossroadMaxHeightCol = laneCenterBiased;
+
+    if (detectCrossroadHeight[1] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[1];
+        detectCrossroadMaxHeightCol = laneCenterBiased-20;
+    }
+    if (detectCrossroadHeight[3] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[3];
+        detectCrossroadMaxHeightCol = laneCenterBiased+20;
+    }
+    if (detectCrossroadHeight[0] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[0];
+        detectCrossroadMaxHeightCol = laneCenterBiased-40;
+    }
+    if (detectCrossroadHeight[4] < detectCrossroadMaxHeight) {
+        detectCrossroadMaxHeight = detectCrossroadHeight[4];
+        detectCrossroadMaxHeightCol = laneCenterBiased+40;
+    }
+
+    for (iterRow=0; iterRow<5; ++iterRow) {
+        printf("%d!!!!!!!!!!!!!!!!!\n", detectCrossroadHeight[iterRow]);
+    }
+
+    printf("detectCrossroadMaxHeight: %d, detectCrossroadMaxHeightCol: %d\n", detectCrossroadMaxHeight, detectCrossroadMaxHeightCol);
+
+    if (detectCrossroadMaxHeight < 7) {
+        flagEnterCrossroad = 1;
+    }
+    }
+
+void adaptCrossroad() {
+    for (iterRow = 0; iterRow < 7; ++iterRow) {
+        if (laneWidthPresent[iterRow] < 1000) {
+            crossroadDesRow = iterRow;
+            crossroadDesRowCol = laneWidthCenter[iterRow];
+            break;
+        }
+    }
+    if (iterRow == 7) {
+        crossroadDesRow = 7;
+        crossroadDesRowCol = laneWidthCenter[iterRow];
+    }
+
+    crossroadMaxAvilRow = max(countJitterBreakRowLeft, countJitterBreakRowRight);
+    crossroadMaxAvilRowCol = laneCenter[(uint8)crossroadMaxAvilRow];
+    // crossroadDesRow = detectCrossroadMaxHeight;
+    // crossroadDesRowCol = detectCrossroadMaxHeightCol;
+    crossroadSlope = (crossroadMaxAvilRowCol - crossroadDesRowCol) / (crossroadMaxAvilRow - crossroadDesRow);
+    currentCenter = laneCenter[(uint8)crossroadMaxAvilRow];
+
+    printf("\n");
+    printf("crossroadMaxAvilRow: %f\n", crossroadMaxAvilRow);
+    printf("crossroadMaxAvilRowCol: %f\n", crossroadMaxAvilRowCol);
+    printf("crossroadDesRow: %f\n", crossroadDesRow);
+    printf("crossroadDesRowCol: %f\n", crossroadDesRowCol);
+    printf("crossroadSloep: %f\n", crossroadSlope);
+    printf("\n");
+
+    for (iterRow = (uint8)crossroadMaxAvilRow-1; iterRow > (uint8)crossroadDesRow; --iterRow) {
+        currentCenter = currentCenter - crossroadSlope;
+        printf("row:%d, current center: %f\n", iterRow, currentCenter);
+        laneCenter[iterRow] = (int32)currentCenter;
+    }
+}
+
 void markSlopeStartCenter() {
     // add a strightline to help compute lane slope
     for (iterRow=imgRow-1; iterRow > slopeRowStart-2; --iterRow) {
@@ -1003,7 +1157,7 @@ void markSlopeStartCenter() {
 
 void delayForALittleWhile() {
     if (delayCounter == 0) {
-        delayCounter = 100;
+        delayCounter = 10;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
@@ -1015,7 +1169,7 @@ void delayForALittleWhile() {
 
 void delayForAMiddleWhile() {
     if (delayCounter == 0) {
-        delayCounter = 200;
+        delayCounter = 50;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
@@ -1027,7 +1181,7 @@ void delayForAMiddleWhile() {
 
 void delayForABigWhile() {
     if (delayCounter == 0) {
-        delayCounter = 300;
+        delayCounter = 100;
     } else if (delayCounter == 1) {
         delayCounter = 0;
         ++iterElement;
@@ -1079,7 +1233,8 @@ void selectElementToExecute(Mat outMat) {
                         //detectTriangleForThreeway(outMat);
                     break;
                 case '3':
-                    detectCrossroad();
+                    // detectCrossroad();
+//                    detectCrossroadScanLine(outMat);
                     break;
                 case '4':
                     detectStartLine(outMat);
@@ -1189,6 +1344,7 @@ void laneAnalyze(Mat outMat){
     // detectTriangleForThreeway(outMat);
     // detectRoundabout(outMat);
     // detectCrossroad();
+    detectCrossroadScanLine(outMat);
     selectElementToExecute(outMat);
 
     markSlopeStartCenter();

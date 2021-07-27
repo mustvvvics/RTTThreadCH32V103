@@ -211,4 +211,20 @@ extern uint8 exitStartlineCounter;
 
 extern int32 encoderNumEnterElement[20];
 extern int32 encoderNumExitElement[20];
+
+// detectCrossroadScanLine
+extern uint8 detectCrossroadStartRowScanLine;
+extern uint8 detectCrossroadLaneWidth;
+extern uint8 detectCrossroadLaneLeft;
+extern uint8 detectCrossroadLaneRight;
+extern uint8 detectCrossroadHeight[5];
+extern uint8 detectCrossroadMaxHeight;
+extern uint8 detectCrossroadMaxHeightCol;
+extern float crossroadMaxAvilRow;
+extern float crossroadMaxAvilRowCol;
+extern float crossroadDesRow;
+extern float crossroadDesRowCol;
+extern float crossroadSlope;
+extern float currentCenter;
 #endif
+
