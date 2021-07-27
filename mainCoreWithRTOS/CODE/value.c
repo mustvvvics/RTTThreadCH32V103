@@ -8,7 +8,7 @@ int16 position_front_last,position_front_delta;//上一次偏差，偏差的变化率
 int16 expected_omega=0;
 int32 expected_y=40;
 int16 speed_low=50;
-int16 expected_X = 3000;
+int16 expected_X = 4500;
 
 //速度环PID //参数 8000限幅
 float S_P=136;

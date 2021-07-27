@@ -196,6 +196,7 @@ void motor_conversion(void)
         //进三叉行驶              //p22.0 d:0.005 sp:50   // p:16.5   d:0.005   sp=45    // p:11.0 d:0.005 sp:40
         else if (car_flag == 2 && threeWayIn == 1) {
     //        yaw_pid.Kp = 26;yaw_pid.Kd = 0.005;
+            expected_y = 40;
             if (accelerate == 0) {clearError();speed_conversion(0,0,0);}    //转完舵机停一会
             else {
     //            expected_omega = PID_Loc(0,-position_front,&yaw_pid);     //位置PID
