@@ -1,0 +1,55 @@
+摄像头引脚
+//摄像头串口的RX引脚一定是接单片机的TX引脚
+//摄像头串口的TX引脚一定是接单片机的RX引脚
+摄像头串口的RX 		PA2(单片机的TX)
+摄像头串口的TX 		PA3(单片机的RX)
+场信号VSY			PA1
+像素信号PCLK(TIM1_ETR) 	PA12 
+数据信号DATA 		PC0-PC7
+
+屏幕引脚使用SPI1
+SCK 			PA5  
+MOSI 			PA7   
+REST 			PC13   
+DC 			PC14   
+CS 			PC15    
+BL 			不接，屏幕内置上拉。
+
+编码器引脚使用SPI2(跟ICM20602分时复用SPI2)
+SCK 			PB13 
+MISO 			PB14 
+MOSI 			PB15  
+ENC_1 			任意IO
+ENC_2 			任意IO
+ENC_3 			任意IO
+ENC_4 			任意IO
+
+ICM20602引脚使用SPI2(跟编码器分时复用SPI2)
+SCK 			PB13 
+MISO 			PB14 
+MOSI 			PB15  
+CS 			任意IO
+
+舵机	  
+TIM2_CH1 		PA0 
+
+四个电机(推荐使用DRV8701E双电机驱动 两个)
+DIR1 			PA15 
+PWM1(TIM4_CH1)		PB6   
+DIR2 			PB3 
+PWM2(TIM4_CH2)		PB7 
+DIR3 			PB10 
+PWM3(TIM4_CH3)		PB8   
+DIR4 			PB11 
+PWM4(TIM4_CH4)		PB9
+
+ADC引脚：
+ADC_IN4			PA4 
+ADC_IN6 			PA6 
+ADC_IN8 			PB0 
+ADC_IN9 			PB1 
+
+核心板上已用的引脚：
+PA13 PA14下载接口
+PD0 PD1晶振
+
