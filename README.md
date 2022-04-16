@@ -1,6 +1,21 @@
 # RTTThreadCH32V103
 
-Thanks @[DarkerWhite](https://github.com/DarkerWhite) 负责图像算法及上位机等开发
+maincore - 主核代码
+
+camcore - 副核代码
+
+参考资料：
+
+[RISC-V单片机 CH32V103](http://www.wch.cn/products/CH32V103.html)
+
+[开发环境mounriver](http://www.mounriver.com/)
+
+
+---
+
+
+Thanks @singer 负责图像算法及上位机等开发
+
 
 7.6 双核 RTOS
 
